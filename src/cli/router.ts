@@ -13,9 +13,13 @@ import { runCollections } from './verbs/collections'
 import { runComments } from './verbs/comments'
 import { runCustomers } from './verbs/customers'
 import { runDraftOrders } from './verbs/draftOrders'
+import { runFulfillmentServices } from './verbs/fulfillment-services'
 import { runFiles } from './verbs/files'
+import { runGiftCards } from './verbs/gift-cards'
 import { runInventory } from './verbs/inventory'
+import { runLocations } from './verbs/locations'
 import { runOrders } from './verbs/orders'
+import { runPaymentTerms } from './verbs/payment-terms'
 import { runProductVariants } from './verbs/product-variants'
 import { runProducts } from './verbs/products'
 import { runPublications } from './verbs/publications'
@@ -76,7 +80,11 @@ export const runCommand = async ({
   if (resource === 'catalogs') return runCatalogs({ ctx, verb, argv })
   if (resource === 'markets') return runMarkets({ ctx, verb, argv })
   if (resource === 'draft-orders') return runDraftOrders({ ctx, verb, argv })
+  if (resource === 'gift-cards') return runGiftCards({ ctx, verb, argv })
   if (resource === 'url-redirects') return runUrlRedirects({ ctx, verb, argv })
+  if (resource === 'locations') return runLocations({ ctx, verb, argv })
+  if (resource === 'fulfillment-services') return runFulfillmentServices({ ctx, verb, argv })
+  if (resource === 'payment-terms') return runPaymentTerms({ ctx, verb, argv })
   if (resource === 'segments') return runSegments({ ctx, verb, argv })
   if (resource === 'webhooks') return runWebhooks({ ctx, verb, argv })
   if (resource === 'metafield-definitions') return runMetafieldDefinitions({ ctx, verb, argv })

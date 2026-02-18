@@ -69,7 +69,7 @@ Known gaps vs notes (next to implement):
 
 ## Next tranche proposal
 
-Focus next on the remaining operations/resources from `.dev/operations.md` that still aren’t implemented (e.g. carrier-services, cart-transforms, customer-addresses, delivery-profiles, gift-cards, payment-terms, price-lists, web-pixels, web-presences, subscriptions).
+Focus next on the remaining operations/resources from `.dev/operations.md` that still aren’t implemented (e.g. carrier-services, cart-transforms, customer-addresses, delivery-profiles, price-lists, web-pixels, web-presences, subscriptions).
 
 ### Tranche 4 implemented (2026-02-18)
 
@@ -121,3 +121,21 @@ Selling plans:
 
 - `shop selling-plan-groups create|get|list|update|delete`
 - `shop selling-plan-groups add-variants|remove-variants --id <gid|num> --variant-ids <gid|num,...>`
+
+### Tranche 5 implemented (2026-02-18)
+
+Gift cards:
+
+- `shop gift-cards create|get|list|count|update|credit|debit|deactivate|notify-customer|notify-recipient|config`
+
+Locations:
+
+- `shop locations add|get|list|count|edit|delete|activate|deactivate|enable-local-pickup|disable-local-pickup`
+
+Fulfillment services:
+
+- `shop fulfillment-services create|get|list|update|delete`
+
+Payment terms:
+
+- `shop payment-terms create|update|delete|send-reminder|templates`
