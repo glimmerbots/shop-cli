@@ -166,22 +166,15 @@ const renderTypeShapesSection = (types: Map<string, InputFieldHelp[]>): string[]
   return lines
 }
 
-/** Format the "See type details" footer for regular --help */
-const formatTypeDetailsFooter = (typeNames: string[]): string | undefined => {
-  if (typeNames.length === 0) return undefined
+/** Format the "Type details" footer for regular --help */
+const formatTypeDetailsFooter = (typeNames: string[]): string[] => {
+  if (typeNames.length === 0) return []
 
-  if (typeNames.length === 1) {
-    return `See type details: shop types ${typeNames[0]}`
+  const lines = ['Type details:']
+  for (const typeName of typeNames) {
+    lines.push(`  shop types ${typeName}`)
   }
-
-  if (typeNames.length === 2) {
-    return `See type details: shop types ${typeNames[0]} and shop types ${typeNames[1]}`
-  }
-
-  // 3+ types: "shop types A, shop types B and shop types C"
-  const allButLast = typeNames.slice(0, -1).map((t) => `shop types ${t}`).join(', ')
-  const last = `shop types ${typeNames[typeNames.length - 1]}`
-  return `See type details: ${allButLast} and ${last}`
+  return lines
 }
 
 export const renderTopLevelHelp = () => {
@@ -363,11 +356,11 @@ export const renderVerbHelp = (
     lines.push('')
   }
 
-  // For regular --help: add "See type details" footer if there are referenced types
+  // For regular --help: add "Type details" footer if there are referenced types
   if (!options.showAllFields && referencedTypeNames.length > 0) {
-    const footer = formatTypeDetailsFooter(referencedTypeNames)
-    if (footer) {
-      lines.push(footer)
+    const footerLines = formatTypeDetailsFooter(referencedTypeNames)
+    if (footerLines.length > 0) {
+      lines.push(...footerLines)
       lines.push('')
     }
   }
