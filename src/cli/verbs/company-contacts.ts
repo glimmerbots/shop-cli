@@ -264,7 +264,7 @@ export const runCompanyContacts = async ({
     const result = await runMutation(ctx, {
       companyContactRemoveFromCompany: {
         __args: { companyContactId: id },
-        companyContact: companyContactSummarySelection,
+        removedCompanyContactId: true,
         userErrors: { field: true, message: true },
       },
     })
@@ -273,7 +273,7 @@ export const runCompanyContacts = async ({
       payload: result.companyContactRemoveFromCompany,
       failOnUserErrors: ctx.failOnUserErrors,
     })
-    if (ctx.quiet) return console.log(result.companyContactRemoveFromCompany?.companyContact?.id ?? '')
+    if (ctx.quiet) return console.log(result.companyContactRemoveFromCompany?.removedCompanyContactId ?? '')
     printJson(result.companyContactRemoveFromCompany, ctx.format !== 'raw')
     return
   }

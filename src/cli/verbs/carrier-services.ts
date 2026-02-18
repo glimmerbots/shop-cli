@@ -95,10 +95,12 @@ export const runCarrierServices = async ({
   if (verb === 'list-available') {
     const result = await runQuery(ctx, {
       availableCarrierServices: {
-        id: true,
-        name: true,
-        active: true,
-        callbackUrl: true,
+        carrierService: {
+          id: true,
+          name: true,
+          active: true,
+          callbackUrl: true,
+        },
         locations: { id: true, name: true },
       },
     })

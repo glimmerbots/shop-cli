@@ -186,7 +186,7 @@ export const runInventoryShipments = async ({
     const result = await runMutation(ctx, {
       inventoryShipmentUpdateItemQuantities: {
         __args: { id, items },
-        inventoryShipment: inventoryShipmentSummarySelection,
+        shipment: inventoryShipmentSummarySelection,
         userErrors: { field: true, message: true },
       },
     })

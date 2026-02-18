@@ -13,7 +13,7 @@ const metafieldDefinitionSummarySelection = {
   namespace: true,
   key: true,
   ownerType: true,
-  type: true,
+  type: { name: true, category: true },
 } as const
 
 const metafieldDefinitionFullSelection = {

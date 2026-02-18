@@ -78,7 +78,7 @@ export const runShopConfig = async ({
     const result = await runMutation(ctx, {
       shopPolicyUpdate: {
         __args: { shopPolicy: built.input },
-        shopPolicy: { id: true, title: true, body: true, handle: true, url: true },
+        shopPolicy: { id: true, title: true, body: true, url: true },
         userErrors: { field: true, message: true },
       },
     })

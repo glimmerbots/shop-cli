@@ -252,10 +252,8 @@ export const runProducts = async ({
     })
 
     if (ctx.dryRun) {
-      throw new CliError(
-        'In --dry-run mode, publish-all cannot resolve publications without executing a query. Use `shop products publish` with explicit --publication-id instead.',
-        2,
-      )
+      await listPublications(ctx)
+      return
     }
 
     const publishDate = parsePublishDate({ at: args.at as any, now: args.now as any })

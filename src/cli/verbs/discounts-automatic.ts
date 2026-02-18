@@ -11,7 +11,7 @@ const automaticDiscountNodeSummarySelection = {
   id: true,
   automaticDiscount: {
     __typename: true,
-    '... on DiscountAutomaticBasic': {
+    on_DiscountAutomaticBasic: {
       title: true,
       status: true,
       startsAt: true,
@@ -21,33 +21,33 @@ const automaticDiscountNodeSummarySelection = {
       customerGets: {
         value: {
           __typename: true,
-          '... on DiscountPercentage': { percentage: true },
-          '... on DiscountAmount': { amount: { amount: true, currencyCode: true } },
-          '... on DiscountOnQuantity': {
+          on_DiscountPercentage: { percentage: true },
+          on_DiscountAmount: { amount: { amount: true, currencyCode: true } },
+          on_DiscountOnQuantity: {
             quantity: { quantity: true },
             effect: {
               __typename: true,
-              '... on DiscountPercentage': { percentage: true },
-              '... on DiscountAmount': { amount: { amount: true, currencyCode: true } },
+              on_DiscountPercentage: { percentage: true },
+              on_DiscountAmount: { amount: { amount: true, currencyCode: true } },
             },
           },
         },
       },
     },
-    '... on DiscountAutomaticBxgy': {
+    on_DiscountAutomaticBxgy: {
       title: true,
       status: true,
       startsAt: true,
       endsAt: true,
       usesPerOrderLimit: true,
     },
-    '... on DiscountAutomaticFreeShipping': {
+    on_DiscountAutomaticFreeShipping: {
       title: true,
       status: true,
       startsAt: true,
       endsAt: true,
     },
-    '... on DiscountAutomaticApp': {
+    on_DiscountAutomaticApp: {
       title: true,
       status: true,
       startsAt: true,

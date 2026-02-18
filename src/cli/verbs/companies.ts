@@ -13,8 +13,8 @@ const companySummarySelection = {
   externalId: true,
   mainContact: { id: true, customer: { displayName: true, email: true } },
   contactCount: true,
-  locationCount: true,
-  orderCount: true,
+  locationsCount: { count: true },
+  ordersCount: { count: true },
   createdAt: true,
 } as const
 
@@ -176,7 +176,7 @@ export const runCompanies = async ({
 
     const result = await runMutation(ctx, {
       companyUpdate: {
-        __args: { id, input: built.input },
+        __args: { companyId: id, input: built.input },
         company: companySummarySelection,
         userErrors: { field: true, message: true },
       },

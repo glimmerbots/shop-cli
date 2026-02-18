@@ -24,12 +24,15 @@ const returnSummarySelection = {
   returnLineItems: {
     __args: { first: 20 },
     nodes: {
+      __typename: true,
       id: true,
       quantity: true,
       returnReason: true,
       returnReasonNote: true,
-      fulfillmentLineItem: {
-        lineItem: { id: true, title: true },
+      on_ReturnLineItem: {
+        fulfillmentLineItem: {
+          lineItem: { id: true, title: true },
+        },
       },
     },
   },
@@ -51,7 +54,7 @@ const returnFullSelection = {
         nodes: {
           id: true,
           deliverable: {
-            '... on ReverseDeliveryShippingDeliverable': {
+            on_ReverseDeliveryShippingDeliverable: {
               label: { id: true },
               tracking: { number: true, url: true },
             },
@@ -106,7 +109,7 @@ const calculatedReturnSelection = {
 const returnReasonDefinitionSelection = {
   id: true,
   name: true,
-  reason: true,
+  handle: true,
 } as const
 
 const returnableFulfillmentSelection = {

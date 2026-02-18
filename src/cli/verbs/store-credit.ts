@@ -11,14 +11,13 @@ const storeCreditAccountSelection = {
   id: true,
   balance: { amount: true, currencyCode: true },
   owner: {
-    '... on Customer': { id: true, displayName: true, email: true },
-    '... on CompanyLocation': { id: true, name: true },
+    on_Customer: { id: true, displayName: true, email: true },
+    on_CompanyLocation: { id: true, name: true },
   },
   transactions: {
     __args: { first: 10 },
     nodes: {
       __typename: true,
-      id: true,
       amount: { amount: true, currencyCode: true },
       createdAt: true,
     },
@@ -85,14 +84,14 @@ export const runStoreCredit = async ({
     const result = await runQuery(ctx, {
       node: {
         __args: { id: ownerId },
-        '... on Customer': {
+        on_Customer: {
           storeCreditAccounts: {
             __args: { first },
             pageInfo: { hasNextPage: true, endCursor: true },
             nodes: selection,
           },
         },
-        '... on CompanyLocation': {
+        on_CompanyLocation: {
           storeCreditAccounts: {
             __args: { first },
             pageInfo: { hasNextPage: true, endCursor: true },

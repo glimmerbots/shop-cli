@@ -1,0 +1,3454 @@
+{
+  "generatedAt": "2026-02-18T08:56:16.668Z",
+  "schemaVersion": "2026-04",
+  "entries": [
+    {
+      "resource": "app-billing",
+      "verb": "cancel-subscription",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "app-billing",
+      "verb": "create-one-time",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Missing required fields (name, returnUrl, price)"
+    },
+    {
+      "resource": "app-billing",
+      "verb": "create-subscription",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Subscription input must include lineItems, name, and returnUrl"
+    },
+    {
+      "resource": "app-billing",
+      "verb": "create-usage-record",
+      "argv": [
+        "--id",
+        "1",
+        "--subscription-line-item-id",
+        "1"
+      ],
+      "skipReason": "Missing required fields (description, price)"
+    },
+    {
+      "resource": "app-billing",
+      "verb": "extend-trial",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "--days must be a positive integer"
+    },
+    {
+      "resource": "app-billing",
+      "verb": "get-installation",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "app-billing",
+      "verb": "list-subscriptions",
+      "argv": []
+    },
+    {
+      "resource": "app-billing",
+      "verb": "update-line-item",
+      "argv": [
+        "--id",
+        "1",
+        "--amount",
+        "1"
+      ]
+    },
+    {
+      "resource": "articles",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "articles",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "articles",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "articles",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "articles",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "blogs",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "blogs",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "blogs",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "blogs",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "blogs",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "bulk-operations",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to cancel without --yes"
+    },
+    {
+      "resource": "bulk-operations",
+      "verb": "current",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "bulk-operations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "bulk-operations",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "bulk-operations",
+      "verb": "run-mutation",
+      "argv": [
+        "--id",
+        "1",
+        "--mutation",
+        "test",
+        "--staged-upload-path",
+        "test"
+      ]
+    },
+    {
+      "resource": "bulk-operations",
+      "verb": "run-query",
+      "argv": [
+        "--id",
+        "1",
+        "--query",
+        "test"
+      ]
+    },
+    {
+      "resource": "carrier-services",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "carrier-services",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "carrier-services",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "carrier-services",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "carrier-services",
+      "verb": "list-available",
+      "argv": []
+    },
+    {
+      "resource": "carrier-services",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "cart-transforms",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--function-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "cart-transforms",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "cart-transforms",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "catalogs",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "catalogs",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "catalogs",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "catalogs",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "catalogs",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "checkout-branding",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "checkout-branding",
+      "verb": "upsert",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "collections",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "duplicate",
+      "argv": [
+        "--id",
+        "1",
+        "--new-title",
+        "Copy"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "collections",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "comments",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "comments",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "comments",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "companies",
+      "verb": "assign-customer",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "companies",
+      "verb": "assign-main-contact",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "companies",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to bulk-delete without --yes"
+    },
+    {
+      "resource": "companies",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "companies",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "companies",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "companies",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "companies",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "companies",
+      "verb": "revoke-main-contact",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "companies",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "assign-role",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "assign-roles",
+      "argv": [
+        "--id",
+        "1",
+        "--role-assignments",
+        "{}"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to bulk-delete without --yes"
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "remove-from-company",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "revoke-role",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "revoke-roles",
+      "argv": [
+        "--id",
+        "1",
+        "--role-assignment-ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "send-welcome-email",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "company-contacts",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "assign-address",
+      "argv": [
+        "--id",
+        "1",
+        "--address-type",
+        "test",
+        "--address",
+        "{}"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "assign-roles",
+      "argv": [
+        "--id",
+        "1",
+        "--role-assignments",
+        "{}"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "assign-staff",
+      "argv": [
+        "--id",
+        "1",
+        "--staff-member-ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "assign-tax-exemptions",
+      "argv": [
+        "--id",
+        "1",
+        "--exemptions",
+        "test"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to bulk-delete without --yes"
+    },
+    {
+      "resource": "company-locations",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "company-locations",
+      "verb": "create-tax-registration",
+      "argv": [
+        "--id",
+        "1",
+        "--tax-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "company-locations",
+      "verb": "remove-staff",
+      "argv": [
+        "--id",
+        "1",
+        "--assignment-ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "revoke-roles",
+      "argv": [
+        "--id",
+        "1",
+        "--role-assignment-ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "revoke-tax-exemptions",
+      "argv": [
+        "--id",
+        "1",
+        "--exemptions",
+        "test"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "revoke-tax-registration",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "company-locations",
+      "verb": "update-tax-settings",
+      "argv": [
+        "--id",
+        "1",
+        "--exemptions",
+        "test"
+      ]
+    },
+    {
+      "resource": "config",
+      "verb": "disable-locale",
+      "argv": [
+        "--id",
+        "1",
+        "--locale",
+        "test"
+      ]
+    },
+    {
+      "resource": "config",
+      "verb": "enable-locale",
+      "argv": [
+        "--id",
+        "1",
+        "--locale",
+        "test"
+      ]
+    },
+    {
+      "resource": "config",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "config",
+      "verb": "get-locales",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "config",
+      "verb": "update-locale",
+      "argv": [
+        "--id",
+        "1",
+        "--locale",
+        "test",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "config",
+      "verb": "update-policy",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "customers",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "delegate-tokens",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "delegate-tokens",
+      "verb": "destroy",
+      "argv": [
+        "--id",
+        "1",
+        "--token",
+        "test"
+      ]
+    },
+    {
+      "resource": "delivery-customizations",
+      "verb": "activate",
+      "argv": [
+        "--id",
+        "1",
+        "--enabled",
+        "test"
+      ],
+      "skipReason": "unhandled error: Unexpected argument 'test'. This command does not take positional arguments"
+    },
+    {
+      "resource": "delivery-customizations",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "delivery-customizations",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "delivery-customizations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "delivery-customizations",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "delivery-customizations",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "delivery-profiles",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "delivery-profiles",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "delivery-profiles",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "delivery-profiles",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "delivery-profiles",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "bulk-add-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to bulk-delete without --yes"
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "bulk-remove-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "calculate",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "complete",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "create-from-order",
+      "argv": [
+        "--id",
+        "1",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "delivery-options",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "duplicate",
+      "argv": [
+        "--id",
+        "1",
+        "--new-title",
+        "Copy"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "preview-invoice",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "saved-searches",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "send-invoice",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "tags",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "draft-orders",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "events",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "events",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "events",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "files",
+      "verb": "upload",
+      "argv": [
+        "--file",
+        "src/test/fixtures/sample.txt"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "accept-cancellation",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "accept-request",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "close",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "hold",
+      "argv": [
+        "--id",
+        "1",
+        "--reason",
+        "correction"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "mark-prepared",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "merge",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "move",
+      "argv": [
+        "--id",
+        "1",
+        "--location-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "open",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "reject-cancellation",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "reject-request",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "release-hold",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "report-progress",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "reroute",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2",
+        "--location-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "reschedule",
+      "argv": [
+        "--id",
+        "1",
+        "--fulfill-at",
+        "test"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "set-deadline",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2",
+        "--deadline",
+        "test"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "split",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "submit-cancellation",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-orders",
+      "verb": "submit-request",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillments",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillments",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "fulfillments",
+      "verb": "create-event",
+      "argv": [
+        "--id",
+        "1",
+        "--status",
+        "ACTIVE"
+      ]
+    },
+    {
+      "resource": "fulfillments",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillments",
+      "verb": "update-tracking",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Missing tracking info (use --tracking-company/--tracking-number/--tracking-url)"
+    },
+    {
+      "resource": "functions",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "functions",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "graphql",
+      "verb": "mutation",
+      "argv": [
+        "mutation { metafieldsSet(metafields: []) { userErrors { message } } }"
+      ]
+    },
+    {
+      "resource": "graphql",
+      "verb": "query",
+      "argv": [
+        "{ shop { name } }"
+      ]
+    },
+    {
+      "resource": "inventory",
+      "verb": "adjust",
+      "argv": [
+        "--location-id",
+        "1",
+        "--inventory-item-id",
+        "1",
+        "--delta",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory",
+      "verb": "set",
+      "argv": [
+        "--location-id",
+        "1",
+        "--inventory-item-id",
+        "1",
+        "--available",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-items",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-items",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "inventory-items",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "add-items",
+      "argv": [
+        "--id",
+        "1",
+        "--items",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "create-in-transit",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "mark-in-transit",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "receive",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "remove-items",
+      "argv": [
+        "--id",
+        "1",
+        "--line-item-ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "set-tracking",
+      "argv": [
+        "--id",
+        "1",
+        "--tracking",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-shipments",
+      "verb": "update-quantities",
+      "argv": [
+        "--id",
+        "1",
+        "--items",
+        "{}"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "create-engagement",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "create-external",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "delete-all-external",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "delete-engagements",
+      "argv": [
+        "--id",
+        "1",
+        "--channel-handle",
+        "test"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "delete-external",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "update-external",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "marketing-activities",
+      "verb": "upsert-external",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "markets",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "markets",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "markets",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "markets",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "markets",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "menus",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing title in --input/--set"
+    },
+    {
+      "resource": "menus",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "menus",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "menus",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "menus",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing title in --input/--set"
+    },
+    {
+      "resource": "metafield-definitions",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "metafield-definitions",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "metafield-definitions",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "metafield-definitions",
+      "verb": "list",
+      "argv": [
+        "--owner-type",
+        "test"
+      ]
+    },
+    {
+      "resource": "metafield-definitions",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "metaobject-definitions",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "metaobject-definitions",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "metaobject-definitions",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "metaobject-definitions",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "metaobject-definitions",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "metaobjects",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "metaobjects",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "metaobjects",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "metaobjects",
+      "verb": "list",
+      "argv": [
+        "--type",
+        "test"
+      ]
+    },
+    {
+      "resource": "metaobjects",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "add-custom-item",
+      "argv": [
+        "--id",
+        "1",
+        "--title",
+        "test",
+        "--price",
+        "{}",
+        "--quantity",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "add-discount",
+      "argv": [
+        "--id",
+        "1",
+        "--line-item-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "add-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "add-variant",
+      "argv": [
+        "--id",
+        "1",
+        "--variant-id",
+        "1",
+        "--quantity",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "begin",
+      "argv": [
+        "--id",
+        "1",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "commit",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "remove-discount",
+      "argv": [
+        "--id",
+        "1",
+        "--discount-application-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "remove-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--shipping-line-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "set-quantity",
+      "argv": [
+        "--id",
+        "1",
+        "--line-item-id",
+        "1",
+        "--quantity",
+        "1"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "update-discount",
+      "argv": [
+        "--id",
+        "1",
+        "--discount-application-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "order-edit",
+      "verb": "update-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--shipping-line-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "orders",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "pages",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "pages",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "pages",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "pages",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "pages",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "product-variants",
+      "verb": "append-media",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "--dry-run cannot resolve product ID from variant; pass --product-id"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "bulk-create",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "bulk-reorder",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "bulk-update",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "product-variants",
+      "verb": "detach-media",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "--dry-run cannot resolve product ID from variant; pass --product-id"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "product-variants",
+      "verb": "get-by-identifier",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "join-selling-plans",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "leave-selling-plans",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "product-variants",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "product-variants",
+      "verb": "update-relationships",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "product-variants",
+      "verb": "upsert",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--product-id",
+        "1"
+      ],
+      "skipReason": "Missing variants input: pass --input as an array or { variants: [...] }"
+    },
+    {
+      "resource": "products",
+      "verb": "add-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "bundle-create",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "bundle-update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "duplicate",
+      "argv": [
+        "--id",
+        "1",
+        "--new-title",
+        "Copy"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "products",
+      "verb": "media add",
+      "argv": [
+        "--id",
+        "1",
+        "--url",
+        "https://example.com"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "media upload",
+      "argv": [
+        "--id",
+        "1",
+        "--file",
+        "src/test/fixtures/sample.txt"
+      ],
+      "skipReason": "Only IMAGE|VIDEO|MODEL_3D can be uploaded as product media"
+    },
+    {
+      "resource": "products",
+      "verb": "metafields upsert",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Metafield input missing key"
+    },
+    {
+      "resource": "products",
+      "verb": "publish",
+      "argv": [
+        "--id",
+        "1",
+        "--publication-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "publish-all",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "remove-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "set-status",
+      "argv": [
+        "--id",
+        "1",
+        "--status",
+        "ACTIVE"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "unpublish",
+      "argv": [
+        "--id",
+        "1",
+        "--publication-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "publications",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "publications",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "publications",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "publications",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "publications",
+      "verb": "resolve",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "publications",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "approve-request",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "calculate",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "close",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "decline-request",
+      "argv": [
+        "--id",
+        "1",
+        "--decline-reason",
+        "correction"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "process",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "reason-definitions",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "refund",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "remove-item",
+      "argv": [
+        "--id",
+        "1",
+        "--return-line-item-id",
+        "1",
+        "--quantity",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "reopen",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "request",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "returns",
+      "verb": "returnable-fulfillments",
+      "argv": [
+        "--id",
+        "1",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "list-collections",
+      "argv": []
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "list-customers",
+      "argv": []
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "list-draft-orders",
+      "argv": []
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "list-orders",
+      "argv": []
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "list-products",
+      "argv": []
+    },
+    {
+      "resource": "saved-searches",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "script-tags",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "script-tags",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "script-tags",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "script-tags",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "script-tags",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "segments",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing name in --input/--set"
+    },
+    {
+      "resource": "segments",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "segments",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "segments",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "segments",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Nothing to update (expected name and/or query)"
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "add-variants",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "remove-variants",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "selling-plan-groups",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "server-pixels",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "server-pixels",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "server-pixels",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "server-pixels",
+      "verb": "update-eventbridge",
+      "argv": [
+        "--id",
+        "1",
+        "--arn",
+        "test"
+      ]
+    },
+    {
+      "resource": "server-pixels",
+      "verb": "update-pubsub",
+      "argv": [
+        "--id",
+        "1",
+        "--pubsub-project",
+        "test"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "store-credit",
+      "verb": "credit",
+      "argv": [
+        "--id",
+        "1",
+        "--amount",
+        "1"
+      ]
+    },
+    {
+      "resource": "store-credit",
+      "verb": "debit",
+      "argv": [
+        "--id",
+        "1",
+        "--amount",
+        "1"
+      ]
+    },
+    {
+      "resource": "store-credit",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "bulk-charge",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "bulk-search",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "charge",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-index",
+        "test"
+      ],
+      "skipReason": "--cycle-index must be a positive integer"
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "create-attempt",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "delete-edits",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-indexes",
+        "test"
+      ],
+      "skipReason": "Invalid cycle index: test"
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "edit-cycle",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-index",
+        "test"
+      ],
+      "skipReason": "--cycle-index must be a positive integer"
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "edit-schedule",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-index",
+        "test"
+      ],
+      "skipReason": "--cycle-index must be a positive integer"
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "get-attempt",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "get-cycle",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-index",
+        "test"
+      ],
+      "skipReason": "--cycle-index must be a positive integer"
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "list-attempts",
+      "argv": [
+        "--contract-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "list-cycles",
+      "argv": [
+        "--contract-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "skip-cycle",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-index",
+        "test"
+      ],
+      "skipReason": "--cycle-index must be a positive integer"
+    },
+    {
+      "resource": "subscription-billing",
+      "verb": "unskip-cycle",
+      "argv": [
+        "--id",
+        "1",
+        "--contract-id",
+        "1",
+        "--cycle-index",
+        "test"
+      ],
+      "skipReason": "--cycle-index must be a positive integer"
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "activate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "atomic-create",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "change-product",
+      "argv": [
+        "--id",
+        "1",
+        "--line-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "expire",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "fail",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "pause",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "set-next-billing",
+      "argv": [
+        "--id",
+        "1",
+        "--date",
+        "test"
+      ]
+    },
+    {
+      "resource": "subscription-contracts",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "add-discount",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "add-free-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "add-line",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "apply-code",
+      "argv": [
+        "--id",
+        "1",
+        "--code",
+        "test"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "commit",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "remove-discount",
+      "argv": [
+        "--id",
+        "1",
+        "--discount-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "remove-line",
+      "argv": [
+        "--id",
+        "1",
+        "--line-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "update-discount",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--discount-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "update-free-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--discount-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "subscription-drafts",
+      "verb": "update-line",
+      "argv": [
+        "--id",
+        "1",
+        "--line-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--source",
+        "test"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "duplicate",
+      "argv": [
+        "--id",
+        "1",
+        "--new-title",
+        "Copy"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "files-copy",
+      "argv": [
+        "--id",
+        "1",
+        "--files",
+        "{}"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "files-delete",
+      "argv": [
+        "--id",
+        "1",
+        "--files",
+        "src/test/fixtures/sample.txt"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "files-upsert",
+      "argv": [
+        "--id",
+        "1",
+        "--files",
+        "{}"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "themes",
+      "verb": "publish",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "themes",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "translations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1",
+        "--resource-id",
+        "1",
+        "--locale",
+        "test"
+      ]
+    },
+    {
+      "resource": "translations",
+      "verb": "list",
+      "argv": [
+        "--resource-type",
+        "test",
+        "--locale",
+        "test"
+      ]
+    },
+    {
+      "resource": "translations",
+      "verb": "list-by-ids",
+      "argv": [
+        "--resource-ids",
+        "1,2",
+        "--locale",
+        "test"
+      ]
+    },
+    {
+      "resource": "translations",
+      "verb": "register",
+      "argv": [
+        "--id",
+        "1",
+        "--resource-id",
+        "1",
+        "--translations",
+        "{}"
+      ]
+    },
+    {
+      "resource": "translations",
+      "verb": "remove",
+      "argv": [
+        "--id",
+        "1",
+        "--resource-id",
+        "1",
+        "--translation-keys",
+        "test",
+        "--locales",
+        "test"
+      ]
+    },
+    {
+      "resource": "url-redirects",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "url-redirects",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "url-redirects",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "url-redirects",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "url-redirects",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "validations",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "validations",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "validations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "validations",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "validations",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "web-pixels",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "web-pixels",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "web-pixels",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "web-pixels",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "webhooks",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--topic",
+        "APP_UNINSTALLED"
+      ]
+    },
+    {
+      "resource": "webhooks",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "webhooks",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "webhooks",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "webhooks",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    }
+  ]
+}

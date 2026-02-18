@@ -12,8 +12,7 @@ const moneyBagSelection = { shopMoney: moneyV2Selection, presentmentMoney: money
 
 const calculatedOrderSummarySelection = {
   id: true,
-  order: { id: true, name: true },
-  originalOrder: { subtotalPriceSet: moneyBagSelection },
+  originalOrder: { id: true, name: true, subtotalPriceSet: moneyBagSelection },
   subtotalPriceSet: moneyBagSelection,
   totalPriceSet: moneyBagSelection,
   totalOutstandingSet: moneyBagSelection,
@@ -32,20 +31,20 @@ const calculatedOrderSummarySelection = {
     __args: { first: 20 },
     nodes: {
       __typename: true,
-      '... on OrderStagedChangeAddVariant': {
+      on_OrderStagedChangeAddVariant: {
         quantity: true,
         variant: { id: true, title: true },
       },
-      '... on OrderStagedChangeAddCustomItem': {
+      on_OrderStagedChangeAddCustomItem: {
         title: true,
         quantity: true,
-        price: moneyV2Selection,
+        originalUnitPrice: moneyV2Selection,
       },
-      '... on OrderStagedChangeIncrementItem': {
+      on_OrderStagedChangeIncrementItem: {
         delta: true,
         lineItem: { id: true, title: true },
       },
-      '... on OrderStagedChangeDecrementItem': {
+      on_OrderStagedChangeDecrementItem: {
         delta: true,
         lineItem: { id: true, title: true },
         restock: true,
@@ -182,7 +181,7 @@ export const runOrderEdit = async ({
       node: {
         __args: { id },
         __typename: true,
-        '... on CalculatedOrder': selection,
+        on_CalculatedOrder: selection,
       },
     })
     if (result === undefined) return

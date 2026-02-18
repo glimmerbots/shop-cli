@@ -42,7 +42,7 @@ const subscriptionContractFullSelection = {
   ...subscriptionContractSummarySelection,
   originOrder: { id: true, name: true },
   deliveryMethod: {
-    '... on SubscriptionDeliveryMethodShipping': {
+    on_SubscriptionDeliveryMethodShipping: {
       address: {
         firstName: true,
         lastName: true,
@@ -54,19 +54,19 @@ const subscriptionContractFullSelection = {
       },
       shippingOption: { title: true, presentmentTitle: true },
     },
-    '... on SubscriptionDeliveryMethodLocalDelivery': {
+    on_SubscriptionDeliveryMethodLocalDelivery: {
       address: { address1: true, city: true },
       localDeliveryOption: { title: true },
     },
-    '... on SubscriptionDeliveryMethodPickup': {
+    on_SubscriptionDeliveryMethodPickup: {
       pickupOption: { title: true, locationId: true },
     },
   },
   customerPaymentMethod: {
     id: true,
     instrument: {
-      '... on CustomerCreditCard': { lastDigits: true, brand: true, expiryYear: true, expiryMonth: true },
-      '... on CustomerPaypalBillingAgreement': { paypalAccountEmail: true },
+      on_CustomerCreditCard: { lastDigits: true, brand: true, expiryYear: true, expiryMonth: true },
+      on_CustomerPaypalBillingAgreement: { paypalAccountEmail: true },
     },
   },
   discounts: {
@@ -75,8 +75,8 @@ const subscriptionContractFullSelection = {
       id: true,
       title: true,
       value: {
-        '... on SubscriptionDiscountFixedAmountValue': { amount: { amount: true, currencyCode: true } },
-        '... on SubscriptionDiscountPercentageValue': { percentage: true },
+        on_SubscriptionDiscountFixedAmountValue: { amount: { amount: true, currencyCode: true } },
+        on_SubscriptionDiscountPercentageValue: { percentage: true },
       },
     },
   },
@@ -352,7 +352,7 @@ export const runSubscriptionContracts = async ({
 
     const result = await runMutation(ctx, {
       subscriptionContractSetNextBillingDate: {
-        __args: { subscriptionContractId, date },
+        __args: { contractId: subscriptionContractId, date },
         contract: subscriptionContractSummarySelection,
         userErrors: { field: true, message: true },
       },

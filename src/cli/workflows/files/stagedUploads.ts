@@ -88,6 +88,26 @@ export const stagedUploadsCreate = async (
     httpMethod: 'POST',
   }))
 
+  if (ctx.dryRun) {
+    await runMutation(ctx, {
+      stagedUploadsCreate: {
+        __args: { input },
+        stagedTargets: {
+          url: true,
+          resourceUrl: true,
+          parameters: { name: true, value: true },
+        },
+        userErrors: { field: true, message: true },
+      },
+    })
+
+    return localFiles.map((f, i) => ({
+      url: `https://example.invalid/staged-uploads/${i}`,
+      resourceUrl: `https://example.invalid/staged-resources/${encodeURIComponent(f.filename)}`,
+      parameters: [],
+    }))
+  }
+
   const result = await runMutation(ctx, {
     stagedUploadsCreate: {
       __args: { input },
@@ -155,6 +175,8 @@ export const stagedUploadLocalFiles = async (
 ): Promise<StagedUploadTarget[] | undefined> => {
   const targets = await stagedUploadsCreate(ctx, localFiles)
   if (targets === undefined) return undefined
+
+  if (ctx.dryRun) return targets
 
   for (let i = 0; i < targets.length; i++) {
     const target = targets[i]!

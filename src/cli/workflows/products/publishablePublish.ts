@@ -85,7 +85,7 @@ export const publishProduct = async ({
   const result = await runMutation(ctx, {
     publishablePublish: {
       __args: { id: productId, input },
-      publishable: { id: true },
+      publishable: { __typename: true, on_Product: { id: true } },
       userErrors: { field: true, message: true },
     },
   })
@@ -115,7 +115,7 @@ export const unpublishProduct = async ({
   const result = await runMutation(ctx, {
     publishableUnpublish: {
       __args: { id: productId, input },
-      publishable: { id: true },
+      publishable: { __typename: true, on_Product: { id: true } },
       userErrors: { field: true, message: true },
     },
   })

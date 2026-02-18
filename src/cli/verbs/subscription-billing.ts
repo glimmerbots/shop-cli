@@ -236,12 +236,24 @@ export const runSubscriptionBilling = async ({
     })
     if (!built.used) throw new CliError('Missing --input or --set/--set-json', 2)
 
+    const hasDateRange = Boolean((built.input as any)?.billingAttemptExpectedDateRange)
+    if (!hasDateRange) {
+      if (ctx.dryRun) {
+        ;(built.input as any).billingAttemptExpectedDateRange = {
+          startDate: '2000-01-01T00:00:00Z',
+          endDate: '2000-01-02T00:00:00Z',
+        }
+      } else {
+        throw new CliError('Missing billingAttemptExpectedDateRange in --input/--set', 2)
+      }
+    }
+
     const mutationField = verb === 'bulk-charge' ? 'subscriptionBillingCycleBulkCharge' : 'subscriptionBillingCycleBulkSearch'
 
     const result = await runMutation(ctx, {
       [mutationField]: {
         __args: built.input,
-        job: { id: true, status: true },
+        job: { id: true, done: true },
         userErrors: { field: true, message: true },
       },
     } as any)

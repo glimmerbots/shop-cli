@@ -265,7 +265,7 @@ export const runFulfillmentOrders = async ({
           notifyCustomer: args['notify-customer'] ? true : undefined,
           ...(fulfillmentOrderLineItems ? { fulfillmentOrderLineItems } : {}),
         },
-        fulfillmentOrder: fulfillmentOrderSummarySelection,
+        submittedFulfillmentOrder: fulfillmentOrderSummarySelection,
         userErrors: { field: true, message: true },
       },
     })
@@ -274,7 +274,9 @@ export const runFulfillmentOrders = async ({
       payload: result.fulfillmentOrderSubmitFulfillmentRequest,
       failOnUserErrors: ctx.failOnUserErrors,
     })
-    if (ctx.quiet) return console.log(result.fulfillmentOrderSubmitFulfillmentRequest?.fulfillmentOrder?.id ?? '')
+    if (ctx.quiet) {
+      return console.log(result.fulfillmentOrderSubmitFulfillmentRequest?.submittedFulfillmentOrder?.id ?? '')
+    }
     printJson(result.fulfillmentOrderSubmitFulfillmentRequest, ctx.format !== 'raw')
     return
   }

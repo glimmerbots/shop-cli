@@ -17,7 +17,6 @@ const marketingActivitySummarySelection = {
   budget: { budgetType: true, total: { amount: true, currencyCode: true } },
   adSpend: { amount: true, currencyCode: true },
   createdAt: true,
-  scheduledToEndAt: true,
 } as const
 
 const marketingActivityFullSelection = {
@@ -308,13 +307,15 @@ export const runMarketingActivities = async ({
           ...(channelHandle ? { channelHandle } : {}),
           ...(remoteId ? { remoteId } : {}),
         },
-        marketingEngagement: { id: true },
+        marketingEngagement: { occurredOn: true, marketingActivity: { id: true } },
         userErrors: { field: true, message: true },
       },
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.marketingEngagementCreate, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.marketingEngagementCreate?.marketingEngagement?.id ?? '')
+    if (ctx.quiet) {
+      return console.log(result.marketingEngagementCreate?.marketingEngagement?.marketingActivity?.id ?? '')
+    }
     printJson(result.marketingEngagementCreate, ctx.format !== 'raw')
     return
   }

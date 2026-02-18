@@ -16,6 +16,8 @@
     "check:help": "tsx scripts/check-help-coverage.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run typecheck && vitest run",
+    "test:graphql:manifest": "tsx scripts/generate-graphql-test-manifest.ts",
+    "test:graphql": "vitest run",
     "test:watch": "vitest"
   },
   "author": "",

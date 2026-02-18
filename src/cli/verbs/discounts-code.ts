@@ -11,7 +11,7 @@ const codeDiscountNodeSummarySelection = {
   id: true,
   codeDiscount: {
     __typename: true,
-    '... on DiscountCodeBasic': {
+    on_DiscountCodeBasic: {
       title: true,
       status: true,
       startsAt: true,
@@ -20,7 +20,7 @@ const codeDiscountNodeSummarySelection = {
       asyncUsageCount: true,
       codes: { __args: { first: 5 }, nodes: { id: true, code: true } },
     },
-    '... on DiscountCodeBxgy': {
+    on_DiscountCodeBxgy: {
       title: true,
       status: true,
       startsAt: true,
@@ -29,7 +29,7 @@ const codeDiscountNodeSummarySelection = {
       asyncUsageCount: true,
       codes: { __args: { first: 5 }, nodes: { id: true, code: true } },
     },
-    '... on DiscountCodeFreeShipping': {
+    on_DiscountCodeFreeShipping: {
       title: true,
       status: true,
       startsAt: true,
@@ -38,7 +38,7 @@ const codeDiscountNodeSummarySelection = {
       asyncUsageCount: true,
       codes: { __args: { first: 5 }, nodes: { id: true, code: true } },
     },
-    '... on DiscountCodeApp': {
+    on_DiscountCodeApp: {
       title: true,
       status: true,
       startsAt: true,

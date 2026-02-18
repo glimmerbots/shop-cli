@@ -388,7 +388,7 @@ export const runProductVariants = async ({
     const result = await runMutation(ctx, {
       productVariantRelationshipBulkUpdate: {
         __args: { input: built.input },
-        productVariants: { id: true },
+        parentProductVariants: { id: true },
         userErrors: { field: true, message: true },
       },
     })

@@ -6,16 +6,22 @@ import { maybeFailOnUserErrors } from '../userErrors'
 
 import { parseFirst, parseJsonArg, parseStringList } from './_shared'
 
-const translatableResourceSelection = {
-  resourceId: true,
-  resourceType: true,
-  translations: { locale: true, key: true, value: true, marketId: true },
-  translatableContent: { key: true, value: true, digest: true, locale: true },
-} as const
+const buildTranslatableResourceSelection = (locale: string) =>
+  ({
+    resourceId: true,
+    translations: {
+      __args: { locale },
+      locale: true,
+      key: true,
+      value: true,
+      market: { id: true },
+    },
+    translatableContent: { key: true, value: true, digest: true, locale: true },
+  }) as const
 
 const getTranslatableSelection = (view: CommandContext['view']) => {
   if (view === 'raw') return {} as const
-  return translatableResourceSelection
+  return buildTranslatableResourceSelection('en')
 }
 
 export const runTranslations = async ({
@@ -46,13 +52,15 @@ export const runTranslations = async ({
   }
 
   if (verb === 'get') {
-    const args = parseStandardArgs({ argv, extraOptions: { 'resource-id': { type: 'string' } } })
+    const args = parseStandardArgs({ argv, extraOptions: { 'resource-id': { type: 'string' }, locale: { type: 'string' } } })
     const resourceId = args['resource-id'] as string | undefined
     if (!resourceId) throw new CliError('Missing --resource-id', 2)
+    const locale = args.locale as string | undefined
+    if (!locale) throw new CliError('Missing --locale', 2)
 
     const selection = resolveSelection({
       view: ctx.view,
-      baseSelection: getTranslatableSelection(ctx.view) as any,
+      baseSelection: buildTranslatableResourceSelection(locale) as any,
       select: args.select,
       selection: (args as any).selection,
       ensureId: false,
@@ -65,9 +73,11 @@ export const runTranslations = async ({
   }
 
   if (verb === 'list') {
-    const args = parseStandardArgs({ argv, extraOptions: { 'resource-type': { type: 'string' } } })
+    const args = parseStandardArgs({ argv, extraOptions: { 'resource-type': { type: 'string' }, locale: { type: 'string' } } })
     const resourceType = args['resource-type'] as string | undefined
     if (!resourceType) throw new CliError('Missing --resource-type', 2)
+    const locale = args.locale as string | undefined
+    if (!locale) throw new CliError('Missing --locale', 2)
 
     const first = parseFirst(args.first)
     const after = args.after as any
@@ -75,7 +85,7 @@ export const runTranslations = async ({
 
     const selection = resolveSelection({
       view: ctx.view,
-      baseSelection: getTranslatableSelection(ctx.view) as any,
+      baseSelection: buildTranslatableResourceSelection(locale) as any,
       select: args.select,
       selection: (args as any).selection,
       ensureId: false,
@@ -94,8 +104,10 @@ export const runTranslations = async ({
   }
 
   if (verb === 'list-by-ids') {
-    const args = parseStandardArgs({ argv, extraOptions: { 'resource-ids': { type: 'string', multiple: true } } })
+    const args = parseStandardArgs({ argv, extraOptions: { 'resource-ids': { type: 'string', multiple: true }, locale: { type: 'string' } } })
     const resourceIds = parseStringList(args['resource-ids'], '--resource-ids')
+    const locale = args.locale as string | undefined
+    if (!locale) throw new CliError('Missing --locale', 2)
 
     const first = parseFirst(args.first)
     const after = args.after as any
@@ -103,7 +115,7 @@ export const runTranslations = async ({
 
     const selection = resolveSelection({
       view: ctx.view,
-      baseSelection: getTranslatableSelection(ctx.view) as any,
+      baseSelection: buildTranslatableResourceSelection(locale) as any,
       select: args.select,
       selection: (args as any).selection,
       ensureId: false,
@@ -130,7 +142,7 @@ export const runTranslations = async ({
     const result = await runMutation(ctx, {
       translationsRegister: {
         __args: { resourceId, translations },
-        translations: { key: true, locale: true, value: true, marketId: true },
+        translations: { key: true, locale: true, value: true, market: { id: true } },
         userErrors: { field: true, message: true },
       },
     })

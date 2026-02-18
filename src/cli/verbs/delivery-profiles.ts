@@ -34,8 +34,8 @@ const deliveryProfileFullSelection = {
             name: true,
             active: true,
             rateProvider: {
-              '... on DeliveryRateDefinition': { price: { amount: true } },
-              '... on DeliveryParticipant': { participantServices: { name: true } },
+              on_DeliveryRateDefinition: { price: { amount: true } },
+              on_DeliveryParticipant: { participantServices: { name: true } },
             },
           },
         },

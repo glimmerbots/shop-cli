@@ -214,7 +214,9 @@ export const runDraftOrders = async ({
     const result = await runMutation(ctx, {
       draftOrderCalculate: {
         __args: { input: built.input },
-        calculatedDraftOrder: { id: true, lineItemsSubtotalPrice: { shopMoney: { amount: true, currencyCode: true } } },
+        calculatedDraftOrder: {
+          lineItemsSubtotalPrice: { shopMoney: { amount: true, currencyCode: true } },
+        },
         userErrors: { field: true, message: true },
       },
     })
