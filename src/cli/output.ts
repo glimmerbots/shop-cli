@@ -1,6 +1,6 @@
 import { CliError } from './errors'
 
-export type OutputFormat = 'json' | 'table' | 'raw'
+export type OutputFormat = 'json' | 'table' | 'raw' | 'markdown'
 
 export const writeJson = (
   data: unknown,
@@ -32,7 +32,6 @@ const toTableCell = (value: unknown): string => {
 }
 
 const escapeMarkdownCell = (value: string): string => {
-  // Escape pipe characters and newlines for markdown table cells
   return value.replace(/\|/g, '\\|').replace(/\n/g, ' ')
 }
 
@@ -93,6 +92,15 @@ export const printNode = ({
     return
   }
 
+  if (format === 'markdown') {
+    if (typeof node !== 'object' || node === null) {
+      printMarkdownTable([{ value: node }])
+      return
+    }
+    printMarkdownTable([node as Record<string, unknown>])
+    return
+  }
+
   if (format === 'raw') {
     printJson(node, false)
     return
@@ -131,6 +139,19 @@ export const printConnection = ({
     })
     printMarkdownTable(rows)
     if (connection.pageInfo) printJson({ pageInfo: connection.pageInfo })
+    return
+  }
+
+  if (format === 'markdown') {
+    const rows = nodes.map((n) => {
+      if (typeof n !== 'object' || n === null) return { value: n }
+      return n as Record<string, unknown>
+    })
+    printMarkdownTable(rows)
+    if (connection.pageInfo) {
+      process.stdout.write('\n')
+      printJson({ pageInfo: connection.pageInfo })
+    }
     return
   }
 
