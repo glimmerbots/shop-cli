@@ -1,5 +1,6 @@
 import { CliError } from '../errors'
 import { getFields, getType } from '../introspection'
+import { isDeprecatedField } from '../introspection/deprecations'
 
 import type { GenqlSelection } from './graphqlSelection'
 
@@ -68,6 +69,7 @@ export const buildAllSelection = (
 
   for (const field of fields) {
     if (field.hasRequiredArgs) continue
+    if (isDeprecatedField(typeName, field.name)) continue
 
     if (field.isConnection) {
       if (!includeConnections.includes(field.name)) continue
