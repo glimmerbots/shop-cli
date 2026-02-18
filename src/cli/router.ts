@@ -49,6 +49,8 @@ import { runProductVariants } from './verbs/product-variants'
 import { runProducts } from './verbs/products'
 import { runPublications } from './verbs/publications'
 import { runMarkets } from './verbs/markets'
+import { runMarketLocalizations } from './verbs/market-localizations'
+import { runMarketWebPresences } from './verbs/market-web-presences'
 import { runMenus } from './verbs/menus'
 import { runMetafieldDefinitions } from './verbs/metafield-definitions'
 import { runMetaobjectDefinitions } from './verbs/metaobject-definitions'
@@ -59,6 +61,7 @@ import { runSavedSearches } from './verbs/saved-searches'
 import { runSegments } from './verbs/segments'
 import { runScriptTags } from './verbs/script-tags'
 import { runSellingPlanGroups } from './verbs/selling-plan-groups'
+import { runSellingPlanGroupProducts } from './verbs/selling-plan-group-products'
 import { runSubscriptionBilling } from './verbs/subscription-billing'
 import { runSubscriptionContracts } from './verbs/subscription-contracts'
 import { runSubscriptionDrafts } from './verbs/subscription-drafts'
@@ -82,6 +85,9 @@ import { runGraphQL } from './verbs/graphql'
 import { runLocales } from './verbs/locales'
 import { runDiscountsAutomatic } from './verbs/discounts-automatic'
 import { runDiscountsCode } from './verbs/discounts-code'
+import { runDiscountNodes } from './verbs/discount-nodes'
+import { runDiscountRedeemCodes } from './verbs/discount-redeem-codes'
+import { runDiscountSavedSearches } from './verbs/discount-saved-searches'
 import { runAbandonedCheckouts } from './verbs/abandoned-checkouts'
 import { runPaymentCustomizations } from './verbs/payment-customizations'
 import { runTaxonomy } from './verbs/taxonomy'
@@ -99,11 +105,15 @@ import { runPointOfSale } from './verbs/point-of-sale'
 import { runCustomerAccountPages } from './verbs/customer-account-pages'
 import { runDeliveryPromises } from './verbs/delivery-promises'
 import { runDisputes } from './verbs/disputes'
+import { runFinance } from './verbs/finance'
 import { runFlow } from './verbs/flow'
+import { runMarketingEvents } from './verbs/marketing-events'
 import { runMobilePlatformApplications } from './verbs/mobile-platform-applications'
 import { runShippingPackages } from './verbs/shipping-packages'
 import { runShop } from './verbs/shop-utils'
 import { runStagedUploads } from './verbs/staged-uploads'
+import { runSubscriptionBillingCycles } from './verbs/subscription-billing-cycles'
+import { runTenderTransactions } from './verbs/tender-transactions'
 import { runTags } from './verbs/tags'
 import { runTax } from './verbs/tax'
 import { runTypes } from './verbs/types'
@@ -213,6 +223,9 @@ export const runCommand = async ({
   if (resource === 'gift-cards') return runGiftCards({ ctx, verb, argv })
   if (resource === 'discounts-automatic') return runDiscountsAutomatic({ ctx, verb, argv })
   if (resource === 'discounts-code') return runDiscountsCode({ ctx, verb, argv })
+  if (resource === 'discount-nodes') return runDiscountNodes({ ctx, verb, argv })
+  if (resource === 'discount-redeem-codes') return runDiscountRedeemCodes({ ctx, verb, argv })
+  if (resource === 'discount-saved-searches') return runDiscountSavedSearches({ ctx, verb, argv })
   if (resource === 'payment-customizations') return runPaymentCustomizations({ ctx, verb, argv })
   if (resource === 'price-lists') return runPriceLists({ ctx, verb, argv })
   if (resource === 'refunds') return runRefunds({ ctx, verb, argv })
@@ -232,6 +245,8 @@ export const runCommand = async ({
   if (resource === 'menus') return runMenus({ ctx, verb, argv })
   if (resource === 'catalogs') return runCatalogs({ ctx, verb, argv })
   if (resource === 'markets') return runMarkets({ ctx, verb, argv })
+  if (resource === 'market-localizations') return runMarketLocalizations({ ctx, verb, argv })
+  if (resource === 'market-web-presences') return runMarketWebPresences({ ctx, verb, argv })
   if (resource === 'draft-orders') return runDraftOrders({ ctx, verb, argv })
   if (resource === 'url-redirects') return runUrlRedirects({ ctx, verb, argv })
   if (resource === 'segments') return runSegments({ ctx, verb, argv })
@@ -241,11 +256,13 @@ export const runCommand = async ({
   if (resource === 'webhooks') return runWebhooks({ ctx, verb, argv })
   if (resource === 'subscription-contracts') return runSubscriptionContracts({ ctx, verb, argv })
   if (resource === 'subscription-billing') return runSubscriptionBilling({ ctx, verb, argv })
+  if (resource === 'subscription-billing-cycles') return runSubscriptionBillingCycles({ ctx, verb, argv })
   if (resource === 'subscription-drafts') return runSubscriptionDrafts({ ctx, verb, argv })
   if (resource === 'metafield-definitions') return runMetafieldDefinitions({ ctx, verb, argv })
   if (resource === 'metaobjects') return runMetaobjects({ ctx, verb, argv })
   if (resource === 'metaobject-definitions') return runMetaobjectDefinitions({ ctx, verb, argv })
   if (resource === 'selling-plan-groups') return runSellingPlanGroups({ ctx, verb, argv })
+  if (resource === 'selling-plan-group-products') return runSellingPlanGroupProducts({ ctx, verb, argv })
   if (resource === 'companies') return runCompanies({ ctx, verb, argv })
   if (resource === 'company-contacts') return runCompanyContacts({ ctx, verb, argv })
   if (resource === 'company-locations') return runCompanyLocations({ ctx, verb, argv })
@@ -267,6 +284,9 @@ export const runCommand = async ({
   if (resource === 'tags') return runTags({ ctx, verb, argv })
   if (resource === 'flow') return runFlow({ ctx, verb, argv })
   if (resource === 'disputes') return runDisputes({ ctx, verb, argv })
+  if (resource === 'finance') return runFinance({ ctx, verb, argv })
+  if (resource === 'marketing-events') return runMarketingEvents({ ctx, verb, argv })
+  if (resource === 'tender-transactions') return runTenderTransactions({ ctx, verb, argv })
   if (resource === 'web-pixels') return runWebPixels({ ctx, verb, argv })
   if (resource === 'server-pixels') return runServerPixels({ ctx, verb, argv })
   if (resource === 'marketing-activities') return runMarketingActivities({ ctx, verb, argv })

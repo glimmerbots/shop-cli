@@ -184,17 +184,24 @@ export const runSellingPlanGroups = async ({
         ? 'sellingPlanGroupAddProductVariants'
         : 'sellingPlanGroupRemoveProductVariants'
 
+    const selection =
+      verb === 'add-variants'
+        ? { sellingPlanGroup: sellingPlanGroupSummarySelection, userErrors: { field: true, message: true } }
+        : { removedProductVariantIds: true, userErrors: { field: true, message: true } }
+
     const result = await runMutation(ctx, {
       [mutationField]: {
         __args: { id, productVariantIds: variantIds },
-        sellingPlanGroup: sellingPlanGroupSummarySelection,
-        userErrors: { field: true, message: true },
+        ...(selection as any),
       },
     } as any)
     if (result === undefined) return
     const payload = (result as any)[mutationField]
     maybeFailOnUserErrors({ payload, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(payload?.sellingPlanGroup?.id ?? '')
+    if (ctx.quiet) {
+      if (verb === 'add-variants') return console.log(payload?.sellingPlanGroup?.id ?? '')
+      return
+    }
     printJson(payload, ctx.format !== 'raw')
     return
   }

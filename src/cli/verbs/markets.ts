@@ -5,7 +5,7 @@ import { parseStandardArgs, runMutation, runQuery, type CommandContext } from '.
 import { resolveSelection } from '../selection/select'
 import { maybeFailOnUserErrors } from '../userErrors'
 
-import { buildListNextPageArgs, parseFirst, requireId } from './_shared'
+import { buildListNextPageArgs, parseCsv, parseFirst, parseIds, requireId } from './_shared'
 
 const marketSummarySelection = {
   id: true,
@@ -19,6 +19,11 @@ const getMarketSelection = (view: CommandContext['view']) => {
   if (view === 'ids') return { id: true } as const
   if (view === 'raw') return {} as const
   return marketSummarySelection
+}
+
+const requireCountryCode = (value: unknown) => {
+  if (typeof value !== 'string' || !value.trim()) throw new CliError('Missing --country-code', 2)
+  return value.trim().toUpperCase()
 }
 
 export const runMarkets = async ({
@@ -38,6 +43,8 @@ export const runMarkets = async ({
         '',
         'Verbs:',
         '  create|get|list|update|delete',
+        '  by-geography|primary|resolved-values',
+        '  currency-settings-update|regions-create|regions-delete|region-delete',
         '',
         'Common output flags:',
         '  --view summary|ids|raw',
@@ -106,6 +113,68 @@ export const runMarkets = async ({
     return
   }
 
+  if (verb === 'by-geography') {
+    const args = parseStandardArgs({ argv, extraOptions: { 'country-code': { type: 'string' } } })
+    const countryCode = requireCountryCode((args as any)['country-code'])
+
+    const selection = resolveSelection({
+      resource: 'markets',
+      view: ctx.view,
+      baseSelection: getMarketSelection(ctx.view) as any,
+      select: args.select,
+      selection: (args as any).selection,
+      include: args.include,
+      ensureId: ctx.quiet,
+    })
+
+    const result = await runQuery(ctx, {
+      marketByGeography: { __args: { countryCode: countryCode as any }, ...selection },
+    })
+    if (result === undefined) return
+    printNode({ node: result.marketByGeography, format: ctx.format, quiet: ctx.quiet })
+    return
+  }
+
+  if (verb === 'primary') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const selection = resolveSelection({
+      resource: 'markets',
+      view: ctx.view,
+      baseSelection: getMarketSelection(ctx.view) as any,
+      select: args.select,
+      selection: (args as any).selection,
+      include: args.include,
+      ensureId: ctx.quiet,
+    })
+
+    const result = await runQuery(ctx, { primaryMarket: selection })
+    if (result === undefined) return
+    printNode({ node: result.primaryMarket, format: ctx.format, quiet: ctx.quiet })
+    return
+  }
+
+  if (verb === 'resolved-values') {
+    const args = parseStandardArgs({ argv, extraOptions: { 'country-code': { type: 'string' } } })
+    const countryCode = requireCountryCode((args as any)['country-code'])
+
+    const result = await runQuery(ctx, {
+      marketsResolvedValues: {
+        __args: { buyerSignal: { countryCode: countryCode as any } },
+        currencyCode: true,
+        priceInclusivity: {
+          dutiesIncluded: true,
+          taxesIncluded: true,
+        },
+        catalogs: { __args: { first: 5 }, nodes: { id: true, title: true } },
+        webPresences: { __args: { first: 5 }, nodes: { id: true, domain: { host: true }, subfolderSuffix: true } },
+      },
+    })
+    if (result === undefined) return
+    if (ctx.quiet) return
+    printJson(result.marketsResolvedValues, ctx.format !== 'raw')
+    return
+  }
+
   if (verb === 'create') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
     const built = buildInput({
@@ -126,6 +195,92 @@ export const runMarkets = async ({
     maybeFailOnUserErrors({ payload: result.marketCreate, failOnUserErrors: ctx.failOnUserErrors })
     if (ctx.quiet) return console.log(result.marketCreate?.market?.id ?? '')
     printJson(result.marketCreate, ctx.format !== 'raw')
+    return
+  }
+
+  if (verb === 'currency-settings-update') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const marketId = requireId(args.id, 'Market')
+    const built = buildInput({
+      inputArg: args.input as any,
+      setArgs: args.set as any,
+      setJsonArgs: args['set-json'] as any,
+    })
+    if (!built.used) throw new CliError('Missing --input or --set/--set-json', 2)
+
+    const result = await runMutation(ctx, {
+      marketCurrencySettingsUpdate: {
+        __args: { marketId, input: built.input },
+        market: marketSummarySelection,
+        userErrors: { field: true, message: true, code: true },
+      },
+    })
+    if (result === undefined) return
+    maybeFailOnUserErrors({
+      payload: result.marketCurrencySettingsUpdate,
+      failOnUserErrors: ctx.failOnUserErrors,
+    })
+    if (ctx.quiet) return console.log(result.marketCurrencySettingsUpdate?.market?.id ?? '')
+    printJson(result.marketCurrencySettingsUpdate, ctx.format !== 'raw')
+    return
+  }
+
+  if (verb === 'regions-create') {
+    const args = parseStandardArgs({ argv, extraOptions: { 'country-codes': { type: 'string' } } })
+    const marketId = requireId(args.id, 'Market')
+    const countryCodes = parseCsv((args as any)['country-codes'], '--country-codes')
+    const regions = countryCodes.map((countryCode) => ({ countryCode: countryCode.toUpperCase() as any }))
+
+    const result = await runMutation(ctx, {
+      marketRegionsCreate: {
+        __args: { marketId, regions },
+        market: marketSummarySelection,
+        userErrors: { field: true, message: true, code: true },
+      },
+    })
+    if (result === undefined) return
+    maybeFailOnUserErrors({ payload: result.marketRegionsCreate, failOnUserErrors: ctx.failOnUserErrors })
+    if (ctx.quiet) return console.log(result.marketRegionsCreate?.market?.id ?? '')
+    printJson(result.marketRegionsCreate, ctx.format !== 'raw')
+    return
+  }
+
+  if (verb === 'regions-delete') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
+    const ids = parseIds(args.ids as any, 'MarketRegionCountry')
+
+    const result = await runMutation(ctx, {
+      marketRegionsDelete: {
+        __args: { ids },
+        deletedIds: true,
+        userErrors: { field: true, message: true, code: true },
+      },
+    })
+    if (result === undefined) return
+    maybeFailOnUserErrors({ payload: result.marketRegionsDelete, failOnUserErrors: ctx.failOnUserErrors })
+    if (ctx.quiet) return
+    printJson(result.marketRegionsDelete, ctx.format !== 'raw')
+    return
+  }
+
+  if (verb === 'region-delete') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const id = requireId(args.id, 'MarketRegionCountry')
+    if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
+
+    const result = await runMutation(ctx, {
+      marketRegionDelete: {
+        __args: { id },
+        deletedId: true,
+        market: marketSummarySelection,
+        userErrors: { field: true, message: true, code: true },
+      },
+    })
+    if (result === undefined) return
+    maybeFailOnUserErrors({ payload: result.marketRegionDelete, failOnUserErrors: ctx.failOnUserErrors })
+    if (ctx.quiet) return console.log(result.marketRegionDelete?.deletedId ?? '')
+    printJson(result.marketRegionDelete, ctx.format !== 'raw')
     return
   }
 

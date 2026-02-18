@@ -52,6 +52,15 @@ const defaultValueForFlag = (flag: string) => {
   if (flag === '--reverse') return undefined
   if (flag === '--now') return undefined
   if (flag === '--notify-customer') return undefined
+  if (flag === '--all') return undefined
+  if (flag === '--enabled') return 'true'
+  if (flag === '--cycle-index') return '1'
+  if (flag === '--cycle-indexes') return '1,2'
+  if (flag === '--credit-amount') return '1.00,USD'
+  if (flag === '--debit-amount') return '1.00,USD'
+  if (flag === '--country-code') return 'US'
+  if (flag === '--country-codes') return 'US'
+  if (flag === '--resource-type') return 'METAOBJECT'
   if (flag.endsWith('-ids') || flag === '--ids' || flag === '--variant-ids') return '1,2'
   if (flag.endsWith('-id') || flag === '--id') return '1'
   if (flag.includes('url')) return 'https://example.com'
@@ -148,18 +157,96 @@ const applyErrorFixes = ({
 }): { updated: boolean; skipReason?: string } => {
   const msg = err.message
 
-  if (msg.includes('Refusing to delete without --yes')) {
+  if (msg.includes('Refusing') && msg.includes('without --yes')) {
     addBoolFlag(argv, '--yes')
     return { updated: true }
   }
 
-  if (msg.includes('Refusing to bulk-delete without --yes')) {
-    addBoolFlag(argv, '--yes')
+  if (
+    msg.includes('Missing --ids') &&
+    ((entry.resource === 'price-lists' && (entry.verb === 'delete-prices' || entry.verb === 'delete-quantity-rules')) ||
+      (entry.resource === 'selling-plan-groups' && (entry.verb === 'add-variants' || entry.verb === 'remove-variants')))
+  ) {
+    addValueFlag(argv, '--variant-ids', '1,2')
     return { updated: true }
   }
 
   if (msg.includes('Missing --input or --set/--set-json')) {
     setFlagValue(argv, '--input', '{}')
+    return { updated: true }
+  }
+
+  if (msg.includes('--ready must be true|false')) {
+    setFlagValue(argv, '--ready', 'true')
+    return { updated: true }
+  }
+
+  if (msg.includes('Missing paymentTermsTemplateId') && msg.includes('--template-id')) {
+    addValueFlag(argv, '--template-id', '1')
+    return { updated: true }
+  }
+
+  if (msg.includes('Nothing to update (expected paymentTermsTemplateId and/or paymentSchedules)')) {
+    addValueFlag(argv, '--template-id', '1')
+    return { updated: true }
+  }
+
+  if (msg.includes('Expected prices array via --input or --set prices[0].*')) {
+    setFlagValue(
+      argv,
+      '--input',
+      '{"prices":[{"variantId":"gid://shopify/ProductVariant/1","price":{"amount":"1.00","currencyCode":"USD"}}]}',
+    )
+    return { updated: true }
+  }
+
+  if (msg.includes('Expected pricesToAdd and/or variantIdsToDelete')) {
+    setFlagValue(
+      argv,
+      '--input',
+      '{"pricesToAdd":[{"variantId":"gid://shopify/ProductVariant/1","price":{"amount":"1.00","currencyCode":"USD"}}]}',
+    )
+    return { updated: true }
+  }
+
+  if (msg.includes('Expected pricesToAdd and/or pricesToDeleteByProductIds')) {
+    setFlagValue(
+      argv,
+      '--input',
+      '{"pricesToAdd":[{"productId":"gid://shopify/Product/1","price":{"amount":"1.00","currencyCode":"USD"}}]}',
+    )
+    return { updated: true }
+  }
+
+  if (msg.includes('Expected quantityRules array via --input or --set quantityRules[0].*')) {
+    setFlagValue(
+      argv,
+      '--input',
+      '{"quantityRules":[{"variantId":"gid://shopify/ProductVariant/1","minimum":1,"maximum":10,"increment":1}]}',
+    )
+    return { updated: true }
+  }
+
+  if (msg.includes('Missing concatenatedBillingCycleContracts array')) {
+    setFlagValue(
+      argv,
+      '--input',
+      '{"concatenatedBillingCycleContracts":[{"contractId":"gid://shopify/SubscriptionContract/1","selector":{"index":1}}]}',
+    )
+    return { updated: true }
+  }
+
+  if (msg.includes('Missing marketLocalizations array')) {
+    setFlagValue(
+      argv,
+      '--input',
+      '[{"key":"title","value":"test","marketId":"gid://shopify/Market/1","marketLocalizableContentDigest":"digest"}]',
+    )
+    return { updated: true }
+  }
+
+  if (msg.includes('Missing defaultLocale (use --set defaultLocale=en)')) {
+    setFlagValue(argv, '--input', '{"defaultLocale":"en"}')
     return { updated: true }
   }
 
