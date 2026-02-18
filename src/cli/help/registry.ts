@@ -2362,6 +2362,7 @@ export const commandRegistry: ResourceSpec[] = [
           flag('--var-json <name>=<json>', 'Set a variable with JSON value (repeatable)'),
           flag('--variables <json>', 'Variables as JSON object (or @file.json)'),
           flag('--operation <name>', 'Operation name (for multi-operation documents)'),
+          flag('--no-validate', 'Skip local schema validation'),
           flag('--include-extensions', 'Include extensions in output'),
         ],
         examples: [
@@ -2372,6 +2373,7 @@ export const commandRegistry: ResourceSpec[] = [
         notes: [
           'The query can be passed as an inline string or loaded from a file with @filename.',
           'Variables can be set individually with --var or as a JSON object with --variables.',
+          'Queries are validated against the bundled schema before execution. Use --no-validate to skip.',
         ],
       },
       {
@@ -2384,6 +2386,7 @@ export const commandRegistry: ResourceSpec[] = [
           flag('--var-json <name>=<json>', 'Set a variable with JSON value (repeatable)'),
           flag('--variables <json>', 'Variables as JSON object (or @file.json)'),
           flag('--operation <name>', 'Operation name (for multi-operation documents)'),
+          flag('--no-validate', 'Skip local schema validation'),
           flag('--include-extensions', 'Include extensions in output'),
         ],
         examples: [
@@ -2393,6 +2396,7 @@ export const commandRegistry: ResourceSpec[] = [
         notes: [
           'The mutation can be passed as an inline string or loaded from a file with @filename.',
           'Use --var for simple string values, --var-json for complex JSON values.',
+          'Mutations are validated against the bundled schema before execution. Use --no-validate to skip.',
         ],
       },
     ],
