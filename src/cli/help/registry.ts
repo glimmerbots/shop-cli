@@ -1,4 +1,5 @@
 import type { FlagSpec, ResourceSpec, VerbSpec } from './spec'
+import { resourceToType } from '../introspection/resources'
 
 const flag = (label: string, description: string): FlagSpec => ({ label, description })
 
@@ -333,7 +334,14 @@ const inputVerb = ({
   output,
 })
 
-export const commandRegistry: ResourceSpec[] = [
+const fieldsVerb: VerbSpec = {
+  verb: 'fields',
+  description: 'List available fields for --select',
+}
+
+const resourcesWithFields = new Set(Object.keys(resourceToType))
+
+const baseCommandRegistry: ResourceSpec[] = [
   {
     resource: 'products',
     description: 'Manage products.',
@@ -2885,14 +2893,14 @@ export const commandRegistry: ResourceSpec[] = [
       listVerb({ operation: 'locations', description: 'List locations.' }),
       countVerb({ operation: 'locationsCount', description: 'Count locations.', flags: [flagQuery] }),
       inputVerb({
-        verb: 'add',
-        description: 'Add a location.',
+        verb: 'create',
+        description: 'Create a location.',
         operation: 'locationAdd',
         inputArg: 'input',
       }),
       inputVerb({
-        verb: 'edit',
-        description: 'Edit a location.',
+        verb: 'update',
+        description: 'Update a location.',
         operation: 'locationEdit',
         requiredFlags: [flagId],
         inputArg: 'input',
@@ -3548,6 +3556,12 @@ export const commandRegistry: ResourceSpec[] = [
     ],
   },
 ]
+
+export const commandRegistry: ResourceSpec[] = baseCommandRegistry.map((spec) => {
+  if (!resourcesWithFields.has(spec.resource)) return spec
+  if (spec.verbs.some((v) => v.verb === fieldsVerb.verb)) return spec
+  return { ...spec, verbs: [...spec.verbs, fieldsVerb] }
+})
 
 export const commonOutputFlags = [flagView, flagSelect, flagSelection]
 export const paginationFlags = [flagFirst, flagAfter, flagQuery, flagSort, flagReverse]

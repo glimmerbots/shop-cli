@@ -50,6 +50,8 @@ for (const resource of commandRegistry) {
   registryMap.set(resource.resource, new Set(resource.verbs.map((verb) => verb.verb)))
 }
 
+const routerHandledVerbs = new Set(['fields'])
+
 const missingResources: string[] = []
 const extraResources: string[] = []
 const missingVerbs: string[] = []
@@ -78,6 +80,7 @@ for (const [resource, file] of resourceToFile.entries()) {
   }
 
   for (const verb of registryVerbs) {
+    if (routerHandledVerbs.has(verb)) continue
     if (!verbs.has(verb)) {
       extraVerbs.push(`${resource}: ${verb}`)
     }

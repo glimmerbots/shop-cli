@@ -174,6 +174,7 @@ const main = async () => {
   const parsed = parseGlobalFlags(rest)
 
   const dryRun = parsed.dryRun ?? false
+  const isOfflineCommand = verb === 'fields'
   const shopDomain = parsed.shopDomain
   const graphqlEndpoint = parsed.graphqlEndpoint
   const accessToken = parsed.accessToken
@@ -191,7 +192,7 @@ const main = async () => {
 
   const resolvedApiVersion = apiVersion ?? process.env.SHOPIFY_API_VERSION
 
-  const client = dryRun
+  const client = dryRun || isOfflineCommand
     ? createShopifyAdminClient({
         shopDomain:
           shopDomain ?? process.env.SHOPIFY_SHOP ?? 'example.myshopify.com',
@@ -215,7 +216,7 @@ const main = async () => {
     resource,
     verb,
     argv: parsed.passthrough,
-    format: (parsed.format as any) ?? 'json',
+    format: (parsed.format as any) ?? (isOfflineCommand ? 'table' : 'json'),
     quiet: parsed.quiet ?? false,
     view: (parsed.view as any) ?? 'summary',
     dryRun,
