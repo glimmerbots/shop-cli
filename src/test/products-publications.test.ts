@@ -18,7 +18,7 @@ describe('products publications computed field', () => {
               id: 'gid://shopify/Publication/1',
               catalog: {
                 title: 'Online Store',
-                on_AppCatalog: { apps: { nodes: [{ title: 'Online Store' }] } },
+                apps: { nodes: [{ title: 'Online Store' }] },
               },
             },
           },

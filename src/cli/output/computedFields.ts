@@ -14,7 +14,11 @@ const getPublicationTitle = (publication: any): string | undefined => {
 
   const catalog = (publication as any).catalog
   if (catalog && typeof catalog === 'object') {
-    const appNodes = (catalog as any).on_AppCatalog?.apps?.nodes
+    // NOTE: GenQL inline fragments (on_AppCatalog) merge fields into the object in the GraphQL response,
+    // so at runtime we expect `catalog.apps`, not `catalog.on_AppCatalog.apps`.
+    const appNodes =
+      (catalog as any).apps?.nodes ??
+      (catalog as any).on_AppCatalog?.apps?.nodes
     if (Array.isArray(appNodes)) {
       const titles = appNodes
         .map((a) => (a && typeof a === 'object' ? (a as any).title : undefined))
