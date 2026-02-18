@@ -95,6 +95,11 @@ const flagLocale = flag('--locale <string>', 'Locale')
 const flagLocales = flag('--locales <csv>', 'Locales (repeatable or comma-separated)')
 const flagTranslationKeys = flag('--translation-keys <csv>', 'Translation keys (repeatable)')
 const flagMarketIds = flag('--market-ids <gid>', 'Market IDs (repeatable)')
+const flagMarketId = flag('--market-id <gid>', 'Market ID')
+const flagCountryCode = flag('--country-code <code>', 'Country code (ISO 3166-1 alpha-2)')
+const flagCountryCodes = flag('--country-codes <csv>', 'Country codes (comma-separated)')
+const flagKeys = flag('--keys <csv>', 'Keys (comma-separated)')
+const flagProductIds = flag('--product-ids <gid>', 'Product IDs (repeatable or comma-separated)')
 const flagFunctionId = flag('--function-id <gid>', 'Function ID')
 const flagFunctionHandle = flag('--function-handle <handle>', 'Function handle')
 const flagBlockOnFailure = flag('--block-on-failure', 'Block checkout on failure')
@@ -134,6 +139,9 @@ const flagClientId = flag('--client-id <string>', 'Client identifier')
 const flagContractId = flag('--contract-id <gid>', 'Subscription contract ID')
 const flagCycleIndex = flag('--cycle-index <n>', 'Billing cycle index')
 const flagCycleIndexes = flag('--cycle-indexes <csv>', 'Billing cycle indexes')
+const flagDraftId = flag('--draft-id <gid>', 'Subscription draft ID')
+const flagJobId = flag('--job-id <gid>', 'Job ID')
+const flagAccountId = flag('--account-id <gid>', 'Account ID')
 const flagDate = flag('--date <date>', 'Date (YYYY-MM-DD)')
 const flagLineId = flag('--line-id <gid>', 'Line item ID')
 const flagDiscountId = flag('--discount-id <gid>', 'Discount ID')
@@ -1838,8 +1846,118 @@ const baseCommandRegistry: ResourceSpec[] = [
       createVerb({ operation: 'marketCreate', description: 'Create a market.' }),
       getVerb({ operation: 'market', description: 'Fetch a market by ID.' }),
       listVerb({ operation: 'markets', description: 'List markets.' }),
+      {
+        verb: 'by-geography',
+        description: 'Resolve the applicable market for a country.',
+        operation: { type: 'query', name: 'marketByGeography' },
+        requiredFlags: [flagCountryCode],
+        output: { view: true, selection: true },
+      },
+      {
+        verb: 'primary',
+        description: 'Fetch the primary market.',
+        operation: { type: 'query', name: 'primaryMarket' },
+        output: { view: true, selection: true },
+      },
+      {
+        verb: 'resolved-values',
+        description: 'Resolve values for buyer signals (currency, catalogs, web presences).',
+        operation: { type: 'query', name: 'marketsResolvedValues' },
+        requiredFlags: [flagCountryCode],
+      },
       updateVerb({ operation: 'marketUpdate', description: 'Update a market.' }),
       deleteVerb({ operation: 'marketDelete', description: 'Delete a market.' }),
+      inputVerb({
+        verb: 'currency-settings-update',
+        description: 'Update market currency settings (deprecated API).',
+        operation: 'marketCurrencySettingsUpdate',
+        requiredFlags: [flagId],
+        inputArg: 'input',
+      }),
+      {
+        verb: 'regions-create',
+        description: 'Create regions for a market (deprecated API).',
+        operation: { type: 'mutation', name: 'marketRegionsCreate' },
+        requiredFlags: [flagId, flagCountryCodes],
+      },
+      {
+        verb: 'regions-delete',
+        description: 'Delete regions (deprecated API).',
+        operation: { type: 'mutation', name: 'marketRegionsDelete' },
+        requiredFlags: [flagIds, flagYes],
+      },
+      {
+        verb: 'region-delete',
+        description: 'Delete a market region (deprecated API).',
+        operation: { type: 'mutation', name: 'marketRegionDelete' },
+        requiredFlags: [flagId, flagYes],
+      },
+    ],
+  },
+  {
+    resource: 'market-localizations',
+    description: 'Manage market localizations (per-market localized values).',
+    verbs: [
+      {
+        verb: 'localizable-resource',
+        description: 'Fetch a market localizable resource by ID.',
+        operation: { type: 'query', name: 'marketLocalizableResource' },
+        requiredFlags: [flagResourceId, flagMarketId],
+        output: { view: true, selection: true },
+      },
+      {
+        verb: 'localizable-resources',
+        description: 'List market localizable resources by type.',
+        operation: { type: 'query', name: 'marketLocalizableResources' },
+        requiredFlags: [flagResourceType, flagMarketId],
+        output: { view: true, selection: true, pagination: true },
+      },
+      {
+        verb: 'localizable-resources-by-ids',
+        description: 'List market localizable resources by IDs.',
+        operation: { type: 'query', name: 'marketLocalizableResourcesByIds' },
+        requiredFlags: [flagResourceIds, flagMarketId],
+        output: { view: true, selection: true, pagination: true },
+      },
+      {
+        verb: 'register',
+        description: 'Create or update market localizations.',
+        operation: { type: 'mutation', name: 'marketLocalizationsRegister' },
+        requiredFlags: [flagResourceId],
+        input: { mode: 'set', required: true },
+      },
+      {
+        verb: 'remove',
+        description: 'Delete market localizations.',
+        operation: { type: 'mutation', name: 'marketLocalizationsRemove' },
+        requiredFlags: [flagResourceId, flagMarketIds, flagKeys],
+      },
+    ],
+  },
+  {
+    resource: 'market-web-presences',
+    description: 'Manage market web presences (deprecated API).',
+    verbs: [
+      {
+        verb: 'create',
+        description: 'Create a web presence for a market.',
+        operation: { type: 'mutation', name: 'marketWebPresenceCreate' },
+        requiredFlags: [flagMarketId],
+        input: { mode: 'set', required: true },
+      },
+      {
+        verb: 'update',
+        description: 'Update a market web presence.',
+        operation: { type: 'mutation', name: 'marketWebPresenceUpdate' },
+        requiredFlags: [flagId],
+        input: { mode: 'set', required: true },
+      },
+      {
+        verb: 'delete',
+        description: 'Delete a market web presence.',
+        operation: { type: 'mutation', name: 'marketWebPresenceDelete' },
+        requiredFlags: [flagId, flagYes],
+      },
     ],
   },
   {
@@ -2257,6 +2375,86 @@ const baseCommandRegistry: ResourceSpec[] = [
     ],
   },
   {
+    resource: 'subscription-billing-cycles',
+    description: 'Query and manage subscription billing cycles (root APIs).',
+    verbs: [
+      {
+        verb: 'attempts',
+        description: 'List subscription billing attempts on the store.',
+        operation: { type: 'query', name: 'subscriptionBillingAttempts' },
+        output: { pagination: true },
+      },
+      {
+        verb: 'bulk-results',
+        description: 'Fetch results for a billing cycle bulk job.',
+        operation: { type: 'query', name: 'subscriptionBillingCycleBulkResults' },
+        requiredFlags: [flagJobId],
+        output: { pagination: true },
+      },
+      {
+        verb: 'get',
+        description: 'Fetch a billing cycle by contract and cycle index.',
+        operation: { type: 'query', name: 'subscriptionBillingCycle' },
+        requiredFlags: [flagContractId, flagCycleIndex],
+        output: { view: true, selection: true },
+      },
+      {
+        verb: 'charge',
+        description: 'Charge a billing cycle.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleCharge' },
+        requiredFlags: [flagContractId, flagCycleIndex],
+      },
+      {
+        verb: 'skip',
+        description: 'Skip a billing cycle.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleSkip' },
+        requiredFlags: [flagContractId, flagCycleIndex],
+      },
+      {
+        verb: 'unskip',
+        description: 'Unskip a billing cycle.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleUnskip' },
+        requiredFlags: [flagContractId, flagCycleIndex],
+      },
+      inputVerb({
+        verb: 'schedule-edit',
+        description: 'Modify the schedule of a specific billing cycle.',
+        operation: 'subscriptionBillingCycleScheduleEdit',
+        requiredFlags: [flagContractId, flagCycleIndex],
+      }),
+      {
+        verb: 'contract-edit',
+        description: 'Create a subscription contract draft for a billing cycle.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleContractEdit' },
+        requiredFlags: [flagContractId, flagCycleIndex],
+      },
+      {
+        verb: 'contract-draft-commit',
+        description: 'Commit a subscription billing cycle contract draft.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleContractDraftCommit' },
+        requiredFlags: [flagDraftId],
+      },
+      inputVerb({
+        verb: 'contract-draft-concatenate',
+        description: 'Concatenate contracts to a subscription draft.',
+        operation: 'subscriptionBillingCycleContractDraftConcatenate',
+        requiredFlags: [flagDraftId],
+      }),
+      {
+        verb: 'edit-delete',
+        description: 'Delete schedule and contract edits of a billing cycle.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleEditDelete' },
+        requiredFlags: [flagContractId, flagCycleIndex, flagYes],
+      },
+      {
+        verb: 'edits-delete',
+        description: 'Delete current and future schedule/contract edits for a contract.',
+        operation: { type: 'mutation', name: 'subscriptionBillingCycleEditsDelete' },
+        requiredFlags: [flagContractId, flagYes],
+      },
+    ],
+  },
+  {
     resource: 'subscription-drafts',
     description: 'Manage subscription drafts.',
     verbs: [
@@ -2446,6 +2644,36 @@ const baseCommandRegistry: ResourceSpec[] = [
       {
         verb: 'remove-variants',
         description: 'Remove variants from a selling plan group.',
+        operation: { type: 'mutation', name: 'sellingPlanGroupRemoveProductVariants' },
+        requiredFlags: [flagId, flagVariantIds],
+      },
+    ],
+  },
+  {
+    resource: 'selling-plan-group-products',
+    description: 'Manage product and variant associations for selling plan groups.',
+    verbs: [
+      {
+        verb: 'add-products',
+        description: 'Add products to a selling plan group.',
+        operation: { type: 'mutation', name: 'sellingPlanGroupAddProducts' },
+        requiredFlags: [flagId, flagProductIds],
+      },
+      {
+        verb: 'remove-products',
+        description: 'Remove products from a selling plan group.',
+        operation: { type: 'mutation', name: 'sellingPlanGroupRemoveProducts' },
+        requiredFlags: [flagId, flagProductIds],
+      },
+      {
+        verb: 'add-product-variants',
+        description: 'Add product variants to a selling plan group.',
+        operation: { type: 'mutation', name: 'sellingPlanGroupAddProductVariants' },
+        requiredFlags: [flagId, flagVariantIds],
+      },
+      {
+        verb: 'remove-product-variants',
+        description: 'Remove product variants from a selling plan group.',
         operation: { type: 'mutation', name: 'sellingPlanGroupRemoveProductVariants' },
         requiredFlags: [flagId, flagVariantIds],
       },
@@ -3030,6 +3258,14 @@ const baseCommandRegistry: ResourceSpec[] = [
     ],
   },
   {
+    resource: 'marketing-events',
+    description: 'Query marketing events.',
+    verbs: [
+      getVerb({ operation: 'marketingEvent', description: 'Fetch a marketing event by ID.' }),
+      listVerb({ operation: 'marketingEvents', description: 'List marketing events.' }),
+    ],
+  },
+  {
     resource: 'bulk-operations',
     description: 'Manage bulk operations.',
     verbs: [
@@ -3091,6 +3327,20 @@ const baseCommandRegistry: ResourceSpec[] = [
         verb: 'list',
         description: 'List automatic discounts.',
         operation: { type: 'query', name: 'automaticDiscountNodes' },
+        output: { view: true, selection: true, pagination: true },
+      },
+      {
+        verb: 'get-discount',
+        description: 'Fetch a DiscountAutomatic by ID (deprecated API).',
+        operation: { type: 'query', name: 'automaticDiscount' },
+        requiredFlags: [flagId],
+        output: { view: true, selection: true },
+      },
+      {
+        verb: 'list-discounts',
+        description: 'List DiscountAutomatic resources (deprecated API).',
+        operation: { type: 'query', name: 'automaticDiscounts' },
+        flags: [flagFirst, flagAfter, flagQuery, flagSavedSearchId, flagSort, flagReverse],
         output: { view: true, selection: true, pagination: true },
       },
       inputVerb({
@@ -3311,6 +3561,66 @@ const baseCommandRegistry: ResourceSpec[] = [
         description: 'Bulk delete redeem codes from a discount by IDs or query.',
         operation: { type: 'mutation', name: 'discountCodeRedeemCodeBulkDelete' },
         requiredFlags: [flagId, flagYes],
+        flags: [flagIds, flagQuery],
+        notes: ['Provide --ids or --query.'],
+      },
+    ],
+  },
+  {
+    resource: 'discount-nodes',
+    description: 'Query discount nodes (unified discount surface).',
+    verbs: [
+      getVerb({ operation: 'discountNode', description: 'Fetch a discount node by ID.' }),
+      {
+        ...listVerb({ operation: 'discountNodes', description: 'List discount nodes.' }),
+        flags: [flagSavedSearchId],
+      },
+      countVerb({
+        operation: 'discountNodesCount',
+        description: 'Count discount nodes.',
+        flags: [flagQuery, flagLimit],
+      }),
+    ],
+  },
+  {
+    resource: 'discount-saved-searches',
+    description: 'List discount-related saved searches.',
+    verbs: [
+      {
+        verb: 'automatic',
+        description: 'List automatic discount saved searches.',
+        operation: { type: 'query', name: 'automaticDiscountSavedSearches' },
+        output: { view: true, selection: true, pagination: true },
+      },
+      {
+        verb: 'code',
+        description: 'List code discount saved searches.',
+        operation: { type: 'query', name: 'codeDiscountSavedSearches' },
+        output: { view: true, selection: true, pagination: true },
+      },
+      {
+        verb: 'redeem-code',
+        description: 'List discount redeem code saved searches.',
+        operation: { type: 'query', name: 'discountRedeemCodeSavedSearches' },
+        output: { view: true, selection: true, pagination: true },
+      },
+    ],
+  },
+  {
+    resource: 'discount-redeem-codes',
+    description: 'Query and manage discount redeem code bulk operations.',
+    verbs: [
+      {
+        verb: 'get-bulk-creation',
+        description: 'Fetch a DiscountRedeemCodeBulkCreation by ID.',
+        operation: { type: 'query', name: 'discountRedeemCodeBulkCreation' },
+        requiredFlags: [flagId],
+      },
+      {
+        verb: 'bulk-delete',
+        description: 'Bulk delete redeem codes by IDs or query.',
+        operation: { type: 'mutation', name: 'discountCodeRedeemCodeBulkDelete' },
+        requiredFlags: [flagDiscountId, flagYes],
         flags: [flagIds, flagQuery],
         notes: ['Provide --ids or --query.'],
       },
@@ -3860,6 +4170,41 @@ const baseCommandRegistry: ResourceSpec[] = [
         description: 'Alias for shopify-payments account.',
         operation: { type: 'query', name: 'shopifyPaymentsAccount' },
         output: { view: true, selection: true },
+      },
+      {
+        verb: 'payout-alternate-currency-create',
+        description: 'Create an alternate currency payout for Shopify Payments.',
+        operation: { type: 'mutation', name: 'shopifyPaymentsPayoutAlternateCurrencyCreate' },
+        requiredFlags: [flagCurrency],
+        flags: [flagAccountId],
+      },
+    ],
+  },
+  {
+    resource: 'finance',
+    description: 'Finance app utilities.',
+    verbs: [
+      {
+        verb: 'app-access-policy',
+        description: 'Fetch finance app access policy.',
+        operation: { type: 'query', name: 'financeAppAccessPolicy' },
+      },
+      {
+        verb: 'kyc-information',
+        description: 'Fetch finance KYC information.',
+        operation: { type: 'query', name: 'financeKycInformation' },
+      },
+    ],
+  },
+  {
+    resource: 'tender-transactions',
+    description: 'Query tender transactions.',
+    verbs: [
+      {
+        verb: 'list',
+        description: 'List tender transactions.',
+        operation: { type: 'query', name: 'tenderTransactions' },
+        output: { view: true, selection: true, pagination: true },
       },
     ],
   },

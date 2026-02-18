@@ -67,6 +67,15 @@ const automaticAppDiscountSummarySelection = {
   status: true,
 } as const
 
+const automaticDiscountSummarySelection = {
+  __typename: true,
+  on_Node: { id: true },
+  on_DiscountAutomaticBasic: { title: true, status: true, startsAt: true, endsAt: true },
+  on_DiscountAutomaticBxgy: { title: true, status: true, startsAt: true, endsAt: true, usesPerOrderLimit: true },
+  on_DiscountAutomaticFreeShipping: { title: true, status: true, startsAt: true, endsAt: true },
+  on_DiscountAutomaticApp: { title: true, status: true, startsAt: true, endsAt: true, appDiscountType: { title: true, functionId: true } },
+} as const
+
 const getAutomaticDiscountSelection = (view: CommandContext['view']) => {
   if (view === 'ids') return { id: true } as const
   if (view === 'full') return automaticDiscountNodeFullSelection
@@ -169,6 +178,52 @@ export const runDiscountsAutomatic = async ({
       format: ctx.format,
       quiet: ctx.quiet,
       nextPageArgs: buildListNextPageArgs('discounts-automatic', { first, query, sort: sortKey, reverse }),
+    })
+    return
+  }
+
+  if (verb === 'get-discount') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const id = requireId(args.id, 'DiscountAutomaticNode')
+
+    const result = await runQuery(ctx, {
+      automaticDiscount: {
+        __args: { id },
+        ...automaticDiscountSummarySelection,
+      },
+    })
+    if (result === undefined) return
+    if (ctx.quiet) return console.log((result.automaticDiscount as any)?.id ?? '')
+    printJson(result.automaticDiscount, ctx.format !== 'raw')
+    return
+  }
+
+  if (verb === 'list-discounts') {
+    const args = parseStandardArgs({ argv, extraOptions: { 'saved-search-id': { type: 'string' } } })
+    const first = parseFirst(args.first)
+    const after = args.after as any
+    const query = args.query as any
+    const reverse = args.reverse as any
+    const sortKey = args.sort as any
+    const savedSearchId = (args as any)['saved-search-id'] as any
+
+    const result = await runQuery(ctx, {
+      automaticDiscounts: {
+        __args: { first, after, query, reverse, sortKey, ...(savedSearchId ? { savedSearchId } : {}) },
+        pageInfo: { hasNextPage: true, endCursor: true },
+        nodes: automaticDiscountSummarySelection,
+      },
+    })
+    if (result === undefined) return
+    printConnection({
+      connection: result.automaticDiscounts,
+      format: ctx.format,
+      quiet: ctx.quiet,
+      nextPageArgs: buildListNextPageArgs(
+        'discounts-automatic',
+        { first, query, sort: sortKey, reverse },
+        savedSearchId ? [{ flag: '--saved-search-id', value: savedSearchId }] : undefined,
+      ),
     })
     return
   }

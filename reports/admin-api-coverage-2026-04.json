@@ -3,35 +3,24 @@
   "totals": {
     "queryFields": 269,
     "mutationFields": 496,
-    "usedQueryFields": 205,
-    "usedMutationFields": 386,
-    "missingQueryFields": 64,
-    "missingMutationFields": 110
+    "usedQueryFields": 228,
+    "usedMutationFields": 423,
+    "missingQueryFields": 41,
+    "missingMutationFields": 73
   },
   "missing": {
     "queries": [
       "assignedFulfillmentOrders",
-      "automaticDiscount",
-      "automaticDiscounts",
-      "automaticDiscountSavedSearches",
       "catalogOperations",
       "catalogsCount",
       "checkoutBranding",
       "checkoutProfile",
       "checkoutProfiles",
-      "codeDiscountSavedSearches",
       "collectionByHandle",
       "collectionByIdentifier",
       "collectionRulesConditions",
       "deletionEvents",
       "deliveryPromiseProvider",
-      "discountNode",
-      "discountNodes",
-      "discountNodesCount",
-      "discountRedeemCodeBulkCreation",
-      "discountRedeemCodeSavedSearches",
-      "financeAppAccessPolicy",
-      "financeKycInformation",
       "inventoryLevel",
       "inventoryProperties",
       "job",
@@ -39,18 +28,10 @@
       "locationsAvailableForDeliveryProfiles",
       "locationsAvailableForDeliveryProfilesConnection",
       "manualHoldsFulfillmentOrders",
-      "marketByGeography",
-      "marketingEvent",
-      "marketingEvents",
-      "marketLocalizableResource",
-      "marketLocalizableResources",
-      "marketLocalizableResourcesByIds",
-      "marketsResolvedValues",
       "orderByIdentifier",
       "orderEditSession",
       "orderPaymentStatus",
       "pendingOrdersCount",
-      "primaryMarket",
       "productByHandle",
       "productByIdentifier",
       "productDuplicateJob",
@@ -67,17 +48,12 @@
       "returnableFulfillment",
       "reverseDelivery",
       "reverseFulfillmentOrder",
-      "subscriptionBillingAttempts",
-      "subscriptionBillingCycle",
-      "subscriptionBillingCycleBulkResults",
-      "tenderTransactions",
       "urlRedirectImport",
       "urlRedirectSavedSearches",
       "urlRedirectsCount"
     ],
     "mutations": [
       "appSubscriptionTrialExtend",
-      "bulkOperationCancel",
       "bulkProductResourceFeedbackCreate",
       "catalogContextUpdate",
       "checkoutBrandingUpsert",
@@ -88,7 +64,6 @@
       "deliveryPromiseProviderUpsert",
       "deliverySettingUpdate",
       "deliveryShippingOriginAssign",
-      "discountCodeRedeemCodeBulkDelete",
       "eventBridgeWebhookSubscriptionCreate",
       "eventBridgeWebhookSubscriptionUpdate",
       "fulfillmentCreate",
@@ -96,8 +71,6 @@
       "fulfillmentServiceUpdate",
       "fulfillmentTrackingInfoUpdate",
       "fulfillmentTrackingInfoUpdateV2",
-      "giftCardCredit",
-      "giftCardDebit",
       "inventoryActivate",
       "inventoryBulkToggleActivation",
       "inventoryDeactivate",
@@ -105,15 +78,6 @@
       "inventorySetScheduledChanges",
       "inventoryTransferSetItems",
       "locationLocalPickupEnable",
-      "marketCurrencySettingsUpdate",
-      "marketLocalizationsRegister",
-      "marketLocalizationsRemove",
-      "marketRegionDelete",
-      "marketRegionsCreate",
-      "marketRegionsDelete",
-      "marketWebPresenceCreate",
-      "marketWebPresenceDelete",
-      "marketWebPresenceUpdate",
       "menuCreate",
       "menuUpdate",
       "orderCapture",
@@ -124,13 +88,6 @@
       "orderInvoiceSend",
       "orderOpen",
       "orderRiskAssessmentCreate",
-      "paymentCustomizationActivation",
-      "paymentTermsCreate",
-      "paymentTermsUpdate",
-      "priceListFixedPricesAdd",
-      "priceListFixedPricesByProductUpdate",
-      "priceListFixedPricesDelete",
-      "priceListFixedPricesUpdate",
       "productChangeStatus",
       "productCreateMedia",
       "productDeleteMedia",
@@ -158,28 +115,11 @@
       "productVariantsBulkUpdate",
       "publishablePublishToCurrentChannel",
       "publishableUnpublishToCurrentChannel",
-      "quantityRulesAdd",
-      "quantityRulesDelete",
       "returnLineItemRemoveFromReturn",
       "reverseDeliveryCreateWithShipping",
       "reverseDeliveryShippingUpdate",
       "reverseFulfillmentOrderDispose",
-      "sellingPlanGroupAddProducts",
-      "sellingPlanGroupAddProductVariants",
-      "sellingPlanGroupRemoveProducts",
-      "sellingPlanGroupRemoveProductVariants",
-      "shopifyPaymentsPayoutAlternateCurrencyCreate",
       "shopResourceFeedbackCreate",
-      "subscriptionBillingCycleCharge",
-      "subscriptionBillingCycleContractDraftCommit",
-      "subscriptionBillingCycleContractDraftConcatenate",
-      "subscriptionBillingCycleContractEdit",
-      "subscriptionBillingCycleEditDelete",
-      "subscriptionBillingCycleEditsDelete",
-      "subscriptionBillingCycleScheduleEdit",
-      "subscriptionBillingCycleSkip",
-      "subscriptionBillingCycleUnskip",
-      "taxAppConfigure",
       "urlRedirectBulkDeleteAll",
       "urlRedirectBulkDeleteByIds",
       "urlRedirectBulkDeleteBySavedSearch",
@@ -203,33 +143,6 @@
             "productTypes",
             "productVariantByIdentifier",
             "productVendors"
-          ]
-        },
-        {
-          "prefix": "discount",
-          "ops": [
-            "discountNode",
-            "discountNodes",
-            "discountNodesCount",
-            "discountRedeemCodeBulkCreation",
-            "discountRedeemCodeSavedSearches"
-          ]
-        },
-        {
-          "prefix": "market",
-          "ops": [
-            "marketByGeography",
-            "marketLocalizableResource",
-            "marketLocalizableResources",
-            "marketLocalizableResourcesByIds"
-          ]
-        },
-        {
-          "prefix": "automatic",
-          "ops": [
-            "automaticDiscount",
-            "automaticDiscounts",
-            "automaticDiscountSavedSearches"
           ]
         },
         {
@@ -257,26 +170,11 @@
           ]
         },
         {
-          "prefix": "subscription",
-          "ops": [
-            "subscriptionBillingAttempts",
-            "subscriptionBillingCycle",
-            "subscriptionBillingCycleBulkResults"
-          ]
-        },
-        {
           "prefix": "url",
           "ops": [
             "urlRedirectImport",
             "urlRedirectSavedSearches",
             "urlRedirectsCount"
-          ]
-        },
-        {
-          "prefix": "finance",
-          "ops": [
-            "financeAppAccessPolicy",
-            "financeKycInformation"
           ]
         },
         {
@@ -291,13 +189,6 @@
           "ops": [
             "locationsAvailableForDeliveryProfiles",
             "locationsAvailableForDeliveryProfilesConnection"
-          ]
-        },
-        {
-          "prefix": "marketing",
-          "ops": [
-            "marketingEvent",
-            "marketingEvents"
           ]
         },
         {
@@ -323,12 +214,6 @@
           "prefix": "catalogs",
           "ops": [
             "catalogsCount"
-          ]
-        },
-        {
-          "prefix": "code",
-          "ops": [
-            "codeDiscountSavedSearches"
           ]
         },
         {
@@ -362,21 +247,9 @@
           ]
         },
         {
-          "prefix": "markets",
-          "ops": [
-            "marketsResolvedValues"
-          ]
-        },
-        {
           "prefix": "pending",
           "ops": [
             "pendingOrdersCount"
-          ]
-        },
-        {
-          "prefix": "primary",
-          "ops": [
-            "primaryMarket"
           ]
         },
         {
@@ -395,12 +268,6 @@
           "prefix": "returnable",
           "ops": [
             "returnableFulfillment"
-          ]
-        },
-        {
-          "prefix": "tender",
-          "ops": [
-            "tenderTransactions"
           ]
         }
       ],
@@ -433,34 +300,6 @@
             "productVariantsBulkDelete",
             "productVariantsBulkReorder",
             "productVariantsBulkUpdate"
-          ]
-        },
-        {
-          "prefix": "market",
-          "ops": [
-            "marketCurrencySettingsUpdate",
-            "marketLocalizationsRegister",
-            "marketLocalizationsRemove",
-            "marketRegionDelete",
-            "marketRegionsCreate",
-            "marketRegionsDelete",
-            "marketWebPresenceCreate",
-            "marketWebPresenceDelete",
-            "marketWebPresenceUpdate"
-          ]
-        },
-        {
-          "prefix": "subscription",
-          "ops": [
-            "subscriptionBillingCycleCharge",
-            "subscriptionBillingCycleContractDraftCommit",
-            "subscriptionBillingCycleContractDraftConcatenate",
-            "subscriptionBillingCycleContractEdit",
-            "subscriptionBillingCycleEditDelete",
-            "subscriptionBillingCycleEditsDelete",
-            "subscriptionBillingCycleScheduleEdit",
-            "subscriptionBillingCycleSkip",
-            "subscriptionBillingCycleUnskip"
           ]
         },
         {
@@ -518,44 +357,11 @@
           ]
         },
         {
-          "prefix": "price",
-          "ops": [
-            "priceListFixedPricesAdd",
-            "priceListFixedPricesByProductUpdate",
-            "priceListFixedPricesDelete",
-            "priceListFixedPricesUpdate"
-          ]
-        },
-        {
-          "prefix": "selling",
-          "ops": [
-            "sellingPlanGroupAddProducts",
-            "sellingPlanGroupAddProductVariants",
-            "sellingPlanGroupRemoveProducts",
-            "sellingPlanGroupRemoveProductVariants"
-          ]
-        },
-        {
-          "prefix": "payment",
-          "ops": [
-            "paymentCustomizationActivation",
-            "paymentTermsCreate",
-            "paymentTermsUpdate"
-          ]
-        },
-        {
           "prefix": "reverse",
           "ops": [
             "reverseDeliveryCreateWithShipping",
             "reverseDeliveryShippingUpdate",
             "reverseFulfillmentOrderDispose"
-          ]
-        },
-        {
-          "prefix": "bulk",
-          "ops": [
-            "bulkOperationCancel",
-            "bulkProductResourceFeedbackCreate"
           ]
         },
         {
@@ -573,13 +379,6 @@
           ]
         },
         {
-          "prefix": "gift",
-          "ops": [
-            "giftCardCredit",
-            "giftCardDebit"
-          ]
-        },
-        {
           "prefix": "menu",
           "ops": [
             "menuCreate",
@@ -594,16 +393,15 @@
           ]
         },
         {
-          "prefix": "quantity",
-          "ops": [
-            "quantityRulesAdd",
-            "quantityRulesDelete"
-          ]
-        },
-        {
           "prefix": "app",
           "ops": [
             "appSubscriptionTrialExtend"
+          ]
+        },
+        {
+          "prefix": "bulk",
+          "ops": [
+            "bulkProductResourceFeedbackCreate"
           ]
         },
         {
@@ -625,12 +423,6 @@
           ]
         },
         {
-          "prefix": "discount",
-          "ops": [
-            "discountCodeRedeemCodeBulkDelete"
-          ]
-        },
-        {
           "prefix": "location",
           "ops": [
             "locationLocalPickupEnable"
@@ -646,18 +438,6 @@
           "prefix": "shop",
           "ops": [
             "shopResourceFeedbackCreate"
-          ]
-        },
-        {
-          "prefix": "shopify",
-          "ops": [
-            "shopifyPaymentsPayoutAlternateCurrencyCreate"
-          ]
-        },
-        {
-          "prefix": "tax",
-          "ops": [
-            "taxAppConfigure"
           ]
         }
       ]
@@ -696,6 +476,19 @@
           ]
         },
         {
+          "prefix": "subscription",
+          "ops": [
+            "subscriptionBillingAttempt",
+            "subscriptionBillingAttempts",
+            "subscriptionBillingCycle",
+            "subscriptionBillingCycleBulkResults",
+            "subscriptionBillingCycles",
+            "subscriptionContract",
+            "subscriptionContracts",
+            "subscriptionDraft"
+          ]
+        },
+        {
           "prefix": "delivery",
           "ops": [
             "deliveryCustomization",
@@ -707,6 +500,17 @@
           ]
         },
         {
+          "prefix": "discount",
+          "ops": [
+            "discountCodesCount",
+            "discountNode",
+            "discountNodes",
+            "discountNodesCount",
+            "discountRedeemCodeBulkCreation",
+            "discountRedeemCodeSavedSearches"
+          ]
+        },
+        {
           "prefix": "draft",
           "ops": [
             "draftOrder",
@@ -715,6 +519,16 @@
             "draftOrderSavedSearches",
             "draftOrdersCount",
             "draftOrderTag"
+          ]
+        },
+        {
+          "prefix": "automatic",
+          "ops": [
+            "automaticDiscount",
+            "automaticDiscountNode",
+            "automaticDiscountNodes",
+            "automaticDiscounts",
+            "automaticDiscountSavedSearches"
           ]
         },
         {
@@ -745,6 +559,16 @@
             "inventoryShipment",
             "inventoryTransfer",
             "inventoryTransfers"
+          ]
+        },
+        {
+          "prefix": "market",
+          "ops": [
+            "market",
+            "marketByGeography",
+            "marketLocalizableResource",
+            "marketLocalizableResources",
+            "marketLocalizableResourcesByIds"
           ]
         },
         {
@@ -788,13 +612,12 @@
           ]
         },
         {
-          "prefix": "subscription",
+          "prefix": "code",
           "ops": [
-            "subscriptionBillingAttempt",
-            "subscriptionBillingCycles",
-            "subscriptionContract",
-            "subscriptionContracts",
-            "subscriptionDraft"
+            "codeDiscountNode",
+            "codeDiscountNodeByCode",
+            "codeDiscountNodes",
+            "codeDiscountSavedSearches"
           ]
         },
         {
@@ -804,6 +627,15 @@
             "giftCardConfiguration",
             "giftCards",
             "giftCardsCount"
+          ]
+        },
+        {
+          "prefix": "marketing",
+          "ops": [
+            "marketingActivities",
+            "marketingActivity",
+            "marketingEvent",
+            "marketingEvents"
           ]
         },
         {
@@ -820,14 +652,6 @@
             "availableBackupRegions",
             "availableCarrierServices",
             "availableLocales"
-          ]
-        },
-        {
-          "prefix": "code",
-          "ops": [
-            "codeDiscountNode",
-            "codeDiscountNodeByCode",
-            "codeDiscountNodes"
           ]
         },
         {
@@ -898,13 +722,6 @@
           "ops": [
             "abandonment",
             "abandonmentByAbandonedCheckoutId"
-          ]
-        },
-        {
-          "prefix": "automatic",
-          "ops": [
-            "automaticDiscountNode",
-            "automaticDiscountNodes"
           ]
         },
         {
@@ -992,6 +809,13 @@
           ]
         },
         {
+          "prefix": "finance",
+          "ops": [
+            "financeAppAccessPolicy",
+            "financeKycInformation"
+          ]
+        },
+        {
           "prefix": "locations",
           "ops": [
             "locations",
@@ -999,10 +823,10 @@
           ]
         },
         {
-          "prefix": "marketing",
+          "prefix": "markets",
           "ops": [
-            "marketingActivities",
-            "marketingActivity"
+            "markets",
+            "marketsResolvedValues"
           ]
         },
         {
@@ -1150,12 +974,6 @@
           ]
         },
         {
-          "prefix": "discount",
-          "ops": [
-            "discountCodesCount"
-          ]
-        },
-        {
           "prefix": "disputes",
           "ops": [
             "disputes"
@@ -1189,18 +1007,6 @@
           "prefix": "location",
           "ops": [
             "location"
-          ]
-        },
-        {
-          "prefix": "market",
-          "ops": [
-            "market"
-          ]
-        },
-        {
-          "prefix": "markets",
-          "ops": [
-            "markets"
           ]
         },
         {
@@ -1249,6 +1055,12 @@
           "prefix": "point",
           "ops": [
             "pointOfSaleDevice"
+          ]
+        },
+        {
+          "prefix": "primary",
+          "ops": [
+            "primaryMarket"
           ]
         },
         {
@@ -1318,6 +1130,12 @@
           ]
         },
         {
+          "prefix": "tender",
+          "ops": [
+            "tenderTransactions"
+          ]
+        },
+        {
           "prefix": "theme",
           "ops": [
             "theme"
@@ -1343,6 +1161,44 @@
         }
       ],
       "mutations": [
+        {
+          "prefix": "subscription",
+          "ops": [
+            "subscriptionBillingAttemptCreate",
+            "subscriptionBillingCycleBulkCharge",
+            "subscriptionBillingCycleBulkSearch",
+            "subscriptionBillingCycleCharge",
+            "subscriptionBillingCycleContractDraftCommit",
+            "subscriptionBillingCycleContractDraftConcatenate",
+            "subscriptionBillingCycleContractEdit",
+            "subscriptionBillingCycleEditDelete",
+            "subscriptionBillingCycleEditsDelete",
+            "subscriptionBillingCycleScheduleEdit",
+            "subscriptionBillingCycleSkip",
+            "subscriptionBillingCycleUnskip",
+            "subscriptionContractActivate",
+            "subscriptionContractAtomicCreate",
+            "subscriptionContractCancel",
+            "subscriptionContractCreate",
+            "subscriptionContractExpire",
+            "subscriptionContractFail",
+            "subscriptionContractPause",
+            "subscriptionContractProductChange",
+            "subscriptionContractSetNextBillingDate",
+            "subscriptionContractUpdate",
+            "subscriptionDraftCommit",
+            "subscriptionDraftDiscountAdd",
+            "subscriptionDraftDiscountCodeApply",
+            "subscriptionDraftDiscountRemove",
+            "subscriptionDraftDiscountUpdate",
+            "subscriptionDraftFreeShippingDiscountAdd",
+            "subscriptionDraftFreeShippingDiscountUpdate",
+            "subscriptionDraftLineAdd",
+            "subscriptionDraftLineRemove",
+            "subscriptionDraftLineUpdate",
+            "subscriptionDraftUpdate"
+          ]
+        },
         {
           "prefix": "company",
           "ops": [
@@ -1442,6 +1298,7 @@
             "discountCodeDelete",
             "discountCodeFreeShippingCreate",
             "discountCodeFreeShippingUpdate",
+            "discountCodeRedeemCodeBulkDelete",
             "discountRedeemCodeBulkAdd"
           ]
         },
@@ -1474,35 +1331,6 @@
             "fulfillmentOrderSubmitCancellationRequest",
             "fulfillmentOrderSubmitFulfillmentRequest",
             "fulfillmentServiceDelete"
-          ]
-        },
-        {
-          "prefix": "subscription",
-          "ops": [
-            "subscriptionBillingAttemptCreate",
-            "subscriptionBillingCycleBulkCharge",
-            "subscriptionBillingCycleBulkSearch",
-            "subscriptionContractActivate",
-            "subscriptionContractAtomicCreate",
-            "subscriptionContractCancel",
-            "subscriptionContractCreate",
-            "subscriptionContractExpire",
-            "subscriptionContractFail",
-            "subscriptionContractPause",
-            "subscriptionContractProductChange",
-            "subscriptionContractSetNextBillingDate",
-            "subscriptionContractUpdate",
-            "subscriptionDraftCommit",
-            "subscriptionDraftDiscountAdd",
-            "subscriptionDraftDiscountCodeApply",
-            "subscriptionDraftDiscountRemove",
-            "subscriptionDraftDiscountUpdate",
-            "subscriptionDraftFreeShippingDiscountAdd",
-            "subscriptionDraftFreeShippingDiscountUpdate",
-            "subscriptionDraftLineAdd",
-            "subscriptionDraftLineRemove",
-            "subscriptionDraftLineUpdate",
-            "subscriptionDraftUpdate"
           ]
         },
         {
@@ -1572,6 +1400,23 @@
           ]
         },
         {
+          "prefix": "market",
+          "ops": [
+            "marketCreate",
+            "marketCurrencySettingsUpdate",
+            "marketDelete",
+            "marketLocalizationsRegister",
+            "marketLocalizationsRemove",
+            "marketRegionDelete",
+            "marketRegionsCreate",
+            "marketRegionsDelete",
+            "marketUpdate",
+            "marketWebPresenceCreate",
+            "marketWebPresenceDelete",
+            "marketWebPresenceUpdate"
+          ]
+        },
+        {
           "prefix": "marketing",
           "ops": [
             "marketingActivitiesDeleteAllExternal",
@@ -1626,6 +1471,19 @@
           ]
         },
         {
+          "prefix": "payment",
+          "ops": [
+            "paymentCustomizationActivation",
+            "paymentCustomizationCreate",
+            "paymentCustomizationDelete",
+            "paymentCustomizationUpdate",
+            "paymentReminderSend",
+            "paymentTermsCreate",
+            "paymentTermsDelete",
+            "paymentTermsUpdate"
+          ]
+        },
+        {
           "prefix": "theme",
           "ops": [
             "themeCreate",
@@ -1663,6 +1521,30 @@
           ]
         },
         {
+          "prefix": "gift",
+          "ops": [
+            "giftCardCreate",
+            "giftCardCredit",
+            "giftCardDeactivate",
+            "giftCardDebit",
+            "giftCardSendNotificationToCustomer",
+            "giftCardSendNotificationToRecipient",
+            "giftCardUpdate"
+          ]
+        },
+        {
+          "prefix": "price",
+          "ops": [
+            "priceListCreate",
+            "priceListDelete",
+            "priceListFixedPricesAdd",
+            "priceListFixedPricesByProductUpdate",
+            "priceListFixedPricesDelete",
+            "priceListFixedPricesUpdate",
+            "priceListUpdate"
+          ]
+        },
+        {
           "prefix": "product",
           "ops": [
             "productBundleCreate",
@@ -1672,6 +1554,18 @@
             "productDuplicate",
             "productUpdate",
             "productVariantRelationshipBulkUpdate"
+          ]
+        },
+        {
+          "prefix": "selling",
+          "ops": [
+            "sellingPlanGroupAddProducts",
+            "sellingPlanGroupAddProductVariants",
+            "sellingPlanGroupCreate",
+            "sellingPlanGroupDelete",
+            "sellingPlanGroupRemoveProducts",
+            "sellingPlanGroupRemoveProductVariants",
+            "sellingPlanGroupUpdate"
           ]
         },
         {
@@ -1697,16 +1591,6 @@
           ]
         },
         {
-          "prefix": "gift",
-          "ops": [
-            "giftCardCreate",
-            "giftCardDeactivate",
-            "giftCardSendNotificationToCustomer",
-            "giftCardSendNotificationToRecipient",
-            "giftCardUpdate"
-          ]
-        },
-        {
           "prefix": "metafield",
           "ops": [
             "metafieldDefinitionCreate",
@@ -1714,16 +1598,6 @@
             "metafieldDefinitionPin",
             "metafieldDefinitionUnpin",
             "metafieldDefinitionUpdate"
-          ]
-        },
-        {
-          "prefix": "payment",
-          "ops": [
-            "paymentCustomizationCreate",
-            "paymentCustomizationDelete",
-            "paymentCustomizationUpdate",
-            "paymentReminderSend",
-            "paymentTermsDelete"
           ]
         },
         {
@@ -1770,6 +1644,14 @@
           ]
         },
         {
+          "prefix": "bulk",
+          "ops": [
+            "bulkOperationCancel",
+            "bulkOperationRunMutation",
+            "bulkOperationRunQuery"
+          ]
+        },
+        {
           "prefix": "carrier",
           "ops": [
             "carrierServiceCreate",
@@ -1783,14 +1665,6 @@
             "catalogCreate",
             "catalogDelete",
             "catalogUpdate"
-          ]
-        },
-        {
-          "prefix": "market",
-          "ops": [
-            "marketCreate",
-            "marketDelete",
-            "marketUpdate"
           ]
         },
         {
@@ -1810,14 +1684,6 @@
           ]
         },
         {
-          "prefix": "price",
-          "ops": [
-            "priceListCreate",
-            "priceListDelete",
-            "priceListUpdate"
-          ]
-        },
-        {
           "prefix": "pub",
           "ops": [
             "pubSubServerPixelUpdate",
@@ -1831,6 +1697,14 @@
             "publicationCreate",
             "publicationDelete",
             "publicationUpdate"
+          ]
+        },
+        {
+          "prefix": "quantity",
+          "ops": [
+            "quantityPricingByVariantUpdate",
+            "quantityRulesAdd",
+            "quantityRulesDelete"
           ]
         },
         {
@@ -1855,14 +1729,6 @@
             "segmentCreate",
             "segmentDelete",
             "segmentUpdate"
-          ]
-        },
-        {
-          "prefix": "selling",
-          "ops": [
-            "sellingPlanGroupCreate",
-            "sellingPlanGroupDelete",
-            "sellingPlanGroupUpdate"
           ]
         },
         {
@@ -1910,13 +1776,6 @@
           "ops": [
             "abandonmentEmailStateUpdate",
             "abandonmentUpdateActivitiesDeliveryStatuses"
-          ]
-        },
-        {
-          "prefix": "bulk",
-          "ops": [
-            "bulkOperationRunMutation",
-            "bulkOperationRunQuery"
           ]
         },
         {
@@ -1990,6 +1849,13 @@
           ]
         },
         {
+          "prefix": "tax",
+          "ops": [
+            "taxAppConfigure",
+            "taxSummaryCreate"
+          ]
+        },
+        {
           "prefix": "translations",
           "ops": [
             "translationsRegister",
@@ -2045,12 +1911,6 @@
           ]
         },
         {
-          "prefix": "quantity",
-          "ops": [
-            "quantityPricingByVariantUpdate"
-          ]
-        },
-        {
           "prefix": "refund",
           "ops": [
             "refundCreate"
@@ -2063,9 +1923,9 @@
           ]
         },
         {
-          "prefix": "tax",
+          "prefix": "shopify",
           "ops": [
-            "taxSummaryCreate"
+            "shopifyPaymentsPayoutAlternateCurrencyCreate"
           ]
         },
         {
