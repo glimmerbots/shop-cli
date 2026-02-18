@@ -13,6 +13,7 @@ import {
   queryHelp,
   type InputFieldHelp,
 } from '../../generated/help/schema-help'
+import { DEFAULT_ADMIN_API_VERSION } from '../../defaults'
 
 type VerbHelpOptions = {
   showAllFields?: boolean
@@ -94,7 +95,7 @@ export const renderTopLevelHelp = () => {
     '  --graphql-endpoint <url>          (or env GRAPHQL_ENDPOINT; overrides shop domain)',
     '  --access-token <token>              (or env SHOPIFY_ACCESS_TOKEN)',
     '  --header "Name: value"              (repeatable; adds request headers)',
-    '  --api-version <YYYY-MM>             (default: 2026-04)',
+    `  --api-version <YYYY-MM>             (default: ${DEFAULT_ADMIN_API_VERSION})`,
     '',
     'Output:',
     '  --format json|jsonl|table|raw|markdown   (default: json)',

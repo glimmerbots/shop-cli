@@ -1,4 +1,5 @@
 import { createShopifyAdminClient, type ShopifyAdminApiVersion } from '../adminClient'
+import { resolveAdminApiVersion } from '../defaults'
 
 export type CliClientOptions = {
   shopDomain?: string
@@ -20,11 +21,7 @@ export const createCliClientFromEnv = ({
   const resolvedGraphqlEndpoint = graphqlEndpoint ?? process.env.GRAPHQL_ENDPOINT
   const resolvedShopDomain = shopDomain ?? process.env.SHOPIFY_SHOP
   const resolvedAccessToken = accessToken ?? process.env.SHOPIFY_ACCESS_TOKEN
-  const resolvedApiVersionRaw = apiVersion ?? process.env.SHOPIFY_API_VERSION
-  const resolvedApiVersion =
-    typeof resolvedApiVersionRaw === 'string' && resolvedApiVersionRaw.trim().length > 0
-      ? (resolvedApiVersionRaw.trim() as ShopifyAdminApiVersion)
-      : '2026-04'
+  const resolvedApiVersion = resolveAdminApiVersion(apiVersion ?? process.env.SHOPIFY_API_VERSION) as ShopifyAdminApiVersion
 
   if (!resolvedGraphqlEndpoint && !resolvedShopDomain) {
     throw new Error(
