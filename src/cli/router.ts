@@ -96,6 +96,7 @@ import { runMobilePlatformApplications } from './verbs/mobile-platform-applicati
 import { runShippingPackages } from './verbs/shipping-packages'
 import { runTags } from './verbs/tags'
 import { runTax } from './verbs/tax'
+import { runTypes } from './verbs/types'
 
 export type CliView = 'summary' | 'ids' | 'full' | 'raw' | 'all'
 
@@ -265,6 +266,7 @@ export const runCommand = async ({
   if (resource === 'events') return runEvents({ ctx, verb, argv })
   if (resource === 'functions') return runShopifyFunctions({ ctx, verb, argv })
   if (resource === 'graphql') return runGraphQL({ ctx, verb, argv })
+  if (resource === 'types') return runTypes({ verb, argv })
 
   throw new CliError(`Unknown resource: ${resource}`, 2)
 }

@@ -150,37 +150,53 @@ const main = async () => {
     firstFlagIndex === -1 ? [] : afterResource.slice(firstFlagIndex)
 
   const verb = verbParts.join(' ')
+
+  // Special handling for `types` command (no verb required for --help)
+  const isTypesCommand = resource === 'types'
+
   if (!verb) {
-    const resourceHelp = renderResourceHelp(resource)
-    if (resourceHelp) {
-      console.log(resourceHelp)
-      if (hasHelpFlag(afterResource)) return
-      throw new CliError(`\nMissing <verb> for "${resource}"`, 2)
+    // For `types`, empty verb with --help shows types help
+    if (isTypesCommand && hasHelpFlag(afterResource)) {
+      // Let runCommand handle it - it will show the types help
+      // Fall through to runCommand below
     } else {
-      console.log(renderTopLevelHelp())
-      throw new CliError(`\nUnknown resource: ${resource}`, 2)
+      const resourceHelp = renderResourceHelp(resource)
+      if (resourceHelp) {
+        console.log(resourceHelp)
+        if (hasHelpFlag(afterResource)) return
+        throw new CliError(`\nMissing <verb> for "${resource}"`, 2)
+      } else if (!isTypesCommand) {
+        console.log(renderTopLevelHelp())
+        throw new CliError(`\nUnknown resource: ${resource}`, 2)
+      }
+      // For `types` with no verb and no --help, fall through and let runTypes show help
     }
   }
 
   if (hasHelpFlag(rest)) {
-    const verbHelp = renderVerbHelp(resource, verb, { showAllFields: wantsFullHelp(rest) })
-    if (verbHelp) {
-      console.log(verbHelp)
+    // Special case: `shop types --help` should show types help
+    if (isTypesCommand) {
+      // Fall through to runCommand which will show the types help
+    } else {
+      const verbHelp = renderVerbHelp(resource, verb, { showAllFields: wantsFullHelp(rest) })
+      if (verbHelp) {
+        console.log(verbHelp)
+        return
+      }
+      const resourceHelp = renderResourceHelp(resource)
+      if (resourceHelp) {
+        console.log(resourceHelp)
+        return
+      }
+      console.log(renderTopLevelHelp())
       return
     }
-    const resourceHelp = renderResourceHelp(resource)
-    if (resourceHelp) {
-      console.log(resourceHelp)
-      return
-    }
-    console.log(renderTopLevelHelp())
-    return
   }
 
   const parsed = parseGlobalFlags(rest)
 
   const dryRun = parsed.dryRun ?? false
-  const isOfflineCommand = verb === 'fields'
+  const isOfflineCommand = verb === 'fields' || isTypesCommand
   const shopDomain = parsed.shopDomain
   const graphqlEndpoint = parsed.graphqlEndpoint
   const accessToken = parsed.accessToken
