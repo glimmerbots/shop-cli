@@ -161,8 +161,8 @@ const renderTypeShapesSection = (types: Map<string, InputFieldHelp[]>): string[]
       const prefix = `    ${name}  ${type}  `
       const indent = ' '.repeat(prefix.length)
 
-      // Split description on newlines and indent continuation lines
-      const descLines = `${required}${desc}`.split('\n')
+      // Split description on newlines, filter blank lines, and indent continuation lines
+      const descLines = `${required}${desc}`.split('\n').filter((line) => line.trim() !== '')
       const formattedDesc = descLines
         .map((line, i) => (i === 0 ? line : `${indent}${line}`))
         .join('\n')
