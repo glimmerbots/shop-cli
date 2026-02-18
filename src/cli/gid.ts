@@ -1,6 +1,28 @@
 import { CliError } from './errors'
 
-export type ShopifyGidType = 'Product' | 'Collection' | 'Customer' | 'Order'
+export type ShopifyGidType =
+  | 'Product'
+  | 'ProductVariant'
+  | 'Collection'
+  | 'Customer'
+  | 'Order'
+  | 'Article'
+  | 'Blog'
+  | 'Page'
+  | 'Comment'
+  | 'Menu'
+  | 'Publication'
+  | 'Catalog'
+  | 'Market'
+  | 'DraftOrder'
+  | 'DraftOrderTag'
+  | 'UrlRedirect'
+  | 'Segment'
+  | 'WebhookSubscription'
+  | 'MetafieldDefinition'
+  | 'Metaobject'
+  | 'MetaobjectDefinition'
+  | 'SellingPlanGroup'
 
 export const isGid = (value: string) => value.startsWith('gid://')
 
@@ -14,4 +36,3 @@ export const coerceGid = (value: string, type: ShopifyGidType) => {
   }
   return `gid://shopify/${type}/${value}`
 }
-
