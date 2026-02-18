@@ -8,14 +8,28 @@ import { CliError } from './errors'
 import { printJsonError } from './output'
 import { runArticles } from './verbs/articles'
 import { runBlogs } from './verbs/blogs'
+import { runBulkOperations } from './verbs/bulk-operations'
+import { runCarrierServices } from './verbs/carrier-services'
+import { runCartTransforms } from './verbs/cart-transforms'
 import { runCatalogs } from './verbs/catalogs'
+import { runCheckoutBranding } from './verbs/checkout-branding'
 import { runCollections } from './verbs/collections'
 import { runComments } from './verbs/comments'
+import { runCompanies } from './verbs/companies'
+import { runCompanyContacts } from './verbs/company-contacts'
+import { runCompanyLocations } from './verbs/company-locations'
 import { runCustomers } from './verbs/customers'
+import { runDelegateTokens } from './verbs/delegate-tokens'
+import { runDeliveryCustomizations } from './verbs/delivery-customizations'
+import { runDeliveryProfiles } from './verbs/delivery-profiles'
 import { runDraftOrders } from './verbs/draftOrders'
+import { runEvents } from './verbs/events'
 import { runFiles } from './verbs/files'
+import { runInventoryItems } from './verbs/inventory-items'
+import { runInventoryShipments } from './verbs/inventory-shipments'
 import { runInventory } from './verbs/inventory'
 import { runOrderEdit } from './verbs/order-edit'
+import { runMarketingActivities } from './verbs/marketing-activities'
 import { runOrders } from './verbs/orders'
 import { runFulfillmentOrders } from './verbs/fulfillment-orders'
 import { runFulfillments } from './verbs/fulfillments'
@@ -28,14 +42,25 @@ import { runMetafieldDefinitions } from './verbs/metafieldDefinitions'
 import { runMetaobjectDefinitions } from './verbs/metaobjectDefinitions'
 import { runMetaobjects } from './verbs/metaobjects'
 import { runPages } from './verbs/pages'
+import { runSavedSearches } from './verbs/saved-searches'
 import { runSegments } from './verbs/segments'
+import { runScriptTags } from './verbs/script-tags'
 import { runSellingPlanGroups } from './verbs/sellingPlanGroups'
 import { runSubscriptionBilling } from './verbs/subscription-billing'
 import { runSubscriptionContracts } from './verbs/subscription-contracts'
 import { runSubscriptionDrafts } from './verbs/subscription-drafts'
+import { runServerPixels } from './verbs/server-pixels'
+import { runShopConfig } from './verbs/shop'
+import { runShopifyFunctions } from './verbs/shopify-functions'
+import { runStoreCredit } from './verbs/store-credit'
+import { runThemes } from './verbs/themes'
+import { runTranslations } from './verbs/translations'
 import { runUrlRedirects } from './verbs/urlRedirects'
+import { runValidations } from './verbs/validations'
+import { runWebPixels } from './verbs/web-pixels'
 import { runWebhooks } from './verbs/webhooks'
 import { runReturns } from './verbs/returns'
+import { runAppBilling } from './verbs/app-billing'
 
 export type CliView = 'summary' | 'ids' | 'full' | 'raw'
 
@@ -77,6 +102,8 @@ export const runCommand = async ({
   if (resource === 'returns') return runReturns({ ctx, verb, argv })
   if (resource === 'fulfillment-orders') return runFulfillmentOrders({ ctx, verb, argv })
   if (resource === 'fulfillments') return runFulfillments({ ctx, verb, argv })
+  if (resource === 'inventory-items') return runInventoryItems({ ctx, verb, argv })
+  if (resource === 'inventory-shipments') return runInventoryShipments({ ctx, verb, argv })
   if (resource === 'files') return runFiles({ ctx, verb, argv })
   if (resource === 'publications') return runPublications({ ctx, verb, argv })
   if (resource === 'articles') return runArticles({ ctx, verb, argv })
@@ -89,6 +116,9 @@ export const runCommand = async ({
   if (resource === 'draft-orders') return runDraftOrders({ ctx, verb, argv })
   if (resource === 'url-redirects') return runUrlRedirects({ ctx, verb, argv })
   if (resource === 'segments') return runSegments({ ctx, verb, argv })
+  if (resource === 'saved-searches') return runSavedSearches({ ctx, verb, argv })
+  if (resource === 'script-tags') return runScriptTags({ ctx, verb, argv })
+  if (resource === 'carrier-services') return runCarrierServices({ ctx, verb, argv })
   if (resource === 'webhooks') return runWebhooks({ ctx, verb, argv })
   if (resource === 'subscription-contracts') return runSubscriptionContracts({ ctx, verb, argv })
   if (resource === 'subscription-billing') return runSubscriptionBilling({ ctx, verb, argv })
@@ -97,6 +127,26 @@ export const runCommand = async ({
   if (resource === 'metaobjects') return runMetaobjects({ ctx, verb, argv })
   if (resource === 'metaobject-definitions') return runMetaobjectDefinitions({ ctx, verb, argv })
   if (resource === 'selling-plan-groups') return runSellingPlanGroups({ ctx, verb, argv })
+  if (resource === 'companies') return runCompanies({ ctx, verb, argv })
+  if (resource === 'company-contacts') return runCompanyContacts({ ctx, verb, argv })
+  if (resource === 'company-locations') return runCompanyLocations({ ctx, verb, argv })
+  if (resource === 'store-credit') return runStoreCredit({ ctx, verb, argv })
+  if (resource === 'delegate-tokens') return runDelegateTokens({ ctx, verb, argv })
+  if (resource === 'themes') return runThemes({ ctx, verb, argv })
+  if (resource === 'cart-transforms') return runCartTransforms({ ctx, verb, argv })
+  if (resource === 'validations') return runValidations({ ctx, verb, argv })
+  if (resource === 'checkout-branding') return runCheckoutBranding({ ctx, verb, argv })
+  if (resource === 'delivery-profiles') return runDeliveryProfiles({ ctx, verb, argv })
+  if (resource === 'delivery-customizations') return runDeliveryCustomizations({ ctx, verb, argv })
+  if (resource === 'web-pixels') return runWebPixels({ ctx, verb, argv })
+  if (resource === 'server-pixels') return runServerPixels({ ctx, verb, argv })
+  if (resource === 'marketing-activities') return runMarketingActivities({ ctx, verb, argv })
+  if (resource === 'bulk-operations') return runBulkOperations({ ctx, verb, argv })
+  if (resource === 'app-billing') return runAppBilling({ ctx, verb, argv })
+  if (resource === 'config') return runShopConfig({ ctx, verb, argv })
+  if (resource === 'translations') return runTranslations({ ctx, verb, argv })
+  if (resource === 'events') return runEvents({ ctx, verb, argv })
+  if (resource === 'functions') return runShopifyFunctions({ ctx, verb, argv })
 
   throw new CliError(`Unknown resource: ${resource}`, 2)
 }

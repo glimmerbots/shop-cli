@@ -92,6 +92,7 @@ export const runProducts = async ({
         'Verbs:',
         '  create|get|list|update|delete|duplicate|set-status|add-tags|remove-tags',
         '  publish|unpublish|publish-all',
+        '  bundle-create|bundle-update',
         '  metafields upsert',
         '',
         'Common output flags:',
@@ -100,6 +101,36 @@ export const runProducts = async ({
         '  --selection <graphql>  (selection override; can be @file.gql)',
       ].join('\n'),
     )
+    return
+  }
+
+  if (verb === 'bundle-create' || verb === 'bundle-update') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const built = buildInput({
+      inputArg: args.input as any,
+      setArgs: args.set as any,
+      setJsonArgs: args['set-json'] as any,
+    })
+    if (!built.used) throw new CliError('Missing --input or --set/--set-json', 2)
+
+    const mutation = verb === 'bundle-create' ? 'productBundleCreate' : 'productBundleUpdate'
+    const result = await runMutation(ctx, {
+      [mutation]: {
+        __args: { input: built.input },
+        productBundleOperation: {
+          id: true,
+          status: true,
+          product: { id: true, title: true },
+          userErrors: { field: true, message: true },
+        },
+        userErrors: { field: true, message: true },
+      },
+    })
+    if (result === undefined) return
+    const payload = (result as any)[mutation]
+    maybeFailOnUserErrors({ payload, failOnUserErrors: ctx.failOnUserErrors })
+    if (ctx.quiet) return console.log(payload?.productBundleOperation?.id ?? '')
+    printJson(payload, ctx.format !== 'raw')
     return
   }
 
