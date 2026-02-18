@@ -61,6 +61,12 @@ const automaticDiscountNodeFullSelection = {
   ...automaticDiscountNodeSummarySelection,
 } as const
 
+const automaticAppDiscountSummarySelection = {
+  discountId: true,
+  title: true,
+  status: true,
+} as const
+
 const getAutomaticDiscountSelection = (view: CommandContext['view']) => {
   if (view === 'ids') return { id: true } as const
   if (view === 'full') return automaticDiscountNodeFullSelection
@@ -243,13 +249,13 @@ export const runDiscountsAutomatic = async ({
     const result = await runMutation(ctx, {
       discountAutomaticAppCreate: {
         __args: { automaticAppDiscount: input },
-        automaticDiscountNode: automaticDiscountNodeSummarySelection,
+        automaticAppDiscount: automaticAppDiscountSummarySelection,
         userErrors: { field: true, message: true },
       },
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.discountAutomaticAppCreate, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.discountAutomaticAppCreate?.automaticDiscountNode?.id ?? '')
+    if (ctx.quiet) return console.log(result.discountAutomaticAppCreate?.automaticAppDiscount?.discountId ?? '')
     printJson(result.discountAutomaticAppCreate, ctx.format !== 'raw')
     return
   }
@@ -343,13 +349,13 @@ export const runDiscountsAutomatic = async ({
     const result = await runMutation(ctx, {
       discountAutomaticAppUpdate: {
         __args: { id, automaticAppDiscount: input },
-        automaticDiscountNode: automaticDiscountNodeSummarySelection,
+        automaticAppDiscount: automaticAppDiscountSummarySelection,
         userErrors: { field: true, message: true },
       },
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.discountAutomaticAppUpdate, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.discountAutomaticAppUpdate?.automaticDiscountNode?.id ?? '')
+    if (ctx.quiet) return console.log(result.discountAutomaticAppUpdate?.automaticAppDiscount?.discountId ?? '')
     printJson(result.discountAutomaticAppUpdate, ctx.format !== 'raw')
     return
   }

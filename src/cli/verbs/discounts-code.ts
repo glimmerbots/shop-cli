@@ -55,6 +55,12 @@ const codeDiscountNodeFullSelection = {
   ...codeDiscountNodeSummarySelection,
 } as const
 
+const codeAppDiscountSummarySelection = {
+  discountId: true,
+  title: true,
+  status: true,
+} as const
+
 const getCodeDiscountSelection = (view: CommandContext['view']) => {
   if (view === 'ids') return { id: true } as const
   if (view === 'full') return codeDiscountNodeFullSelection
@@ -265,13 +271,13 @@ export const runDiscountsCode = async ({
     const result = await runMutation(ctx, {
       discountCodeAppCreate: {
         __args: { codeAppDiscount: input },
-        codeDiscountNode: codeDiscountNodeSummarySelection,
+        codeAppDiscount: codeAppDiscountSummarySelection,
         userErrors: { field: true, message: true },
       },
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.discountCodeAppCreate, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.discountCodeAppCreate?.codeDiscountNode?.id ?? '')
+    if (ctx.quiet) return console.log(result.discountCodeAppCreate?.codeAppDiscount?.discountId ?? '')
     printJson(result.discountCodeAppCreate, ctx.format !== 'raw')
     return
   }
@@ -362,13 +368,13 @@ export const runDiscountsCode = async ({
     const result = await runMutation(ctx, {
       discountCodeAppUpdate: {
         __args: { id, codeAppDiscount: input },
-        codeDiscountNode: codeDiscountNodeSummarySelection,
+        codeAppDiscount: codeAppDiscountSummarySelection,
         userErrors: { field: true, message: true },
       },
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.discountCodeAppUpdate, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.discountCodeAppUpdate?.codeDiscountNode?.id ?? '')
+    if (ctx.quiet) return console.log(result.discountCodeAppUpdate?.codeAppDiscount?.discountId ?? '')
     printJson(result.discountCodeAppUpdate, ctx.format !== 'raw')
     return
   }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-18T08:56:16.668Z",
+  "generatedAt": "2026-02-18T09:32:06.909Z",
   "schemaVersion": "2026-04",
   "entries": [
     {
@@ -105,6 +105,22 @@
     },
     {
       "resource": "articles",
+      "verb": "publish",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "articles",
+      "verb": "unpublish",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "articles",
       "verb": "update",
       "argv": [
         "--id",
@@ -142,6 +158,24 @@
       "resource": "blogs",
       "verb": "list",
       "argv": []
+    },
+    {
+      "resource": "blogs",
+      "verb": "publish",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "blogs publish/unpublish is not supported in --dry-run mode (requires pagination)"
+    },
+    {
+      "resource": "blogs",
+      "verb": "unpublish",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "blogs publish/unpublish is not supported in --dry-run mode (requires pagination)"
     },
     {
       "resource": "blogs",
@@ -334,6 +368,21 @@
     },
     {
       "resource": "collections",
+      "verb": "add-products",
+      "argv": [
+        "--id",
+        "1",
+        "--product-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "collections",
       "verb": "create",
       "argv": [
         "--input",
@@ -371,6 +420,45 @@
       "resource": "collections",
       "verb": "list",
       "argv": []
+    },
+    {
+      "resource": "collections",
+      "verb": "publish",
+      "argv": [
+        "--id",
+        "1",
+        "--publication-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "remove-products",
+      "argv": [
+        "--id",
+        "1",
+        "--product-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "collections",
+      "verb": "reorder-products",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Missing moves: pass either --moves <json|@file> or --move <productId>:<newPosition> (repeatable)"
+    },
+    {
+      "resource": "collections",
+      "verb": "unpublish",
+      "argv": [
+        "--id",
+        "1",
+        "--publication-id",
+        "1"
+      ]
     },
     {
       "resource": "collections",
@@ -797,6 +885,21 @@
     },
     {
       "resource": "customers",
+      "verb": "add-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "customers",
       "verb": "create",
       "argv": [
         "--input",
@@ -824,6 +927,43 @@
       "resource": "customers",
       "verb": "list",
       "argv": []
+    },
+    {
+      "resource": "customers",
+      "verb": "merge",
+      "argv": [
+        "--id",
+        "1",
+        "--other-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "metafields",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Unknown customers metafields verb: --id"
+    },
+    {
+      "resource": "customers",
+      "verb": "remove-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "customers",
+      "verb": "send-invite",
+      "argv": [
+        "--id",
+        "1"
+      ]
     },
     {
       "resource": "customers",
@@ -937,6 +1077,314 @@
     {
       "resource": "delivery-profiles",
       "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "activate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to bulk-delete without --yes"
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "create-app",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "create-basic",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "create-bxgy",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "create-free-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "deactivate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "update-app",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "update-basic",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "update-bxgy",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-automatic",
+      "verb": "update-free-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "activate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "add-redeem-codes",
+      "argv": [
+        "--id",
+        "1",
+        "--codes",
+        "test"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "bulk-activate",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "bulk-deactivate",
+      "argv": [
+        "--id",
+        "1",
+        "--ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "bulk-delete",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to bulk-delete without --yes"
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "create-app",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "create-basic",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "create-bxgy",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "create-free-shipping",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "deactivate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "delete-redeem-codes",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to delete redeem codes without --yes"
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "get-by-code",
+      "argv": [
+        "--id",
+        "1",
+        "--code",
+        "test"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "update-app",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "update-basic",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "update-bxgy",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "discounts-code",
+      "verb": "update-free-shipping",
       "argv": [
         "--id",
         "1",
@@ -1119,6 +1567,40 @@
       "resource": "events",
       "verb": "list",
       "argv": []
+    },
+    {
+      "resource": "files",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "files",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "files",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "files",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--alt",
+        "test"
+      ]
     },
     {
       "resource": "files",
@@ -1312,6 +1794,48 @@
       ]
     },
     {
+      "resource": "fulfillment-services",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing name in --input/--set"
+    },
+    {
+      "resource": "fulfillment-services",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "fulfillment-services",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "fulfillment-services",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "fulfillment-services",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Nothing to update (expected at least one field)"
+    },
+    {
       "resource": "fulfillments",
       "verb": "cancel",
       "argv": [
@@ -1368,6 +1892,96 @@
       "argv": []
     },
     {
+      "resource": "gift-cards",
+      "verb": "config",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "credit",
+      "argv": [
+        "--id",
+        "1",
+        "--credit-amount",
+        "1"
+      ],
+      "skipReason": "--credit-amount must be in the form \"amount,currency\" (for example 10.00,USD)"
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "deactivate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "debit",
+      "argv": [
+        "--id",
+        "1",
+        "--debit-amount",
+        "1"
+      ],
+      "skipReason": "--debit-amount must be in the form \"amount,currency\" (for example 10.00,USD)"
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "notify-customer",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "notify-recipient",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "gift-cards",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
       "resource": "graphql",
       "verb": "mutation",
       "argv": [
@@ -1391,6 +2005,32 @@
         "1",
         "--delta",
         "1"
+      ]
+    },
+    {
+      "resource": "inventory",
+      "verb": "list",
+      "argv": [
+        "--location-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory",
+      "verb": "move",
+      "argv": [
+        "--id",
+        "1",
+        "--inventory-item-id",
+        "1",
+        "--from-location-id",
+        "1",
+        "--to-location-id",
+        "1",
+        "--quantity",
+        "1",
+        "--reference-document-uri",
+        "test"
       ]
     },
     {
@@ -1516,6 +2156,183 @@
         "--id",
         "1",
         "--items",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "create-ready",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "duplicate",
+      "argv": [
+        "--id",
+        "1",
+        "--new-title",
+        "Copy"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "edit",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "mark-ready",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "remove-items",
+      "argv": [
+        "--id",
+        "1",
+        "--transfer-line-item-ids",
+        "1,2"
+      ]
+    },
+    {
+      "resource": "inventory-transfers",
+      "verb": "set-items",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Expected lineItems array via --input or --set lineItems[0].*"
+    },
+    {
+      "resource": "locations",
+      "verb": "activate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "locations",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "locations",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "locations",
+      "verb": "deactivate",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "locations",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "locations",
+      "verb": "disable-local-pickup",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "locations",
+      "verb": "enable-local-pickup",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing pickupTime in --input/--set"
+    },
+    {
+      "resource": "locations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "locations",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "locations",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
         "{}"
       ]
     },
@@ -1957,6 +2774,47 @@
     },
     {
       "resource": "orders",
+      "verb": "add-note",
+      "argv": [
+        "--id",
+        "1",
+        "--note",
+        "test"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "add-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--tags",
+        "tag1,tag2"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "cancel",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "close",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "orders",
       "verb": "create",
       "argv": [
         "--input",
@@ -1974,6 +2832,14 @@
     },
     {
       "resource": "orders",
+      "verb": "fulfill",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "orders",
       "verb": "get",
       "argv": [
         "--id",
@@ -1984,6 +2850,24 @@
       "resource": "orders",
       "verb": "list",
       "argv": []
+    },
+    {
+      "resource": "orders",
+      "verb": "mark-paid",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "orders",
+      "verb": "remove-tags",
+      "argv": [
+        "--id",
+        "1",
+        "--tags",
+        "tag1,tag2"
+      ]
     },
     {
       "resource": "orders",
@@ -2027,7 +2911,182 @@
     },
     {
       "resource": "pages",
+      "verb": "publish",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "pages",
+      "verb": "unpublish",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "pages",
       "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "payment-terms",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--reference-id",
+        "1"
+      ],
+      "skipReason": "Missing paymentTermsTemplateId (use --template-id or --set paymentTermsTemplateId=...)"
+    },
+    {
+      "resource": "payment-terms",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "payment-terms",
+      "verb": "send-reminder",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "payment-terms",
+      "verb": "templates",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "payment-terms",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Nothing to update (expected paymentTermsTemplateId and/or paymentSchedules)"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "add-prices",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Expected prices array via --input or --set prices[0].*"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "add-quantity-rules",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Expected quantityRules array via --input or --set quantityRules[0].*"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "price-lists",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "price-lists",
+      "verb": "delete-prices",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to delete prices without --yes"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "delete-quantity-rules",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Refusing to delete quantity rules without --yes"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "price-lists",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "price-lists",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "price-lists",
+      "verb": "update-prices",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Expected pricesToAdd and/or variantIdsToDelete"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "update-prices-by-product",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Expected pricesToAdd and/or pricesToDeleteByProductIds"
+    },
+    {
+      "resource": "price-lists",
+      "verb": "update-quantity-pricing",
       "argv": [
         "--id",
         "1",
@@ -2173,6 +3232,14 @@
     },
     {
       "resource": "products",
+      "verb": "archive",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
       "verb": "bundle-create",
       "argv": [
         "--id",
@@ -2190,6 +3257,11 @@
         "--input",
         "{}"
       ]
+    },
+    {
+      "resource": "products",
+      "verb": "count",
+      "argv": []
     },
     {
       "resource": "products",
@@ -2239,6 +3311,45 @@
         "1",
         "--url",
         "https://example.com"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "media list",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "media remove",
+      "argv": [
+        "--id",
+        "1",
+        "--media-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "media reorder",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "Missing moves: pass either --moves <json> or --move <mediaId>:<newPosition> (repeatable)"
+    },
+    {
+      "resource": "products",
+      "verb": "media update",
+      "argv": [
+        "--id",
+        "1",
+        "--media-id",
+        "1",
+        "--alt",
+        "test"
       ]
     },
     {
@@ -2293,12 +3404,29 @@
     },
     {
       "resource": "products",
+      "verb": "set-price",
+      "argv": [
+        "--id",
+        "1"
+      ],
+      "skipReason": "exceeded retry budget while auto-generating args"
+    },
+    {
+      "resource": "products",
       "verb": "set-status",
       "argv": [
         "--id",
         "1",
         "--status",
         "ACTIVE"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "unarchive",
+      "argv": [
+        "--id",
+        "1"
       ]
     },
     {
@@ -2367,6 +3495,36 @@
         "1",
         "--input",
         "{}"
+      ]
+    },
+    {
+      "resource": "refunds",
+      "verb": "calculate",
+      "argv": [
+        "--id",
+        "1",
+        "--order-id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "refunds",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--order-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "refunds",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
       ]
     },
     {
