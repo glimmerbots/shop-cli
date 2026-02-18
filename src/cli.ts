@@ -10,6 +10,7 @@ import { CliError } from './cli/errors'
 import { renderResourceHelp, renderTopLevelHelp, renderVerbHelp } from './cli/help/render'
 import { runCommand } from './cli/router'
 import { createShopifyAdminClient } from './adminClient'
+import { resolveAdminApiVersion } from './defaults'
 
 type GlobalParsed = {
   passthrough: string[]
@@ -195,11 +196,7 @@ const main = async () => {
 
   const verbose = parsed.verbose ?? false
 
-  const resolvedApiVersionRaw = (apiVersion ?? process.env.SHOPIFY_API_VERSION) as any
-  const resolvedApiVersion =
-    typeof resolvedApiVersionRaw === 'string' && resolvedApiVersionRaw.trim().length > 0
-      ? resolvedApiVersionRaw.trim()
-      : '2026-04'
+  const resolvedApiVersion = resolveAdminApiVersion(apiVersion ?? process.env.SHOPIFY_API_VERSION)
 
   const client = dryRun || isOfflineCommand
     ? createShopifyAdminClient({

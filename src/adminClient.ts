@@ -1,6 +1,8 @@
 import { createClient, type Client } from './generated/admin-2026-04'
 export { GenqlError } from './generated/admin-2026-04'
 
+import { resolveAdminApiVersion } from './defaults'
+
 export type ShopifyAdminApiVersion = '2026-04' | (string & {})
 
 export type RawGraphQLRequest = {
@@ -49,10 +51,7 @@ const resolveGraphqlEndpoint = ({
     )
   }
   const normalizedShopDomain = normalizeShopDomain(shopDomain)
-  const resolvedApiVersion =
-    typeof apiVersion === 'string' && apiVersion.trim().length > 0
-      ? apiVersion.trim()
-      : '2026-04'
+  const resolvedApiVersion = resolveAdminApiVersion(apiVersion)
   return `https://${normalizedShopDomain}/admin/api/${resolvedApiVersion}/graphql.json`
 }
 
