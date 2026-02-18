@@ -6,6 +6,9 @@ import { GenqlError } from '../generated/admin-2026-04'
 
 import { CliError } from './errors'
 import { printJsonError } from './output'
+import { getFields, getType } from './introspection'
+import { printFieldsTable } from './introspection/format'
+import { resourceToType } from './introspection/resources'
 import { runArticles } from './verbs/articles'
 import { runBlogs } from './verbs/blogs'
 import { runBulkOperations } from './verbs/bulk-operations'
@@ -138,6 +141,29 @@ export const runCommand = async ({
     accessToken,
     apiVersion,
     headers,
+  }
+
+  if (verb === 'fields') {
+    const typeName = resourceToType[resource]
+    if (!typeName) {
+      throw new CliError(`No field introspection available for resource: ${resource}`, 2)
+    }
+
+    const type = getType(typeName)
+    if (!type) {
+      throw new CliError(`Unknown GraphQL type for resource "${resource}": ${typeName}`, 2)
+    }
+
+    const fields = getFields(typeName)
+
+    if (ctx.format === 'json') {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify({ resource, typeName, fields }, null, 2))
+      return
+    }
+
+    printFieldsTable({ resource, typeName, fields })
+    return
   }
 
   if (resource === 'products') return runProducts({ ctx, verb, argv })
