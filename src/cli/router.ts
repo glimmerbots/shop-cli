@@ -12,17 +12,13 @@ import { runCatalogs } from './verbs/catalogs'
 import { runCollections } from './verbs/collections'
 import { runComments } from './verbs/comments'
 import { runCustomers } from './verbs/customers'
-import { runDiscountsAutomatic } from './verbs/discounts-automatic'
-import { runDiscountsCode } from './verbs/discounts-code'
 import { runDraftOrders } from './verbs/draftOrders'
-import { runFulfillmentServices } from './verbs/fulfillment-services'
 import { runFiles } from './verbs/files'
-import { runGiftCards } from './verbs/gift-cards'
 import { runInventory } from './verbs/inventory'
-import { runLocations } from './verbs/locations'
-import { runInventoryTransfers } from './verbs/inventory-transfers'
+import { runOrderEdit } from './verbs/order-edit'
 import { runOrders } from './verbs/orders'
-import { runPaymentTerms } from './verbs/payment-terms'
+import { runFulfillmentOrders } from './verbs/fulfillment-orders'
+import { runFulfillments } from './verbs/fulfillments'
 import { runProductVariants } from './verbs/product-variants'
 import { runProducts } from './verbs/products'
 import { runPublications } from './verbs/publications'
@@ -32,12 +28,14 @@ import { runMetafieldDefinitions } from './verbs/metafieldDefinitions'
 import { runMetaobjectDefinitions } from './verbs/metaobjectDefinitions'
 import { runMetaobjects } from './verbs/metaobjects'
 import { runPages } from './verbs/pages'
-import { runPriceLists } from './verbs/price-lists'
-import { runRefunds } from './verbs/refunds'
 import { runSegments } from './verbs/segments'
 import { runSellingPlanGroups } from './verbs/sellingPlanGroups'
+import { runSubscriptionBilling } from './verbs/subscription-billing'
+import { runSubscriptionContracts } from './verbs/subscription-contracts'
+import { runSubscriptionDrafts } from './verbs/subscription-drafts'
 import { runUrlRedirects } from './verbs/urlRedirects'
 import { runWebhooks } from './verbs/webhooks'
+import { runReturns } from './verbs/returns'
 
 export type CliView = 'summary' | 'ids' | 'full' | 'raw'
 
@@ -74,29 +72,27 @@ export const runCommand = async ({
   if (resource === 'collections') return runCollections({ ctx, verb, argv })
   if (resource === 'customers') return runCustomers({ ctx, verb, argv })
   if (resource === 'orders') return runOrders({ ctx, verb, argv })
+  if (resource === 'order-edit') return runOrderEdit({ ctx, verb, argv })
   if (resource === 'inventory') return runInventory({ ctx, verb, argv })
+  if (resource === 'returns') return runReturns({ ctx, verb, argv })
+  if (resource === 'fulfillment-orders') return runFulfillmentOrders({ ctx, verb, argv })
+  if (resource === 'fulfillments') return runFulfillments({ ctx, verb, argv })
   if (resource === 'files') return runFiles({ ctx, verb, argv })
   if (resource === 'publications') return runPublications({ ctx, verb, argv })
   if (resource === 'articles') return runArticles({ ctx, verb, argv })
   if (resource === 'blogs') return runBlogs({ ctx, verb, argv })
   if (resource === 'pages') return runPages({ ctx, verb, argv })
   if (resource === 'comments') return runComments({ ctx, verb, argv })
-  if (resource === 'price-lists') return runPriceLists({ ctx, verb, argv })
-  if (resource === 'discounts-automatic') return runDiscountsAutomatic({ ctx, verb, argv })
-  if (resource === 'discounts-code') return runDiscountsCode({ ctx, verb, argv })
-  if (resource === 'inventory-transfers') return runInventoryTransfers({ ctx, verb, argv })
-  if (resource === 'refunds') return runRefunds({ ctx, verb, argv })
   if (resource === 'menus') return runMenus({ ctx, verb, argv })
   if (resource === 'catalogs') return runCatalogs({ ctx, verb, argv })
   if (resource === 'markets') return runMarkets({ ctx, verb, argv })
   if (resource === 'draft-orders') return runDraftOrders({ ctx, verb, argv })
-  if (resource === 'gift-cards') return runGiftCards({ ctx, verb, argv })
   if (resource === 'url-redirects') return runUrlRedirects({ ctx, verb, argv })
-  if (resource === 'locations') return runLocations({ ctx, verb, argv })
-  if (resource === 'fulfillment-services') return runFulfillmentServices({ ctx, verb, argv })
-  if (resource === 'payment-terms') return runPaymentTerms({ ctx, verb, argv })
   if (resource === 'segments') return runSegments({ ctx, verb, argv })
   if (resource === 'webhooks') return runWebhooks({ ctx, verb, argv })
+  if (resource === 'subscription-contracts') return runSubscriptionContracts({ ctx, verb, argv })
+  if (resource === 'subscription-billing') return runSubscriptionBilling({ ctx, verb, argv })
+  if (resource === 'subscription-drafts') return runSubscriptionDrafts({ ctx, verb, argv })
   if (resource === 'metafield-definitions') return runMetafieldDefinitions({ ctx, verb, argv })
   if (resource === 'metaobjects') return runMetaobjects({ ctx, verb, argv })
   if (resource === 'metaobject-definitions') return runMetaobjectDefinitions({ ctx, verb, argv })
