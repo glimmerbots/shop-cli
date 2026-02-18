@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 import { CliError } from '../errors'
 import { coerceGid, type ShopifyGidType } from '../gid'
 
@@ -32,4 +34,80 @@ export const parseIds = (value: unknown, type: ShopifyGidType) => {
   }
   if (parts.length === 0) throw new CliError('Missing --ids', 2)
   return parts.map((id) => coerceGid(id, type))
+}
+
+const readUtf8 = (path: string) => readFileSync(path, 'utf8')
+
+const parseJson = (value: string, label: string) => {
+  try {
+    return JSON.parse(value)
+  } catch (err) {
+    throw new CliError(`${label} must be valid JSON: ${(err as Error).message}`, 2)
+  }
+}
+
+export const parseJsonArg = (
+  value: unknown,
+  label: string,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+) => {
+  if (value === undefined || value === null || value === '') {
+    if (allowEmpty) return undefined
+    throw new CliError(`Missing ${label}`, 2)
+  }
+  if (typeof value !== 'string') throw new CliError(`${label} must be a string`, 2)
+  const raw = value.trim()
+  if (!raw) {
+    if (allowEmpty) return undefined
+    throw new CliError(`Missing ${label}`, 2)
+  }
+  if (raw.startsWith('@file:')) return parseJson(readUtf8(raw.slice('@file:'.length)), label)
+  if (raw.startsWith('@')) return parseJson(readUtf8(raw.slice(1)), label)
+  return parseJson(raw, label)
+}
+
+export const parseTextArg = (
+  value: unknown,
+  label: string,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+) => {
+  if (value === undefined || value === null || value === '') {
+    if (allowEmpty) return undefined
+    throw new CliError(`Missing ${label}`, 2)
+  }
+  if (typeof value !== 'string') throw new CliError(`${label} must be a string`, 2)
+  const raw = value.trim()
+  if (!raw) {
+    if (allowEmpty) return undefined
+    throw new CliError(`Missing ${label}`, 2)
+  }
+  if (raw.startsWith('@file:')) return readUtf8(raw.slice('@file:'.length))
+  if (raw.startsWith('@')) return readUtf8(raw.slice(1))
+  return raw
+}
+
+export const parseStringList = (
+  value: unknown,
+  label: string,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+) => {
+  if (value === undefined || value === null) {
+    if (allowEmpty) return [] as string[]
+    throw new CliError(`Missing ${label}`, 2)
+  }
+
+  const raw = Array.isArray(value) ? value : [value]
+  const parts: string[] = []
+
+  for (const v of raw) {
+    if (typeof v !== 'string') throw new CliError(`${label} must be a string`, 2)
+    parts.push(...v.split(',').map((s) => s.trim()).filter(Boolean))
+  }
+
+  if (parts.length === 0) {
+    if (allowEmpty) return []
+    throw new CliError(`Missing ${label}`, 2)
+  }
+
+  return parts
 }
