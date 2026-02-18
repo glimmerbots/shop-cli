@@ -81,7 +81,7 @@ export const runFulfillments = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Fulfillment')
+    const id = requireId(args.id, 'Fulfillment')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getFulfillmentSelection(ctx.view) as any,
@@ -121,7 +121,7 @@ export const runFulfillments = async ({
 
   if (verb === 'cancel') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Fulfillment')
+    const id = requireId(args.id, 'Fulfillment')
 
     const result = await runMutation(ctx, {
       fulfillmentCancel: {
@@ -147,7 +147,7 @@ export const runFulfillments = async ({
         'notify-customer': { type: 'boolean' },
       },
     })
-    const id = requireId(args.id as any, 'Fulfillment')
+    const id = requireId(args.id, 'Fulfillment')
     const trackingInfoInput = parseTrackingInfo({
       company: args['tracking-company'],
       number: args['tracking-number'],
@@ -181,7 +181,7 @@ export const runFulfillments = async ({
       argv,
       extraOptions: { status: { type: 'string' }, message: { type: 'string' }, 'happened-at': { type: 'string' } },
     })
-    const id = requireId(args.id as any, 'Fulfillment')
+    const id = requireId(args.id, 'Fulfillment')
     const status = args.status as string | undefined
     if (!status) throw new CliError('Missing --status', 2)
 

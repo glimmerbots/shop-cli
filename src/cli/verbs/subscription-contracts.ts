@@ -177,7 +177,7 @@ export const runSubscriptionContracts = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'SubscriptionContract')
+    const id = requireId(args.id, 'SubscriptionContract')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getSubscriptionContractSelection(ctx.view) as any,
@@ -271,7 +271,7 @@ export const runSubscriptionContracts = async ({
 
   if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const contractId = requireId(args.id as any, 'SubscriptionContract')
+    const contractId = requireId(args.id, 'SubscriptionContract')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -317,7 +317,7 @@ export const runSubscriptionContracts = async ({
 
   if (verb === 'activate' || verb === 'pause' || verb === 'cancel' || verb === 'expire' || verb === 'fail') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const subscriptionContractId = requireId(args.id as any, 'SubscriptionContract')
+    const subscriptionContractId = requireId(args.id, 'SubscriptionContract')
     const mutationField =
       verb === 'activate'
         ? 'subscriptionContractActivate'
@@ -346,7 +346,7 @@ export const runSubscriptionContracts = async ({
 
   if (verb === 'set-next-billing') {
     const args = parseStandardArgs({ argv, extraOptions: { date: { type: 'string' } } })
-    const subscriptionContractId = requireId(args.id as any, 'SubscriptionContract')
+    const subscriptionContractId = requireId(args.id, 'SubscriptionContract')
     const date = args.date as string | undefined
     if (!date) throw new CliError('Missing --date', 2)
 
@@ -369,7 +369,7 @@ export const runSubscriptionContracts = async ({
 
   if (verb === 'change-product') {
     const args = parseStandardArgs({ argv, extraOptions: { 'line-id': { type: 'string' } } })
-    const subscriptionContractId = requireId(args.id as any, 'SubscriptionContract')
+    const subscriptionContractId = requireId(args.id, 'SubscriptionContract')
     const lineId = requireLineId(args['line-id'])
     const built = buildInput({
       inputArg: args.input as any,

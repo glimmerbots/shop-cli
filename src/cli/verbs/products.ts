@@ -221,7 +221,7 @@ export const runProducts = async ({
       const publishDate = parsePublishDate({ at: args.at as any, now: args.now as any })
       const payload = await publishProduct({
         ctx,
-        id: args.id as any,
+        id: args.id,
         publicationIds: resolvedPublicationIds,
         publishDate,
       })
@@ -233,7 +233,7 @@ export const runProducts = async ({
 
     const payload = await unpublishProduct({
       ctx,
-      id: args.id as any,
+      id: args.id,
       publicationIds: resolvedPublicationIds,
     })
     if (payload === undefined) return
@@ -265,7 +265,7 @@ export const runProducts = async ({
 
     const payload = await publishProduct({
       ctx,
-      id: args.id as any,
+      id: args.id,
       publicationIds,
       publishDate,
     })
@@ -289,7 +289,7 @@ export const runProducts = async ({
     })
     if (!built.used) throw new CliError('Missing --input or --set/--set-json', 2)
 
-    const result = await metafieldsUpsert({ ctx, id: args.id as any, input: built.input })
+    const result = await metafieldsUpsert({ ctx, id: args.id, input: built.input })
     if (result === undefined) return
 
     printJson(result)
@@ -298,7 +298,7 @@ export const runProducts = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getProductSelection(ctx.view) as any,
@@ -387,7 +387,7 @@ export const runProducts = async ({
 
   if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -413,7 +413,7 @@ export const runProducts = async ({
 
   if (verb === 'delete') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
     if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
 
     const result = await runMutation(ctx, {
@@ -432,7 +432,7 @@ export const runProducts = async ({
 
   if (verb === 'duplicate') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
 
     const built = buildInput({
       inputArg: undefined,
@@ -474,7 +474,7 @@ export const runProducts = async ({
 
   if (verb === 'set-status') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
     const status = args.status as string | undefined
     if (!status) throw new CliError('Missing --status (ACTIVE|DRAFT|ARCHIVED)', 2)
 
@@ -556,7 +556,7 @@ export const runProducts = async ({
 
   if (verb === 'add-tags' || verb === 'remove-tags') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
     const tags = parseTags(args.tags as any)
 
     const mutationField = verb === 'add-tags' ? 'tagsAdd' : 'tagsRemove'
@@ -586,7 +586,7 @@ export const runProducts = async ({
         'media-type': { type: 'string' },
       },
     })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
 
     const urls = (args.url as string[] | undefined) ?? []
     if (urls.length === 0) throw new CliError('Missing --url (repeatable)', 2)
@@ -624,7 +624,7 @@ export const runProducts = async ({
         'media-type': { type: 'string' },
       },
     })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireId(args.id, 'Product')
 
     const filePaths = (args.file as string[] | undefined) ?? []
     if (filePaths.length === 0) throw new CliError('Missing --file (repeatable)', 2)

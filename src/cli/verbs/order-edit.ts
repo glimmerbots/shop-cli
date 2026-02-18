@@ -169,7 +169,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getCalculatedOrderSelection(ctx.view) as any,
@@ -224,7 +224,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'commit') {
     const args = parseStandardArgs({ argv, extraOptions: { 'staff-note': { type: 'string' }, 'notify-customer': { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
 
     const result = await runMutation(ctx, {
       orderEditCommit: {
@@ -255,7 +255,7 @@ export const runOrderEdit = async ({
         'allow-duplicates': { type: 'boolean' },
       },
     })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const variantId = requireVariantId(args['variant-id'])
     const quantity = parseQuantity(args.quantity, '--quantity', { allowZero: true })
     const locationId = args['location-id'] ? coerceGid(args['location-id'], 'Location') : undefined
@@ -301,7 +301,7 @@ export const runOrderEdit = async ({
         'location-id': { type: 'string' },
       },
     })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const title = args.title as string | undefined
     if (!title) throw new CliError('Missing --title', 2)
     const price = parseJsonFlag(args.price, '--price')
@@ -341,7 +341,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'set-quantity') {
     const args = parseStandardArgs({ argv, extraOptions: { 'line-item-id': { type: 'string' }, quantity: { type: 'string' }, restock: { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const lineItemId = requireLineItemId(args['line-item-id'])
     const quantity = parseQuantity(args.quantity, '--quantity')
 
@@ -370,7 +370,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'add-discount') {
     const args = parseStandardArgs({ argv, extraOptions: { 'line-item-id': { type: 'string' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const lineItemId = requireLineItemId(args['line-item-id'])
     const built = buildInput({
       inputArg: args.input as any,
@@ -404,7 +404,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'remove-discount') {
     const args = parseStandardArgs({ argv, extraOptions: { 'discount-application-id': { type: 'string' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const discountApplicationId = requireDiscountApplicationId(args['discount-application-id'])
 
     const selection = resolveSelection({
@@ -432,7 +432,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'update-discount') {
     const args = parseStandardArgs({ argv, extraOptions: { 'discount-application-id': { type: 'string' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const discountApplicationId = requireDiscountApplicationId(args['discount-application-id'])
     const built = buildInput({
       inputArg: args.input as any,
@@ -466,7 +466,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'add-shipping') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -499,7 +499,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'remove-shipping') {
     const args = parseStandardArgs({ argv, extraOptions: { 'shipping-line-id': { type: 'string' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const shippingLineId = requireShippingLineId(args['shipping-line-id'])
 
     const selection = resolveSelection({
@@ -527,7 +527,7 @@ export const runOrderEdit = async ({
 
   if (verb === 'update-shipping') {
     const args = parseStandardArgs({ argv, extraOptions: { 'shipping-line-id': { type: 'string' } } })
-    const id = requireId(args.id as any, 'CalculatedOrder')
+    const id = requireId(args.id, 'CalculatedOrder')
     const shippingLineId = requireShippingLineId(args['shipping-line-id'])
     const built = buildInput({
       inputArg: args.input as any,

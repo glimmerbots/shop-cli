@@ -73,19 +73,12 @@ export const runLocations = async ({
   if (argv.includes('--help') || argv.includes('-h')) {
     console.log(
       [
-        'Usage: shop locations <verb> [flags]',
+        'Usage:',
+        '  shop locations <verb> [flags]',
         '',
         'Verbs:',
-        '  add                 Add a location',
-        '  get                 Get a location by ID',
-        '  list                List locations',
-        '  count               Count locations',
-        '  edit                Edit a location',
-        '  delete              Delete a location',
-        '  activate            Activate a location',
-        '  deactivate          Deactivate a location',
-        '  enable-local-pickup  Enable local pickup for a location',
-        '  disable-local-pickup Disable local pickup for a location',
+        '  create|get|list|count|update|delete',
+        '  activate|deactivate|enable-local-pickup|disable-local-pickup',
         '',
         'Common output flags:',
         '  --view summary|ids|full|raw',
@@ -173,7 +166,7 @@ export const runLocations = async ({
     return
   }
 
-  if (verb === 'add') {
+  if (verb === 'create') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
     const built = buildInput({
       inputArg: args.input as any,
@@ -196,7 +189,7 @@ export const runLocations = async ({
     return
   }
 
-  if (verb === 'edit') {
+  if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
     const id = requireId(args.id, 'Location')
     const built = buildInput({

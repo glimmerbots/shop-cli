@@ -82,7 +82,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireDraftId(args.id as any)
+    const id = requireDraftId(args.id)
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getSubscriptionDraftSelection(ctx.view) as any,
@@ -99,7 +99,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'commit') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
 
     const result = await runMutation(ctx, {
       subscriptionDraftCommit: {
@@ -117,7 +117,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -141,7 +141,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'add-line') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -166,7 +166,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'update-line') {
     const args = parseStandardArgs({ argv, extraOptions: { 'line-id': { type: 'string' } } })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const lineId = requireLineId(args['line-id'])
     const built = buildInput({
       inputArg: args.input as any,
@@ -192,7 +192,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'remove-line') {
     const args = parseStandardArgs({ argv, extraOptions: { 'line-id': { type: 'string' } } })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const lineId = requireLineId(args['line-id'])
 
     const result = await runMutation(ctx, {
@@ -212,7 +212,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'add-discount' || verb === 'update-discount') {
     const args = parseStandardArgs({ argv, extraOptions: { 'discount-id': { type: 'string' } } })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -244,7 +244,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'remove-discount') {
     const args = parseStandardArgs({ argv, extraOptions: { 'discount-id': { type: 'string' } } })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const discountId = requireDiscountId(args['discount-id'])
 
     const result = await runMutation(ctx, {
@@ -263,7 +263,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'apply-code') {
     const args = parseStandardArgs({ argv, extraOptions: { code: { type: 'string' } } })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const code = args.code as string | undefined
     if (!code) throw new CliError('Missing --code', 2)
 
@@ -283,7 +283,7 @@ export const runSubscriptionDrafts = async ({
 
   if (verb === 'add-free-shipping' || verb === 'update-free-shipping') {
     const args = parseStandardArgs({ argv, extraOptions: { 'discount-id': { type: 'string' } } })
-    const draftId = requireDraftId(args.id as any)
+    const draftId = requireDraftId(args.id)
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
