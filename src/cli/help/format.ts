@@ -22,7 +22,7 @@ export const formatFlags = ({
   flags,
   indent = '  ',
   gap = 2,
-  width = 88,
+  width = 108,
 }: {
   flags: FlagSpec[]
   indent?: string
