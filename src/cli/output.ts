@@ -23,11 +23,48 @@ export const printIds = (ids: Array<string | undefined | null>) => {
   }
 }
 
-const toTableCell = (value: unknown) => {
-  if (value === null || value === undefined) return value
+const toTableCell = (value: unknown): string => {
+  if (value === null || value === undefined) return ''
   const t = typeof value
-  if (t === 'string' || t === 'number' || t === 'boolean') return value
+  if (t === 'string') return String(value)
+  if (t === 'number' || t === 'boolean') return String(value)
   return JSON.stringify(value)
+}
+
+const escapeMarkdownCell = (value: string): string => {
+  // Escape pipe characters and newlines for markdown table cells
+  return value.replace(/\|/g, '\\|').replace(/\n/g, ' ')
+}
+
+const printMarkdownTable = (rows: Array<Record<string, unknown>>) => {
+  if (rows.length === 0) return
+
+  // Collect all unique keys across all rows
+  const keys = new Set<string>()
+  for (const row of rows) {
+    for (const key of Object.keys(row)) keys.add(key)
+  }
+  const headers = Array.from(keys)
+
+  if (headers.length === 0) return
+
+  // Build header row
+  const headerRow = '| ' + headers.join(' | ') + ' |'
+
+  // Build separator row
+  const separatorRow = '| ' + headers.map(() => '---').join(' | ') + ' |'
+
+  // Build data rows
+  const dataRows = rows.map((row) => {
+    const cells = headers.map((h) => escapeMarkdownCell(toTableCell(row[h])))
+    return '| ' + cells.join(' | ') + ' |'
+  })
+
+  process.stdout.write(headerRow + '\n')
+  process.stdout.write(separatorRow + '\n')
+  for (const row of dataRows) {
+    process.stdout.write(row + '\n')
+  }
 }
 
 export const printNode = ({
@@ -47,14 +84,12 @@ export const printNode = ({
 
   if (format === 'table') {
     if (typeof node !== 'object' || node === null) {
-      // eslint-disable-next-line no-console
-      console.table([{ value: toTableCell(node) }])
+      printMarkdownTable([{ value: node }])
       return
     }
     const row: Record<string, unknown> = {}
-    for (const [k, v] of Object.entries(node)) row[k] = toTableCell(v)
-    // eslint-disable-next-line no-console
-    console.table([row])
+    for (const [k, v] of Object.entries(node)) row[k] = v
+    printMarkdownTable([row])
     return
   }
 
@@ -89,13 +124,12 @@ export const printConnection = ({
 
   if (format === 'table') {
     const rows = nodes.map((n) => {
-      if (typeof n !== 'object' || n === null) return { value: toTableCell(n) }
+      if (typeof n !== 'object' || n === null) return { value: n }
       const row: Record<string, unknown> = {}
-      for (const [k, v] of Object.entries(n)) row[k] = toTableCell(v)
+      for (const [k, v] of Object.entries(n)) row[k] = v
       return row
     })
-    // eslint-disable-next-line no-console
-    console.table(rows)
+    printMarkdownTable(rows)
     if (connection.pageInfo) printJson({ pageInfo: connection.pageInfo })
     return
   }
