@@ -4,6 +4,7 @@ import type { CliView } from '../router'
 import { parseGraphqlSelectionArg, type GenqlSelection } from './graphqlSelection'
 import { buildAllSelection, validateIncludes } from './buildAllSelection'
 import { resourceToType } from '../introspection'
+import { stripDeprecatedFromSelection } from './stripDeprecated'
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -115,10 +116,11 @@ export const resolveSelection = ({
   }
   const includes = Array.from(new Set(includeValues as string[]))
 
+  const resolvedTypeName = typeName ?? (resource ? resourceToType[resource] : undefined)
+
   const mergedBase: GenqlSelection = (() => {
     if (view === 'raw') return {}
     if (view === 'all') {
-      const resolvedTypeName = typeName ?? (resource ? resourceToType[resource] : undefined)
       if (!resolvedTypeName) {
         const suffix = resource ? ` for resource: ${resource}` : ''
         throw new CliError(`--view all is not supported${suffix}`, 2)
@@ -129,7 +131,12 @@ export const resolveSelection = ({
     return deepCloneSelection(baseSelection)
   })()
 
-  let out = override ? deepCloneSelection(override) : mergedBase
+  const baseForBuiltInViews =
+    !override && resolvedTypeName && view !== 'raw'
+      ? stripDeprecatedFromSelection(resolvedTypeName, mergedBase)
+      : mergedBase
+
+  let out = override ? deepCloneSelection(override) : baseForBuiltInViews
 
   for (const p of selectPaths as string[]) {
     mergeDotPath({ selection: out, path: p, defaultConnectionFirst })
