@@ -28,7 +28,17 @@ shop
 shop <resource> <verb> [flags]
 ```
 
-Run `shop --help` to see all available resources and commands.
+## Documentation
+
+The CLI is self-documenting. Point your agent at it for context:
+
+```bash
+shop                     # High-level overview of all resources
+shop --help              # Same as above
+
+shop products            # Detailed docs for a specific resource
+shop products --help     # Same as above
+```
 
 ## Authentication
 
