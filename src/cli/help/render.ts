@@ -15,6 +15,12 @@ import {
 } from '../../generated/help/schema-help'
 import { DEFAULT_ADMIN_API_VERSION } from '../../defaults'
 
+const PRIMITIVES = new Set([
+  'String', 'Int', 'Float', 'Boolean', 'ID', 'DateTime', 'Date', 'JSON',
+  'Decimal', 'HTML', 'URL', 'Money', 'UnsignedInt64', 'FormattedString',
+  'Color', 'UtcOffset', 'ARN',
+])
+
 type VerbHelpOptions = {
   showAllFields?: boolean
 }
@@ -74,6 +80,110 @@ const formatOutputFlags = (spec: VerbSpec) => {
   return flags
 }
 
+/** Get type names from fields that reference other input types (not primitives/enums) */
+const getReferencedInputTypes = (fields: InputFieldHelp[]): string[] => {
+  const types: string[] = []
+  const seen = new Set<string>()
+
+  for (const field of fields) {
+    const typeName = field.typeName
+    if (PRIMITIVES.has(typeName)) continue
+    if (enumTypeHelp[typeName]) continue // It's an enum, not an input type
+    if (!inputTypeHelp[typeName]) continue // Not a known input type
+    if (seen.has(typeName)) continue
+
+    seen.add(typeName)
+    types.push(typeName)
+  }
+
+  return types
+}
+
+/** Collect all nested input types up to a given depth, preserving first-reference order */
+const collectNestedTypes = (
+  fields: InputFieldHelp[],
+  depth: number,
+  visited: Set<string>,
+): Map<string, InputFieldHelp[]> => {
+  const result = new Map<string, InputFieldHelp[]>()
+  if (depth <= 0) return result
+
+  for (const field of fields) {
+    const typeName = field.typeName
+    if (PRIMITIVES.has(typeName)) continue
+    if (enumTypeHelp[typeName]) continue // Skip enums
+    if (visited.has(typeName)) continue
+
+    const nestedFields = inputTypeHelp[typeName]
+    if (!nestedFields) continue
+
+    visited.add(typeName)
+    result.set(typeName, nestedFields)
+
+    // Recurse
+    const deeper = collectNestedTypes(nestedFields, depth - 1, visited)
+    for (const [k, v] of deeper) {
+      result.set(k, v)
+    }
+  }
+
+  return result
+}
+
+/** Format a field's type with list and required markers */
+const formatFieldTypeWithMarkers = (field: InputFieldHelp): string => {
+  let label = field.typeName
+  if (field.isList) label = `${label}[]`
+  if (field.required) label = `${label}!`
+  return label
+}
+
+/** Render the collected type shapes section for --help-full */
+const renderTypeShapesSection = (types: Map<string, InputFieldHelp[]>): string[] => {
+  if (types.size === 0) return []
+
+  const lines: string[] = ['Referenced types:']
+
+  for (const [typeName, fields] of types) {
+    lines.push('')
+    lines.push(`  ${typeName}:`)
+
+    const nameWidth = Math.max(...fields.map((f) => f.name.length), 4)
+    const typeWidth = Math.max(...fields.map((f) => formatFieldTypeWithMarkers(f).length), 4)
+
+    for (const field of fields) {
+      const name = field.name.padEnd(nameWidth)
+      const type = formatFieldTypeWithMarkers(field).padEnd(typeWidth)
+      const required = field.required ? 'Required. ' : ''
+      const desc = field.description ?? ''
+      // Truncate description to keep it readable
+      const maxDescLen = 60
+      const truncDesc = desc.length > maxDescLen ? desc.slice(0, maxDescLen - 3) + '...' : desc
+      lines.push(`    ${name}  ${type}  ${required}${truncDesc}`)
+    }
+  }
+
+  return lines
+}
+
+/** Format the "See type details" footer for regular --help */
+const formatTypeDetailsFooter = (typeNames: string[]): string | undefined => {
+  if (typeNames.length === 0) return undefined
+
+  if (typeNames.length === 1) {
+    return `See type details: shop types ${typeNames[0]}`
+  }
+
+  if (typeNames.length === 2) {
+    return `See type details: shop types ${typeNames[0]} and shop types ${typeNames[1]}`
+  }
+
+  // 3+ types: "shop types A, shop types B and shop types C"
+  const allButLast = typeNames.slice(0, -1).map((t) => `shop types ${t}`).join(', ')
+  const last = `shop types ${typeNames[typeNames.length - 1]}`
+  return `See type details: ${allButLast} and ${last}`
+}
+
 export const renderTopLevelHelp = () => {
   const resources = [...commandRegistry]
     .filter((r) => r.resource !== 'graphql')
@@ -115,6 +225,9 @@ export const renderTopLevelHelp = () => {
     '  --var <name>=<value>              Set a variable (repeatable)',
     '  --variables <json>                Variables as JSON (or @file.json)',
     '  --no-validate                     Skip local schema validation',
+    '',
+    'Schema introspection:',
+    '  shop types <TypeName>             Explore input types and enums',
     '',
     'Examples:',
     '  shop products list --first 5 --format table',
@@ -190,6 +303,8 @@ export const renderVerbHelp = (
   }
 
   const inputFields = inputFieldsFor(spec)
+  let referencedTypeNames: string[] = []
+
   if (inputFields && inputFields.length > 0) {
     const requiredFields = inputFields.filter((field) => field.required)
     const optionalFields = inputFields.filter((field) => !field.required)
@@ -208,6 +323,19 @@ export const renderVerbHelp = (
       )
     } else {
       lines.push('')
+    }
+
+    // For --help-full: expand all referenced types at the end
+    if (options.showAllFields) {
+      const visited = new Set<string>()
+      const nestedTypes = collectNestedTypes(ordered, 2, visited)
+      if (nestedTypes.size > 0) {
+        lines.push(...renderTypeShapesSection(nestedTypes))
+        lines.push('')
+      }
+    } else {
+      // For regular --help: collect type names for footer
+      referencedTypeNames = getReferencedInputTypes(shown)
     }
   }
 
@@ -233,6 +361,15 @@ export const renderVerbHelp = (
     lines.push('Examples:')
     for (const example of spec.examples) lines.push(`  ${example}`)
     lines.push('')
+  }
+
+  // For regular --help: add "See type details" footer if there are referenced types
+  if (!options.showAllFields && referencedTypeNames.length > 0) {
+    const footer = formatTypeDetailsFooter(referencedTypeNames)
+    if (footer) {
+      lines.push(footer)
+      lines.push('')
+    }
   }
 
   return lines.join('\n').trimEnd()
