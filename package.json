@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "shop-cli": "bin/shop.js"
+    "shop-cli": "bin/shop.js",
+    "shop": "bin/shop.js"
   },
   "scripts": {
     "schema:admin": "node scripts/download-admin-schema.js",
