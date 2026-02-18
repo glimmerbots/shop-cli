@@ -12,7 +12,7 @@ const businessEntitySummarySelection = {
   companyName: true,
   primary: true,
   archived: true,
-  address: { country: true, city: true, provinceCode: true },
+  address: { countryCode: true, city: true, province: true },
 } as const
 
 const businessEntityFullSelection = {
@@ -83,4 +83,3 @@ export const runBusinessEntities = async ({
 
   throw new CliError(`Unknown verb for business-entities: ${verb}`, 2)
 }
-

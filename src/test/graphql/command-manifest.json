@@ -1,7 +1,59 @@
 {
-  "generatedAt": "2026-02-18T09:32:06.909Z",
+  "generatedAt": "2026-02-18T09:36:43.031Z",
   "schemaVersion": "2026-04",
   "entries": [
+    {
+      "resource": "abandoned-checkouts",
+      "verb": "abandonment",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "abandoned-checkouts",
+      "verb": "abandonment-by-checkout",
+      "argv": [
+        "--id",
+        "1",
+        "--checkout-id",
+        "1"
+      ]
+    },
+    {
+      "resource": "abandoned-checkouts",
+      "verb": "count",
+      "argv": []
+    },
+    {
+      "resource": "abandoned-checkouts",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "abandoned-checkouts",
+      "verb": "update-activity-delivery-status",
+      "argv": [
+        "--id",
+        "1",
+        "--abandonment-id",
+        "1",
+        "--marketing-activity-id",
+        "1",
+        "--status",
+        "ACTIVE"
+      ]
+    },
+    {
+      "resource": "abandoned-checkouts",
+      "verb": "update-email-state",
+      "argv": [
+        "--id",
+        "1",
+        "--state",
+        "test"
+      ]
+    },
     {
       "resource": "app-billing",
       "verb": "cancel-subscription",
@@ -240,6 +292,19 @@
       ]
     },
     {
+      "resource": "business-entities",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "business-entities",
+      "verb": "list",
+      "argv": []
+    },
+    {
       "resource": "carrier-services",
       "verb": "create",
       "argv": [
@@ -305,6 +370,19 @@
     },
     {
       "resource": "cart-transforms",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "cash-tracking",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "cash-tracking",
       "verb": "list",
       "argv": []
     },
@@ -884,6 +962,19 @@
       ]
     },
     {
+      "resource": "customer-account-pages",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "customer-account-pages",
+      "verb": "list",
+      "argv": []
+    },
+    {
       "resource": "customers",
       "verb": "add-tags",
       "argv": [
@@ -940,12 +1031,14 @@
     },
     {
       "resource": "customers",
-      "verb": "metafields",
+      "verb": "metafields upsert",
       "argv": [
         "--id",
-        "1"
+        "1",
+        "--input",
+        "{}"
       ],
-      "skipReason": "Unknown customers metafields verb: --id"
+      "skipReason": "Metafield input missing key"
     },
     {
       "resource": "customers",
@@ -1608,6 +1701,44 @@
       "argv": [
         "--file",
         "src/test/fixtures/sample.txt"
+      ]
+    },
+    {
+      "resource": "fulfillment-constraint-rules",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}",
+        "--delivery-method-types",
+        "test",
+        "--function-handle",
+        "test"
+      ]
+    },
+    {
+      "resource": "fulfillment-constraint-rules",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "fulfillment-constraint-rules",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "fulfillment-constraint-rules",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}",
+        "--delivery-method-types",
+        "test"
       ]
     },
     {
@@ -2936,6 +3067,57 @@
       ]
     },
     {
+      "resource": "payment-customizations",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ]
+    },
+    {
+      "resource": "payment-customizations",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "payment-customizations",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "payment-customizations",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "payment-customizations",
+      "verb": "set-enabled",
+      "argv": [
+        "--id",
+        "1",
+        "--enabled",
+        "test"
+      ],
+      "skipReason": "--enabled must be true|false"
+    },
+    {
+      "resource": "payment-customizations",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ]
+    },
+    {
       "resource": "payment-terms",
       "verb": "create",
       "argv": [
@@ -2981,6 +3163,14 @@
         "{}"
       ],
       "skipReason": "Nothing to update (expected paymentTermsTemplateId and/or paymentSchedules)"
+    },
+    {
+      "resource": "point-of-sale",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
     },
     {
       "resource": "price-lists",
@@ -3904,6 +4094,59 @@
       "skipReason": "exceeded retry budget while auto-generating args"
     },
     {
+      "resource": "shop-policies",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "shop-policies",
+      "verb": "update",
+      "argv": [
+        "--id",
+        "1",
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing type (ShopPolicyType)"
+    },
+    {
+      "resource": "shopify-payments",
+      "verb": "account",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "shopify-payments",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "staff",
+      "verb": "get",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "staff",
+      "verb": "list",
+      "argv": []
+    },
+    {
+      "resource": "staff",
+      "verb": "me",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
       "resource": "store-credit",
       "verb": "credit",
       "argv": [
@@ -3930,6 +4173,29 @@
         "--id",
         "1"
       ]
+    },
+    {
+      "resource": "storefront-access-tokens",
+      "verb": "create",
+      "argv": [
+        "--input",
+        "{}"
+      ],
+      "skipReason": "Missing title"
+    },
+    {
+      "resource": "storefront-access-tokens",
+      "verb": "delete",
+      "argv": [
+        "--id",
+        "1",
+        "--yes"
+      ]
+    },
+    {
+      "resource": "storefront-access-tokens",
+      "verb": "list",
+      "argv": []
     },
     {
       "resource": "subscription-billing",
@@ -4302,6 +4568,19 @@
         "--input",
         "{}"
       ]
+    },
+    {
+      "resource": "taxonomy",
+      "verb": "categories",
+      "argv": [
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "taxonomy",
+      "verb": "list",
+      "argv": []
     },
     {
       "resource": "themes",

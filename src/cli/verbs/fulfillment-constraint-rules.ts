@@ -110,7 +110,7 @@ export const runFulfillmentConstraintRules = async ({
     const result = await runMutation(ctx, {
       fulfillmentConstraintRuleDelete: {
         __args: { id },
-        deletedId: true,
+        success: true,
         userErrors: { field: true, message: true },
       },
     })
@@ -119,7 +119,7 @@ export const runFulfillmentConstraintRules = async ({
       payload: result.fulfillmentConstraintRuleDelete,
       failOnUserErrors: ctx.failOnUserErrors,
     })
-    if (ctx.quiet) return console.log(result.fulfillmentConstraintRuleDelete?.deletedId ?? '')
+    if (ctx.quiet) return console.log(result.fulfillmentConstraintRuleDelete?.success ?? '')
     printJson(result.fulfillmentConstraintRuleDelete, ctx.format !== 'raw')
     return
   }
