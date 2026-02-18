@@ -1,10 +1,10 @@
 {
-  "name": "shopcli",
+  "name": "shop-cli",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "bin": {
-    "shop": "bin/shop.js"
+    "shop-cli": "bin/shop.js"
   },
   "scripts": {
     "schema:admin": "node scripts/download-admin-schema.js",
