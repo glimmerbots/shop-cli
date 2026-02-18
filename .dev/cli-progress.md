@@ -69,7 +69,7 @@ Known gaps vs notes (next to implement):
 
 ## Next tranche proposal
 
-Focus next on the remaining operations/resources from `.dev/operations.md` that still aren’t implemented (e.g. carrier-services, cart-transforms, customer-addresses, delivery-profiles, price-lists, web-pixels, web-presences, subscriptions).
+Focus next on the remaining operations/resources from `.dev/operations.md` that still aren’t implemented (e.g. carrier-services, cart-transforms, customer-addresses, delivery-profiles, gift-cards, payment-terms, web-pixels, web-presences, subscriptions).
 
 ### Tranche 4 implemented (2026-02-18)
 
@@ -139,3 +139,18 @@ Fulfillment services:
 Payment terms:
 
 - `shop payment-terms create|update|delete|send-reminder|templates`
+
+### Phase 2 implemented (2026-02-18)
+
+- `shop price-lists create|get|list|update|delete`
+- `shop price-lists add-prices|update-prices|update-prices-by-product|delete-prices`
+- `shop price-lists add-quantity-rules|delete-quantity-rules|update-quantity-pricing`
+- `shop discounts-automatic create-basic|create-bxgy|create-free-shipping|create-app`
+- `shop discounts-automatic get|list|update-basic|update-bxgy|update-free-shipping|update-app`
+- `shop discounts-automatic delete|bulk-delete|activate|deactivate`
+- `shop discounts-code create-basic|create-bxgy|create-free-shipping|create-app`
+- `shop discounts-code get|get-by-code|list|count|update-basic|update-bxgy|update-free-shipping|update-app`
+- `shop discounts-code delete|bulk-delete|activate|deactivate|bulk-activate|bulk-deactivate`
+- `shop discounts-code add-redeem-codes|delete-redeem-codes`
+- `shop inventory-transfers create|create-ready|get|list|edit|delete|duplicate|mark-ready|cancel|set-items|remove-items`
+- `shop refunds create|get|calculate`

@@ -17,10 +17,14 @@ export type ShopifyGidType =
   | 'Menu'
   | 'Catalog'
   | 'Market'
+  | 'PriceList'
   | 'DraftOrder'
   | 'DraftOrderTag'
   | 'FulfillmentService'
   | 'GiftCard'
+  | 'DiscountAutomaticNode'
+  | 'DiscountCodeNode'
+  | 'DiscountRedeemCode'
   | 'UrlRedirect'
   | 'PaymentSchedule'
   | 'PaymentTerms'
@@ -31,6 +35,9 @@ export type ShopifyGidType =
   | 'Metaobject'
   | 'MetaobjectDefinition'
   | 'SellingPlanGroup'
+  | 'InventoryTransfer'
+  | 'InventoryTransferLineItem'
+  | 'Refund'
 
 export const isGid = (value: string) => value.startsWith('gid://')
 

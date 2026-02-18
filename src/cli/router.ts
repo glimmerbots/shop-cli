@@ -12,12 +12,15 @@ import { runCatalogs } from './verbs/catalogs'
 import { runCollections } from './verbs/collections'
 import { runComments } from './verbs/comments'
 import { runCustomers } from './verbs/customers'
+import { runDiscountsAutomatic } from './verbs/discounts-automatic'
+import { runDiscountsCode } from './verbs/discounts-code'
 import { runDraftOrders } from './verbs/draftOrders'
 import { runFulfillmentServices } from './verbs/fulfillment-services'
 import { runFiles } from './verbs/files'
 import { runGiftCards } from './verbs/gift-cards'
 import { runInventory } from './verbs/inventory'
 import { runLocations } from './verbs/locations'
+import { runInventoryTransfers } from './verbs/inventory-transfers'
 import { runOrders } from './verbs/orders'
 import { runPaymentTerms } from './verbs/payment-terms'
 import { runProductVariants } from './verbs/product-variants'
@@ -29,6 +32,8 @@ import { runMetafieldDefinitions } from './verbs/metafieldDefinitions'
 import { runMetaobjectDefinitions } from './verbs/metaobjectDefinitions'
 import { runMetaobjects } from './verbs/metaobjects'
 import { runPages } from './verbs/pages'
+import { runPriceLists } from './verbs/price-lists'
+import { runRefunds } from './verbs/refunds'
 import { runSegments } from './verbs/segments'
 import { runSellingPlanGroups } from './verbs/sellingPlanGroups'
 import { runUrlRedirects } from './verbs/urlRedirects'
@@ -76,6 +81,11 @@ export const runCommand = async ({
   if (resource === 'blogs') return runBlogs({ ctx, verb, argv })
   if (resource === 'pages') return runPages({ ctx, verb, argv })
   if (resource === 'comments') return runComments({ ctx, verb, argv })
+  if (resource === 'price-lists') return runPriceLists({ ctx, verb, argv })
+  if (resource === 'discounts-automatic') return runDiscountsAutomatic({ ctx, verb, argv })
+  if (resource === 'discounts-code') return runDiscountsCode({ ctx, verb, argv })
+  if (resource === 'inventory-transfers') return runInventoryTransfers({ ctx, verb, argv })
+  if (resource === 'refunds') return runRefunds({ ctx, verb, argv })
   if (resource === 'menus') return runMenus({ ctx, verb, argv })
   if (resource === 'catalogs') return runCatalogs({ ctx, verb, argv })
   if (resource === 'markets') return runMarkets({ ctx, verb, argv })
