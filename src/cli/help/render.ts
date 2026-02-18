@@ -149,8 +149,11 @@ export const renderResourceHelp = (resource: string) => {
     lines.push('')
   }
 
-  const outputFlags = formatFlags({ flags: commonOutputFlags })
-  lines.push(...formatSection('Common output flags:', outputFlags))
+  // Don't show common output flags for resources that don't use them (e.g., graphql)
+  if (spec.resource !== 'graphql') {
+    const outputFlags = formatFlags({ flags: commonOutputFlags })
+    lines.push(...formatSection('Common output flags:', outputFlags))
+  }
   return lines.join('\n')
 }
 
