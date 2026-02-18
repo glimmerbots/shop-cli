@@ -69,7 +69,7 @@ Known gaps vs notes (next to implement):
 
 ## Next tranche proposal
 
-Focus next on the remaining operations/resources from `.dev/operations.md` that still aren’t implemented (e.g. carrier-services, cart-transforms, customer-addresses, delivery-profiles, gift-cards, payment-terms, web-pixels, web-presences, subscriptions).
+Focus next on the remaining operations/resources from `.dev/operations.md` that still aren’t implemented (e.g. carrier-services, cart-transforms, customer-addresses, delivery-profiles, gift-cards, payment-terms, price-lists, web-pixels, web-presences, subscriptions).
 
 ### Tranche 4 implemented (2026-02-18)
 
@@ -122,35 +122,34 @@ Selling plans:
 - `shop selling-plan-groups create|get|list|update|delete`
 - `shop selling-plan-groups add-variants|remove-variants --id <gid|num> --variant-ids <gid|num,...>`
 
-### Tranche 5 implemented (2026-02-18)
+### Phase 3 implemented (2026-02-18)
 
-Gift cards:
+Returns:
 
-- `shop gift-cards create|get|list|count|update|credit|debit|deactivate|notify-customer|notify-recipient|config`
+- `shop returns create|get|calculate|cancel|close|reopen|process|refund`
+- `shop returns request|approve-request|decline-request|remove-item`
+- `shop returns reason-definitions|returnable-fulfillments`
 
-Locations:
+Fulfillment orders + fulfillments:
 
-- `shop locations add|get|list|count|edit|delete|activate|deactivate|enable-local-pickup|disable-local-pickup`
+- `shop fulfillment-orders get|list|accept-request|reject-request|submit-request`
+- `shop fulfillment-orders accept-cancellation|reject-cancellation|submit-cancellation|cancel|close|open`
+- `shop fulfillment-orders hold|release-hold|reschedule|move|split|merge|report-progress|mark-prepared`
+- `shop fulfillment-orders set-deadline|reroute`
+- `shop fulfillments create|get|cancel|update-tracking|create-event`
 
-Fulfillment services:
+Subscriptions:
 
-- `shop fulfillment-services create|get|list|update|delete`
+- `shop subscription-contracts get|list|create|atomic-create|update|activate|pause|cancel|expire|fail`
+- `shop subscription-contracts set-next-billing|change-product`
+- `shop subscription-billing get-attempt|list-attempts|create-attempt|get-cycle|list-cycles|charge`
+- `shop subscription-billing bulk-charge|bulk-search|skip-cycle|unskip-cycle|edit-schedule|edit-cycle|delete-edits`
+- `shop subscription-drafts get|commit|update|add-line|update-line|remove-line`
+- `shop subscription-drafts add-discount|update-discount|remove-discount|apply-code`
+- `shop subscription-drafts add-free-shipping|update-free-shipping`
 
-Payment terms:
+Order edit:
 
-- `shop payment-terms create|update|delete|send-reminder|templates`
-
-### Phase 2 implemented (2026-02-18)
-
-- `shop price-lists create|get|list|update|delete`
-- `shop price-lists add-prices|update-prices|update-prices-by-product|delete-prices`
-- `shop price-lists add-quantity-rules|delete-quantity-rules|update-quantity-pricing`
-- `shop discounts-automatic create-basic|create-bxgy|create-free-shipping|create-app`
-- `shop discounts-automatic get|list|update-basic|update-bxgy|update-free-shipping|update-app`
-- `shop discounts-automatic delete|bulk-delete|activate|deactivate`
-- `shop discounts-code create-basic|create-bxgy|create-free-shipping|create-app`
-- `shop discounts-code get|get-by-code|list|count|update-basic|update-bxgy|update-free-shipping|update-app`
-- `shop discounts-code delete|bulk-delete|activate|deactivate|bulk-activate|bulk-deactivate`
-- `shop discounts-code add-redeem-codes|delete-redeem-codes`
-- `shop inventory-transfers create|create-ready|get|list|edit|delete|duplicate|mark-ready|cancel|set-items|remove-items`
-- `shop refunds create|get|calculate`
+- `shop order-edit begin|get|commit|add-variant|add-custom-item|set-quantity`
+- `shop order-edit add-discount|remove-discount|update-discount`
+- `shop order-edit add-shipping|remove-shipping|update-shipping`
