@@ -84,7 +84,7 @@ export const renderTopLevelHelp = () => {
     'Usage:',
     '  shop <resource> <verb> [flags]',
     '',
-    'Implemented resources:',
+    'Resources:',
     ...resourceLines,
     '',
     'Auth (flags override env):',
