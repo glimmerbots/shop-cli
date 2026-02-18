@@ -25,7 +25,11 @@ export type CreateShopifyAdminClientOptions = {
 }
 
 const normalizeShopDomain = (shopDomain: string) => {
-  return shopDomain.replace(/^https?:\/\//, '').replace(/\/+$/, '')
+  let normalized = shopDomain.replace(/^https?:\/\//, '').replace(/\/+$/, '')
+  if (!normalized.endsWith('.myshopify.com')) {
+    normalized = `${normalized}.myshopify.com`
+  }
+  return normalized
 }
 
 const resolveGraphqlEndpoint = ({
