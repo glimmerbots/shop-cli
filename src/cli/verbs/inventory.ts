@@ -1,29 +1,12 @@
 import { randomUUID } from 'node:crypto'
 
 import { CliError } from '../errors'
-import { coerceGid } from '../gid'
 import { parseStandardArgs, runMutation, runQuery, type CommandContext } from '../router'
 import { maybeFailOnUserErrors } from '../userErrors'
 import { resolveInventoryItemId } from '../workflows/inventory/resolveInventoryItemId'
 import { printConnection, printJson } from '../output'
 
-import { parseFirst } from './_shared'
-
-const parseIntFlag = (flag: string, value: unknown) => {
-  if (value === undefined || value === null || value === '') {
-    throw new CliError(`Missing ${flag}`, 2)
-  }
-  const n = Number(value)
-  if (!Number.isFinite(n) || !Number.isInteger(n)) {
-    throw new CliError(`${flag} must be an integer`, 2)
-  }
-  return n
-}
-
-const requireLocationId = (id: string | undefined) => {
-  if (!id) throw new CliError('Missing --location-id', 2)
-  return coerceGid(id, 'Location')
-}
+import { parseFirst, parseIntFlag, requireLocationId } from './_shared'
 
 const inventoryAdjustmentGroupSelection = ({
   inventoryItemId,
@@ -83,7 +66,7 @@ export const runInventory = async ({
         'location-id': { type: 'string' },
       },
     })
-    const locationId = requireLocationId(args['location-id'] as any)
+    const locationId = requireLocationId(args['location-id'])
     const first = parseFirst(args.first)
     const after = args.after as any
     const query = args.query as any
@@ -132,7 +115,7 @@ export const runInventory = async ({
     },
   })
 
-  const locationId = verb === 'move' ? undefined : requireLocationId(args['location-id'] as any)
+  const locationId = verb === 'move' ? undefined : requireLocationId(args['location-id'])
   const inventoryItemId = await resolveInventoryItemId({
     ctx,
     inventoryItemId: args['inventory-item-id'] as any,
@@ -228,8 +211,8 @@ export const runInventory = async ({
     if (!fromLocationIdRaw) throw new CliError('Missing --from-location-id', 2)
     if (!toLocationIdRaw) throw new CliError('Missing --to-location-id', 2)
 
-    const fromLocationId = coerceGid(fromLocationIdRaw, 'Location')
-    const toLocationId = coerceGid(toLocationIdRaw, 'Location')
+    const fromLocationId = requireLocationId(fromLocationIdRaw, '--from-location-id')
+    const toLocationId = requireLocationId(toLocationIdRaw, '--to-location-id')
 
     const quantity = parseIntFlag('--quantity', (args as any).quantity)
     const quantityName = ((args as any)['quantity-name'] as string | undefined) ?? 'available'

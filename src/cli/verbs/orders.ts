@@ -88,7 +88,7 @@ export const runOrders = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Order')
+    const id = requireId(args.id, 'Order')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getOrderSelection(ctx.view) as any,
@@ -399,7 +399,7 @@ export const runOrders = async ({
 
   if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Order')
+    const id = requireId(args.id, 'Order')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -425,7 +425,7 @@ export const runOrders = async ({
 
   if (verb === 'delete') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Order')
+    const id = requireId(args.id, 'Order')
     if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
 
     const result = await runMutation(ctx, {

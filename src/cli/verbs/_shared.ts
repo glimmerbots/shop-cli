@@ -10,9 +10,30 @@ export const parseFirst = (value: unknown) => {
   return Math.floor(n)
 }
 
+export const parseIntFlag = (flag: string, value: unknown) => {
+  if (value === undefined || value === null || value === '') {
+    throw new CliError(`Missing ${flag}`, 2)
+  }
+  const n = Number(value)
+  if (!Number.isFinite(n) || !Number.isInteger(n)) {
+    throw new CliError(`${flag} must be an integer`, 2)
+  }
+  return n
+}
+
 export const requireId = (id: unknown, type: ShopifyGidType) => {
   if (typeof id !== 'string' || !id) throw new CliError('Missing --id', 2)
   return coerceGid(id, type)
+}
+
+export const requireLocationId = (value: unknown, flag = '--location-id') => {
+  if (typeof value !== 'string' || !value) throw new CliError(`Missing ${flag}`, 2)
+  return coerceGid(value, 'Location')
+}
+
+export const parseDateTime = (value: unknown, flag: string) => {
+  if (typeof value !== 'string' || !value) throw new CliError(`Missing ${flag}`, 2)
+  return value
 }
 
 export const parseCsv = (value: unknown, label: string) => {

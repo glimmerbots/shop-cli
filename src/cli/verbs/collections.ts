@@ -63,7 +63,7 @@ export const runCollections = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Collection')
+    const id = requireId(args.id, 'Collection')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getCollectionSelection(ctx.view) as any,
@@ -288,7 +288,7 @@ export const runCollections = async ({
 
   if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Collection')
+    const id = requireId(args.id, 'Collection')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -314,7 +314,7 @@ export const runCollections = async ({
 
   if (verb === 'delete') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Collection')
+    const id = requireId(args.id, 'Collection')
     if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
 
     const result = await runMutation(ctx, {
@@ -333,7 +333,7 @@ export const runCollections = async ({
 
   if (verb === 'duplicate') {
     const args = parseStandardArgs({ argv, extraOptions: { 'copy-publications': { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'Collection')
+    const id = requireId(args.id, 'Collection')
 
     const built = buildInput({
       inputArg: undefined,

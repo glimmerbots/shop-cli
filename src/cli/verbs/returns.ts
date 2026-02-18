@@ -185,7 +185,7 @@ export const runReturns = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getReturnSelection(ctx.view) as any,
@@ -310,7 +310,7 @@ export const runReturns = async ({
 
   if (verb === 'approve-request') {
     const args = parseStandardArgs({ argv, extraOptions: { 'notify-customer': { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
 
     const result = await runMutation(ctx, {
       returnApproveRequest: {
@@ -335,7 +335,7 @@ export const runReturns = async ({
         'notify-customer': { type: 'boolean' },
       },
     })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
     const declineReason = args['decline-reason'] as string | undefined
     if (!declineReason) throw new CliError('Missing --decline-reason', 2)
 
@@ -359,7 +359,7 @@ export const runReturns = async ({
 
   if (verb === 'cancel' || verb === 'close' || verb === 'reopen') {
     const args = parseStandardArgs({ argv, extraOptions: { 'notify-customer': { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
     const mutationField =
       verb === 'cancel' ? 'returnCancel' : verb === 'close' ? 'returnClose' : 'returnReopen'
     const mutationArgs =
@@ -384,7 +384,7 @@ export const runReturns = async ({
 
   if (verb === 'process') {
     const args = parseStandardArgs({ argv, extraOptions: { 'notify-customer': { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -414,7 +414,7 @@ export const runReturns = async ({
 
   if (verb === 'refund') {
     const args = parseStandardArgs({ argv, extraOptions: { 'notify-customer': { type: 'boolean' } } })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -447,7 +447,7 @@ export const runReturns = async ({
       argv,
       extraOptions: { 'return-line-item-id': { type: 'string' }, quantity: { type: 'string' } },
     })
-    const id = requireId(args.id as any, 'Return')
+    const id = requireId(args.id, 'Return')
     const returnLineItemId = requireReturnLineItemId(args['return-line-item-id'])
     const quantity = parseQuantity(args.quantity, '--quantity')
 

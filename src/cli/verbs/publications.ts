@@ -1,11 +1,12 @@
 import { CliError } from '../errors'
-import { coerceGid } from '../gid'
 import { buildInput } from '../input'
 import { printConnection, printJson, printNode } from '../output'
 import { parseStandardArgs, runMutation, runQuery, type CommandContext } from '../router'
 import { resolveSelection } from '../selection/select'
 import { maybeFailOnUserErrors } from '../userErrors'
 import { listPublications, resolvePublicationIdFromList } from '../workflows/publications/resolvePublicationId'
+
+import { parseFirst, requireId } from './_shared'
 
 const publicationSummarySelection = {
   id: true,
@@ -23,18 +24,6 @@ const getPublicationSelection = (view: CommandContext['view']) => {
   if (view === 'full') return publicationFullSelection
   if (view === 'raw') return {} as const
   return publicationSummarySelection
-}
-
-const requireId = (id: string | undefined) => {
-  if (!id) throw new CliError('Missing --id', 2)
-  return coerceGid(id, 'Publication')
-}
-
-const parseFirst = (value: unknown) => {
-  if (value === undefined) return 50
-  const n = Number(value)
-  if (!Number.isFinite(n) || n <= 0) throw new CliError('--first must be a positive integer', 2)
-  return Math.floor(n)
 }
 
 export const runPublications = async ({
@@ -100,7 +89,7 @@ export const runPublications = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any)
+    const id = requireId(args.id, 'Publication')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getPublicationSelection(ctx.view) as any,
@@ -166,7 +155,7 @@ export const runPublications = async ({
 
   if (verb === 'update') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any)
+    const id = requireId(args.id, 'Publication')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -190,7 +179,7 @@ export const runPublications = async ({
 
   if (verb === 'delete') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any)
+    const id = requireId(args.id, 'Publication')
     if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
 
     const result = await runMutation(ctx, {
@@ -209,4 +198,3 @@ export const runPublications = async ({
 
   throw new CliError(`Unknown verb for publications: ${verb}`, 2)
 }
-

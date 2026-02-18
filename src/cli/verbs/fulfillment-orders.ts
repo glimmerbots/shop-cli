@@ -1,12 +1,11 @@
 import { CliError } from '../errors'
-import { coerceGid } from '../gid'
 import { buildInput } from '../input'
 import { printConnection, printJson, printNode } from '../output'
 import { parseStandardArgs, runMutation, runQuery, type CommandContext } from '../router'
 import { resolveSelection } from '../selection/select'
 import { maybeFailOnUserErrors } from '../userErrors'
 
-import { parseFirst, parseIds, requireId } from './_shared'
+import { parseDateTime, parseFirst, parseIds, requireId, requireLocationId } from './_shared'
 
 const fulfillmentOrderSummarySelection = {
   id: true,
@@ -91,16 +90,6 @@ const getFulfillmentOrderSelection = (view: CommandContext['view']) => {
   return fulfillmentOrderSummarySelection
 }
 
-const requireLocationId = (value: unknown, flag = '--location-id') => {
-  if (typeof value !== 'string' || !value) throw new CliError(`Missing ${flag}`, 2)
-  return coerceGid(value, 'Location')
-}
-
-const parseDateTime = (value: unknown, flag: string) => {
-  if (typeof value !== 'string' || !value) throw new CliError(`Missing ${flag}`, 2)
-  return value
-}
-
 const parseLineItemsInput = (input: any) => {
   if (input === undefined) return undefined
   if (Array.isArray(input)) return input
@@ -131,22 +120,6 @@ export const runFulfillmentOrders = async ({
         '  hold|release-hold|reschedule|move|split|merge|report-progress|mark-prepared',
         '  set-deadline|reroute',
         '',
-        'State machine:',
-        '  OPEN → ON_HOLD → IN_PROGRESS → FULFILLED',
-        '    │        │         │           │',
-        '    └── INCOMPLETE ←───┴───────────┘',
-        '             │',
-        '          CLOSED / CANCELLED',
-        '',
-        'Request flow:',
-        '  UNSUBMITTED → SUBMITTED → ACCEPTED → (fulfill)',
-        '                    ↓',
-        '                REJECTED',
-        '',
-        '  CANCELLATION_REQUESTED → CANCELLATION_ACCEPTED',
-        '                       ↓',
-        '                 CANCELLATION_REJECTED',
-        '',
         'Common output flags:',
         '  --view summary|ids|full|raw',
         '  --select <path>        (repeatable; dot paths; adds to base view selection)',
@@ -158,7 +131,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'get') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const selection = resolveSelection({
       view: ctx.view,
       baseSelection: getFulfillmentOrderSelection(ctx.view) as any,
@@ -223,7 +196,7 @@ export const runFulfillmentOrders = async ({
       argv,
       extraOptions: { message: { type: 'string' }, 'estimated-shipped-at': { type: 'string' } },
     })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const message = args.message as string | undefined
     const estimatedShippedAt = args['estimated-shipped-at'] as string | undefined
 
@@ -249,7 +222,7 @@ export const runFulfillmentOrders = async ({
       argv,
       extraOptions: { message: { type: 'string' }, reason: { type: 'string' } },
     })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const message = args.message as string | undefined
     const reason = args.reason as string | undefined
 
@@ -275,7 +248,7 @@ export const runFulfillmentOrders = async ({
       argv,
       extraOptions: { message: { type: 'string' }, 'notify-customer': { type: 'boolean' } },
     })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -308,7 +281,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'accept-cancellation') {
     const args = parseStandardArgs({ argv, extraOptions: { message: { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
 
     const result = await runMutation(ctx, {
       fulfillmentOrderAcceptCancellationRequest: {
@@ -329,7 +302,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'reject-cancellation') {
     const args = parseStandardArgs({ argv, extraOptions: { message: { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
 
     const result = await runMutation(ctx, {
       fulfillmentOrderRejectCancellationRequest: {
@@ -350,7 +323,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'submit-cancellation') {
     const args = parseStandardArgs({ argv, extraOptions: { message: { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
 
     const result = await runMutation(ctx, {
       fulfillmentOrderSubmitCancellationRequest: {
@@ -371,7 +344,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'cancel' || verb === 'close' || verb === 'open') {
     const args = parseStandardArgs({ argv, extraOptions: { message: { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const mutationField =
       verb === 'cancel' ? 'fulfillmentOrderCancel' : verb === 'close' ? 'fulfillmentOrderClose' : 'fulfillmentOrderOpen'
 
@@ -400,7 +373,7 @@ export const runFulfillmentOrders = async ({
       argv,
       extraOptions: { reason: { type: 'string' }, notes: { type: 'string' } },
     })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const reason = args.reason as string | undefined
     if (!reason) throw new CliError('Missing --reason', 2)
 
@@ -426,7 +399,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'release-hold') {
     const args = parseStandardArgs({ argv, extraOptions: { 'hold-ids': { type: 'string', multiple: true } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const holdIds = args['hold-ids'] ? parseIds(args['hold-ids'], 'FulfillmentHold') : undefined
 
     const result = await runMutation(ctx, {
@@ -445,7 +418,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'reschedule') {
     const args = parseStandardArgs({ argv, extraOptions: { 'fulfill-at': { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const fulfillAt = parseDateTime(args['fulfill-at'], '--fulfill-at')
 
     const result = await runMutation(ctx, {
@@ -464,7 +437,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'move') {
     const args = parseStandardArgs({ argv, extraOptions: { 'location-id': { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const newLocationId = requireLocationId(args['location-id'])
     const built = buildInput({
       inputArg: args.input as any,
@@ -563,7 +536,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'report-progress') {
     const args = parseStandardArgs({ argv, extraOptions: { message: { type: 'string' } } })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const progressReport = args.message ? { reasonNotes: args.message } : undefined
 
     const result = await runMutation(ctx, {
@@ -582,7 +555,7 @@ export const runFulfillmentOrders = async ({
 
   if (verb === 'mark-prepared') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'FulfillmentOrder')
+    const id = requireId(args.id, 'FulfillmentOrder')
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,

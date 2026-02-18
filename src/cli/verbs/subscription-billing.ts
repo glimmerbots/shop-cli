@@ -110,7 +110,7 @@ export const runSubscriptionBilling = async ({
 
   if (verb === 'get-attempt') {
     const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'SubscriptionBillingAttempt')
+    const id = requireId(args.id, 'SubscriptionBillingAttempt')
 
     const result = await runQuery(ctx, {
       subscriptionBillingAttempt: {
