@@ -84,6 +84,39 @@ describe('help command rendering', () => {
     expect(help).not.toContain('Create a new product.')
   })
 
+  it('`shop products variants` prints grouped help', async () => {
+    process.env.SHOP_CLI_COMMAND = 'shopcli'
+    const { runProducts } = await import('../cli/verbs/products')
+
+    const ctx: any = {
+      client: {},
+      format: 'json',
+      quiet: false,
+      view: 'summary',
+      dryRun: false,
+      failOnUserErrors: true,
+      warnMissingAccessToken: false,
+    }
+
+    let logged = ''
+    const originalLog = console.log
+    try {
+      ;(console as any).log = (chunk: unknown) => {
+        logged += typeof chunk === 'string' ? chunk : Buffer.from(chunk as any).toString('utf8')
+        logged += '\n'
+      }
+
+      await runProducts({ ctx, verb: 'variants', argv: [] })
+    } finally {
+      ;(console as any).log = originalLog
+    }
+
+    expect(logged).toContain('  shopcli products variants <verb> [flags]')
+    expect(logged).toContain('variants list')
+    expect(logged).toContain('variants update')
+    expect(logged).toContain('shopcli products variants list --help')
+  })
+
   it('re-writes next-page hint command when global command is set', () => {
     setGlobalOutputFormat('jsonl')
     setGlobalCommand('shopcli')

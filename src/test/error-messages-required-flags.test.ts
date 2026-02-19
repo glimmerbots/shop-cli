@@ -1,25 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
 describe('required flag error messages', () => {
-  it('products variants defaults to variants list and reports missing --product-id', async () => {
-    const { runProducts } = await import('../cli/verbs/products')
-
-    const ctx: any = {
-      client: {},
-      format: 'json',
-      quiet: false,
-      view: 'summary',
-      dryRun: false,
-      failOnUserErrors: true,
-      warnMissingAccessToken: false,
-    }
-
-    await expect(runProducts({ ctx, verb: 'variants', argv: [] })).rejects.toMatchObject({
-      message: 'Missing --product-id',
-      exitCode: 2,
-    })
-  })
-
   it('products variants update reports missing --variant-id (not --id)', async () => {
     const { runProducts } = await import('../cli/verbs/products')
 
