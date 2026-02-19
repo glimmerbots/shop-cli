@@ -5337,42 +5337,52 @@
     },
     {
       "resource": "products",
-      "verb": "option-update",
+      "verb": "options list",
       "argv": [
-        "--product-id",
+        "--id",
+        "1"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "options update",
+      "argv": [
+        "--id",
+        "1",
+        "--option-id",
+        "1",
+        "--name",
+        "Size"
+      ]
+    },
+    {
+      "resource": "products",
+      "verb": "options create",
+      "argv": [
+        "--id",
         "1",
         "--option",
-        "{}"
+        "Size=Small,Medium"
       ]
     },
     {
       "resource": "products",
-      "verb": "options-create",
+      "verb": "options delete",
       "argv": [
-        "--product-id",
+        "--id",
         "1",
-        "--options",
-        "[]"
+        "--option-id",
+        "1"
       ]
     },
     {
       "resource": "products",
-      "verb": "options-delete",
+      "verb": "options reorder",
       "argv": [
-        "--product-id",
+        "--id",
         "1",
-        "--option-ids",
-        "1,2"
-      ]
-    },
-    {
-      "resource": "products",
-      "verb": "options-reorder",
-      "argv": [
-        "--product-id",
-        "1",
-        "--options",
-        "[]"
+        "--order",
+        "Size"
       ]
     },
     {

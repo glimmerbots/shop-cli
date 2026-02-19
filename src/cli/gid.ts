@@ -8,6 +8,8 @@ export type ShopifyGidType =
   | 'Metafield'
   | 'Job'
   | 'Product'
+  | 'ProductOption'
+  | 'ProductOptionValue'
   | 'ProductFeed'
   | 'ProductVariant'
   | 'Collection'

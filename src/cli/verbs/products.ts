@@ -84,6 +84,25 @@ const productOptionSelection = {
   values: true,
 } as const
 
+const productOptionListSummarySelection = {
+  id: true,
+  name: true,
+  position: true,
+  values: true,
+} as const
+
+const productOptionListFullSelection = {
+  ...productOptionListSummarySelection,
+  optionValues: { id: true, name: true, hasVariants: true },
+} as const
+
+const getProductOptionListSelection = (view: CommandContext['view']) => {
+  if (view === 'ids') return { id: true } as const
+  if (view === 'full') return productOptionListFullSelection
+  if (view === 'raw') return {} as const
+  return productOptionListSummarySelection
+}
+
 const productOptionsSummarySelection = {
   ...productSummarySelection,
   options: {
@@ -268,6 +287,123 @@ const parseVariantOptionValues = (value: unknown) => {
   return optionValues
 }
 
+const parseRepeatableStrings = (
+  value: unknown,
+  flag: string,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+) => {
+  if (value === undefined || value === null) {
+    if (allowEmpty) return [] as string[]
+    throw new CliError(`Missing ${flag}`, 2)
+  }
+
+  const raw = Array.isArray(value) ? value : [value]
+  const out: string[] = []
+
+  for (const entry of raw) {
+    if (typeof entry !== 'string') throw new CliError(`${flag} must be a string (repeatable)`, 2)
+    const trimmed = entry.trim()
+    if (!trimmed) throw new CliError(`${flag} cannot be empty`, 2)
+    out.push(trimmed)
+  }
+
+  if (out.length === 0) {
+    if (allowEmpty) return []
+    throw new CliError(`Missing ${flag}`, 2)
+  }
+
+  return out
+}
+
+const parseOptionSpec = (value: string, flag: string) => {
+  const trimmed = value.trim()
+  const eq = trimmed.indexOf('=')
+  if (eq <= 0 || eq === trimmed.length - 1) {
+    throw new CliError(`${flag} must be in the form Name=Value1,Value2,... Got: ${value}`, 2)
+  }
+  const name = trimmed.slice(0, eq).trim()
+  const valuesRaw = trimmed.slice(eq + 1).trim()
+  if (!name || !valuesRaw) {
+    throw new CliError(`${flag} must be in the form Name=Value1,Value2,... Got: ${value}`, 2)
+  }
+  const valueNames = valuesRaw
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean)
+  if (valueNames.length === 0) {
+    throw new CliError(`${flag} must include at least one value. Got: ${value}`, 2)
+  }
+  return {
+    name,
+    values: valueNames.map((v) => ({ name: v })),
+  }
+}
+
+const parseFromTo = (value: string, flag: string) => {
+  const trimmed = value.trim()
+  const eq = trimmed.indexOf('=')
+  if (eq <= 0 || eq === trimmed.length - 1) {
+    throw new CliError(`${flag} must be in the form From=To. Got: ${value}`, 2)
+  }
+  const from = trimmed.slice(0, eq).trim()
+  const to = trimmed.slice(eq + 1).trim()
+  if (!from || !to) {
+    throw new CliError(`${flag} must be in the form From=To. Got: ${value}`, 2)
+  }
+  return { from, to }
+}
+
+const looksLikeGidOrNumericId = (value: string) => /^gid:\/\//i.test(value) || /^\d+$/.test(value)
+
+const normalizeProductOptionCreateVariantStrategy = (value: unknown) => {
+  if (value === undefined || value === null || value === '') return undefined
+  if (typeof value !== 'string') throw new CliError('--variant-strategy must be a string', 2)
+  const v = value.trim().toUpperCase()
+  if (v === 'LEAVE_AS_IS' || v === 'CREATE') return v
+  throw new CliError('--variant-strategy must be LEAVE_AS_IS|CREATE', 2)
+}
+
+const normalizeProductOptionUpdateVariantStrategy = (value: unknown) => {
+  if (value === undefined || value === null || value === '') return undefined
+  if (typeof value !== 'string') throw new CliError('--variant-strategy must be a string', 2)
+  const v = value.trim().toUpperCase()
+  if (v === 'LEAVE_AS_IS' || v === 'MANAGE') return v
+  throw new CliError('--variant-strategy must be LEAVE_AS_IS|MANAGE', 2)
+}
+
+const normalizeProductOptionDeleteStrategy = (value: unknown) => {
+  if (value === undefined || value === null || value === '') return undefined
+  if (typeof value !== 'string') throw new CliError('--strategy must be a string', 2)
+  const v = value.trim().toUpperCase()
+  if (v === 'DEFAULT' || v === 'NON_DESTRUCTIVE' || v === 'POSITION') return v
+  throw new CliError('--strategy must be DEFAULT|NON_DESTRUCTIVE|POSITION', 2)
+}
+
+const productOptionResolveSelection = {
+  id: true,
+  name: true,
+  position: true,
+  values: true,
+  optionValues: { id: true, name: true },
+} as const
+
+const fetchProductOptionsForResolution = async ({ ctx, productId }: { ctx: CommandContext; productId: string }) => {
+  const result = await runQuery(ctx, {
+    product: { __args: { id: productId }, options: productOptionResolveSelection },
+  })
+  if (result === undefined) return [] as any[]
+  return (result.product?.options ?? []) as any[]
+}
+
+const resolveSingleOptionByName = (options: any[], name: string) => {
+  const matches = options.filter((o) => typeof o?.name === 'string' && o.name === name)
+  if (matches.length === 0) return undefined
+  if (matches.length > 1) {
+    throw new CliError(`Multiple product options named "${name}" exist. Use --option-id instead.`, 2)
+  }
+  return matches[0]
+}
+
 const parseInventoryPolicy = (value: unknown) => {
   if (value === undefined || value === null || value === '') return undefined
   if (typeof value !== 'string') throw new CliError('--inventory-policy must be a string', 2)
@@ -297,7 +433,7 @@ export const runProducts = async ({
         '  tags|types|vendors',
         '  change-status|set',
         '  join-selling-plan-groups|leave-selling-plan-groups',
-        '  option-update|options-create|options-delete|options-reorder',
+        '  options list|options create|options update|options delete|options reorder',
         '  variants list|variants create|variants update|variants delete|variants reorder',
         '  combined-listing-update',
         '  add-tags|remove-tags|set-price',
@@ -935,31 +1071,270 @@ export const runProducts = async ({
     return
   }
 
-  if (verb === 'option-update') {
+  if (verb === 'options list') {
+    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const id = requireId(args.id as any, 'Product')
+
+    const selection = resolveSelection({
+      typeName: 'ProductOption',
+      view: ctx.view,
+      baseSelection: getProductOptionListSelection(ctx.view) as any,
+      select: args.select,
+      selection: (args as any).selection,
+      include: args.include,
+      ensureId: ctx.quiet,
+    })
+
+    const result = await runQuery(ctx, {
+      product: {
+        __args: { id },
+        options: selection,
+      },
+    })
+    if (result === undefined) return
+    const options = (result.product?.options ?? []) as any[]
+    printConnection({
+      connection: { nodes: options, pageInfo: undefined },
+      format: ctx.format,
+      quiet: ctx.quiet,
+    })
+    return
+  }
+
+  if (verb === 'options create') {
     const args = parseStandardArgs({
       argv,
       extraOptions: {
-        'product-id': { type: 'string' },
-        option: { type: 'string' },
-        'option-values-to-add': { type: 'string' },
-        'option-values-to-delete': { type: 'string' },
-        'option-values-to-update': { type: 'string' },
+        option: { type: 'string', multiple: true },
+        'options-json': { type: 'string' },
         'variant-strategy': { type: 'string' },
       },
     })
-    const productId = requireId((args as any)['product-id'], 'Product')
-    const option = parseJsonArg((args as any).option, '--option')
+    const productId = requireId(args.id as any, 'Product')
 
-    const optionValuesToAdd = (args as any)['option-values-to-add']
-      ? parseJsonArg((args as any)['option-values-to-add'], '--option-values-to-add')
-      : undefined
-    const optionValuesToDelete = (args as any)['option-values-to-delete']
-      ? parseJsonArg((args as any)['option-values-to-delete'], '--option-values-to-delete')
-      : undefined
-    const optionValuesToUpdate = (args as any)['option-values-to-update']
-      ? parseJsonArg((args as any)['option-values-to-update'], '--option-values-to-update')
-      : undefined
-    const variantStrategy = (args as any)['variant-strategy'] as string | undefined
+    const optionSpecs = parseRepeatableStrings((args as any).option, '--option', { allowEmpty: true })
+    const optionsJsonRaw = (args as any)['options-json'] as string | undefined
+    if (optionSpecs.length > 0 && optionsJsonRaw) {
+      throw new CliError('Do not pass both --option and --options-json', 2)
+    }
+
+    const options =
+      optionsJsonRaw !== undefined
+        ? parseJsonArg(optionsJsonRaw, '--options-json')
+        : optionSpecs.map((s) => parseOptionSpec(s, '--option'))
+
+    if (!Array.isArray(options) || options.length === 0) {
+      throw new CliError('Missing options: pass one or more --option entries, or --options-json', 2)
+    }
+
+    const variantStrategy = normalizeProductOptionCreateVariantStrategy((args as any)['variant-strategy'])
+
+    const selection = resolveSelection({
+      resource: 'products',
+      view: ctx.view,
+      baseSelection: getProductSelectionForOptions(ctx.view) as any,
+      select: args.select,
+      selection: (args as any).selection,
+      include: args.include,
+      ensureId: ctx.quiet,
+    })
+
+    const result = await runMutation(ctx, {
+      productOptionsCreate: {
+        __args: { productId, options, ...(variantStrategy ? { variantStrategy } : {}) },
+        product: selection,
+        userErrors: { code: true, field: true, message: true },
+      },
+    })
+    if (result === undefined) return
+    maybeFailOnUserErrors({ payload: result.productOptionsCreate, failOnUserErrors: ctx.failOnUserErrors })
+    printNode({ node: result.productOptionsCreate?.product, format: ctx.format, quiet: ctx.quiet })
+    return
+  }
+
+  if (verb === 'options update') {
+    const args = parseStandardArgs({
+      argv,
+      extraOptions: {
+        'option-id': { type: 'string' },
+        name: { type: 'string' },
+        position: { type: 'string' },
+        'add-value': { type: 'string', multiple: true },
+        'delete-value': { type: 'string', multiple: true },
+        'rename-value': { type: 'string', multiple: true },
+        'delete-value-id': { type: 'string', multiple: true },
+        'rename-value-id': { type: 'string', multiple: true },
+        'option-json': { type: 'string' },
+        'add-values-json': { type: 'string' },
+        'delete-value-ids-json': { type: 'string' },
+        'update-values-json': { type: 'string' },
+        'variant-strategy': { type: 'string' },
+      },
+    })
+    const productId = requireId(args.id as any, 'Product')
+    const optionIdRaw = (args as any)['option-id'] as string | undefined
+    if (!optionIdRaw) throw new CliError('Missing --option-id', 2)
+    const optionId = coerceGid(optionIdRaw, 'ProductOption')
+
+    const optionJsonRaw = (args as any)['option-json'] as string | undefined
+    const addValuesJsonRaw = (args as any)['add-values-json'] as string | undefined
+    const deleteValueIdsJsonRaw = (args as any)['delete-value-ids-json'] as string | undefined
+    const updateValuesJsonRaw = (args as any)['update-values-json'] as string | undefined
+
+    const hasJsonMode = Boolean(optionJsonRaw || addValuesJsonRaw || deleteValueIdsJsonRaw || updateValuesJsonRaw)
+
+    const addValueNames = parseRepeatableStrings((args as any)['add-value'], '--add-value', { allowEmpty: true })
+    const deleteValueNames = parseRepeatableStrings((args as any)['delete-value'], '--delete-value', { allowEmpty: true })
+    const renameValueSpecs = parseRepeatableStrings((args as any)['rename-value'], '--rename-value', { allowEmpty: true })
+    const deleteValueIdSpecs = parseRepeatableStrings((args as any)['delete-value-id'], '--delete-value-id', {
+      allowEmpty: true,
+    })
+    const renameValueIdSpecs = parseRepeatableStrings((args as any)['rename-value-id'], '--rename-value-id', {
+      allowEmpty: true,
+    })
+
+    if (hasJsonMode) {
+      if (
+        addValueNames.length ||
+        deleteValueNames.length ||
+        renameValueSpecs.length ||
+        deleteValueIdSpecs.length ||
+        renameValueIdSpecs.length ||
+        args.name !== undefined ||
+        (args as any).position !== undefined
+      ) {
+        throw new CliError('Do not mix JSON flags with non-JSON option update flags', 2)
+      }
+    }
+
+    const position = parsePositiveIntFlag({ value: (args as any).position, flag: '--position' })
+    const hasNonJsonOptionChange = (typeof args.name === 'string' && args.name.trim() !== '') || position !== undefined
+    const hasNonJsonValueChange =
+      addValueNames.length > 0 ||
+      deleteValueNames.length > 0 ||
+      renameValueSpecs.length > 0 ||
+      deleteValueIdSpecs.length > 0 ||
+      renameValueIdSpecs.length > 0
+
+    if (!hasJsonMode && !hasNonJsonOptionChange && !hasNonJsonValueChange) {
+      throw new CliError(
+        'No changes specified. Pass --name/--position and/or value change flags (e.g. --add-value, --delete-value, --rename-value).',
+        2,
+      )
+    }
+
+    const optionUpdate =
+      optionJsonRaw !== undefined
+        ? parseJsonArg(optionJsonRaw, '--option-json')
+        : {
+            id: optionId,
+            ...(typeof args.name === 'string' && args.name.trim() ? { name: args.name.trim() } : {}),
+            ...(position !== undefined ? { position } : {}),
+          }
+
+    if (!optionUpdate || typeof optionUpdate !== 'object') {
+      throw new CliError('--option-json must be a JSON object', 2)
+    }
+
+    if (!(optionUpdate as any).id) (optionUpdate as any).id = optionId
+
+    const optionValuesToAdd =
+      addValuesJsonRaw !== undefined
+        ? parseJsonArg(addValuesJsonRaw, '--add-values-json')
+        : addValueNames.map((name) => ({ name }))
+    const optionValuesToDeleteJson =
+      deleteValueIdsJsonRaw !== undefined ? parseJsonArg(deleteValueIdsJsonRaw, '--delete-value-ids-json') : undefined
+    const optionValuesToUpdate =
+      updateValuesJsonRaw !== undefined ? parseJsonArg(updateValuesJsonRaw, '--update-values-json') : undefined
+
+    const optionValuesToDeleteFromIds = deleteValueIdSpecs.map((id) => coerceGid(id, 'ProductOptionValue'))
+
+    const needsResolutionByName = deleteValueNames.length > 0 || renameValueSpecs.length > 0
+    if (needsResolutionByName && ctx.dryRun) {
+      throw new CliError(
+        'Name-based value changes are not supported in --dry-run mode. Use --delete-value-id/--rename-value-id or JSON flags.',
+        2,
+      )
+    }
+
+    let resolvedDeletesFromNames: string[] = []
+    let resolvedUpdatesFromNames: Array<{ id: string; name: string }> = []
+
+    if (needsResolutionByName) {
+      const options = await fetchProductOptionsForResolution({ ctx, productId })
+      const option = options.find((o) => typeof o?.id === 'string' && o.id === optionId)
+      if (!option) throw new CliError(`Option not found on product: ${optionId}`, 2)
+
+      const optionValues = (option.optionValues ?? []) as any[]
+      const byName = new Map<string, any[]>()
+      for (const ov of optionValues) {
+        const n = typeof ov?.name === 'string' ? ov.name : undefined
+        if (!n) continue
+        const list = byName.get(n) ?? []
+        list.push(ov)
+        byName.set(n, list)
+      }
+
+      for (const name of deleteValueNames) {
+        const matches = byName.get(name) ?? []
+        if (matches.length === 0) throw new CliError(`Option value not found: "${name}"`, 2)
+        if (matches.length > 1) {
+          throw new CliError(`Multiple option values named "${name}" exist. Use --delete-value-id instead.`, 2)
+        }
+        const id = matches[0]?.id
+        if (typeof id !== 'string' || !id) throw new CliError(`Option value "${name}" is missing an ID`, 2)
+        resolvedDeletesFromNames.push(id)
+      }
+
+      for (const spec of renameValueSpecs) {
+        const { from, to } = parseFromTo(spec, '--rename-value')
+        const matches = byName.get(from) ?? []
+        if (matches.length === 0) throw new CliError(`Option value not found: "${from}"`, 2)
+        if (matches.length > 1) {
+          throw new CliError(`Multiple option values named "${from}" exist. Use --rename-value-id instead.`, 2)
+        }
+        const id = matches[0]?.id
+        if (typeof id !== 'string' || !id) throw new CliError(`Option value "${from}" is missing an ID`, 2)
+        resolvedUpdatesFromNames.push({ id, name: to })
+      }
+    }
+
+    const renameUpdatesFromIds: Array<{ id: string; name: string }> = []
+    for (const spec of renameValueIdSpecs) {
+      const { from, to } = parseFromTo(spec, '--rename-value-id')
+      renameUpdatesFromIds.push({ id: coerceGid(from, 'ProductOptionValue'), name: to })
+    }
+
+    const deletesFromJson =
+      optionValuesToDeleteJson !== undefined
+        ? (() => {
+            if (!Array.isArray(optionValuesToDeleteJson)) {
+              throw new CliError('--delete-value-ids-json must be a JSON array', 2)
+            }
+            return optionValuesToDeleteJson.map((id) => {
+              if (typeof id !== 'string' || !id.trim()) throw new CliError('delete-value-ids-json must contain strings', 2)
+              return id
+            })
+          })()
+        : []
+
+    const deletes = Array.from(new Set([...optionValuesToDeleteFromIds, ...resolvedDeletesFromNames, ...deletesFromJson]))
+
+    const updates = [
+      ...(Array.isArray(optionValuesToUpdate) ? optionValuesToUpdate : optionValuesToUpdate ? [optionValuesToUpdate] : []),
+      ...resolvedUpdatesFromNames,
+      ...renameUpdatesFromIds,
+    ]
+
+    if (optionValuesToAdd !== undefined && optionValuesToAdd !== null && !Array.isArray(optionValuesToAdd)) {
+      throw new CliError('--add-values-json must be a JSON array', 2)
+    }
+
+    if (optionValuesToUpdate !== undefined && optionValuesToUpdate !== null && !Array.isArray(optionValuesToUpdate)) {
+      throw new CliError('--update-values-json must be a JSON array', 2)
+    }
+
+    const variantStrategy = normalizeProductOptionUpdateVariantStrategy((args as any)['variant-strategy'])
 
     const selection = resolveSelection({
       resource: 'products',
@@ -975,10 +1350,10 @@ export const runProducts = async ({
       productOptionUpdate: {
         __args: {
           productId,
-          option,
-          ...(optionValuesToAdd !== undefined ? { optionValuesToAdd } : {}),
-          ...(optionValuesToDelete !== undefined ? { optionValuesToDelete } : {}),
-          ...(optionValuesToUpdate !== undefined ? { optionValuesToUpdate } : {}),
+          option: optionUpdate,
+          ...(Array.isArray(optionValuesToAdd) && optionValuesToAdd.length ? { optionValuesToAdd } : {}),
+          ...(deletes.length ? { optionValuesToDelete: deletes } : {}),
+          ...(updates.length ? { optionValuesToUpdate: updates } : {}),
           ...(variantStrategy ? { variantStrategy } : {}),
         },
         product: selection,
@@ -991,63 +1366,46 @@ export const runProducts = async ({
     return
   }
 
-  if (verb === 'options-create') {
+  if (verb === 'options delete') {
     const args = parseStandardArgs({
       argv,
       extraOptions: {
-        'product-id': { type: 'string' },
-        options: { type: 'string' },
-        'variant-strategy': { type: 'string' },
-      },
-    })
-    const productId = requireId((args as any)['product-id'], 'Product')
-    const options = parseJsonArg((args as any).options, '--options')
-    if (!Array.isArray(options)) throw new CliError('--options must be a JSON array', 2)
-    const variantStrategy = (args as any)['variant-strategy'] as string | undefined
-
-    const selection = resolveSelection({
-      resource: 'products',
-      view: ctx.view,
-      baseSelection: getProductSelectionForOptions(ctx.view) as any,
-      select: args.select,
-      selection: (args as any).selection,
-      include: args.include,
-      ensureId: ctx.quiet,
-    })
-
-    const result = await runMutation(ctx, {
-      productOptionsCreate: {
-        __args: {
-          productId,
-          options,
-          ...(variantStrategy ? { variantStrategy } : {}),
-        },
-        product: selection,
-        userErrors: { code: true, field: true, message: true },
-      },
-    })
-    if (result === undefined) return
-    maybeFailOnUserErrors({ payload: result.productOptionsCreate, failOnUserErrors: ctx.failOnUserErrors })
-    printNode({ node: result.productOptionsCreate?.product, format: ctx.format, quiet: ctx.quiet })
-    return
-  }
-
-  if (verb === 'options-delete') {
-    const args = parseStandardArgs({
-      argv,
-      extraOptions: {
-        'product-id': { type: 'string' },
-        'option-ids': { type: 'string', multiple: true },
+        'option-id': { type: 'string', multiple: true },
+        'option-name': { type: 'string', multiple: true },
         strategy: { type: 'string' },
       },
     })
-    const productId = requireId((args as any)['product-id'], 'Product')
-    const options = parseStringList((args as any)['option-ids'], '--option-ids')
-    const strategy = args.strategy as string | undefined
+    const productId = requireId(args.id as any, 'Product')
+    const optionIdsRaw = parseStringList((args as any)['option-id'], '--option-id', { allowEmpty: true })
+    const optionNames = parseStringList((args as any)['option-name'], '--option-name', { allowEmpty: true })
+    const strategy = normalizeProductOptionDeleteStrategy(args.strategy)
+
+    if (optionIdsRaw.length === 0 && optionNames.length === 0) {
+      throw new CliError('Missing options: pass one or more --option-id and/or --option-name entries', 2)
+    }
+
+    if (ctx.dryRun && optionNames.length > 0) {
+      throw new CliError('Option name resolution is not supported in --dry-run mode. Use --option-id instead.', 2)
+    }
+
+    const optionIds = optionIdsRaw.map((id) => coerceGid(id, 'ProductOption'))
+
+    if (optionNames.length > 0) {
+      const options = await fetchProductOptionsForResolution({ ctx, productId })
+      for (const name of optionNames) {
+        const opt = resolveSingleOptionByName(options, name)
+        if (!opt) throw new CliError(`Option not found on product: "${name}"`, 2)
+        const id = opt?.id
+        if (typeof id !== 'string' || !id) throw new CliError(`Option "${name}" is missing an ID`, 2)
+        optionIds.push(id)
+      }
+    }
+
+    const uniqueOptionIds = Array.from(new Set(optionIds))
 
     const result = await runMutation(ctx, {
       productOptionsDelete: {
-        __args: { productId, options, ...(strategy ? { strategy } : {}) },
+        __args: { productId, options: uniqueOptionIds, ...(strategy ? { strategy } : {}) },
         deletedOptionsIds: true,
         userErrors: { code: true, field: true, message: true },
       },
@@ -1069,17 +1427,21 @@ export const runProducts = async ({
     return
   }
 
-  if (verb === 'options-reorder') {
+  if (verb === 'options reorder') {
     const args = parseStandardArgs({
       argv,
       extraOptions: {
-        'product-id': { type: 'string' },
-        options: { type: 'string' },
+        order: { type: 'string', multiple: true },
+        'options-json': { type: 'string' },
       },
     })
-    const productId = requireId((args as any)['product-id'], 'Product')
-    const options = parseJsonArg((args as any).options, '--options')
-    if (!Array.isArray(options)) throw new CliError('--options must be a JSON array', 2)
+    const productId = requireId(args.id as any, 'Product')
+
+    const orderSpecs = parseRepeatableStrings((args as any).order, '--order', { allowEmpty: true })
+    const optionsJsonRaw = (args as any)['options-json'] as string | undefined
+    if (orderSpecs.length > 0 && optionsJsonRaw) {
+      throw new CliError('Do not pass both --order and --options-json', 2)
+    }
 
     const selection = resolveSelection({
       resource: 'products',
@@ -1090,6 +1452,110 @@ export const runProducts = async ({
       include: args.include,
       ensureId: ctx.quiet,
     })
+
+    const optionsInput = optionsJsonRaw !== undefined ? parseJsonArg(optionsJsonRaw, '--options-json') : undefined
+
+    let options: any[] = []
+    if (optionsInput !== undefined) {
+      if (!Array.isArray(optionsInput)) throw new CliError('--options-json must be a JSON array', 2)
+      options = optionsInput
+    } else {
+      if (orderSpecs.length === 0) throw new CliError('Missing order: pass one or more --order entries, or --options-json', 2)
+
+      const parsed: any[] = []
+      const hasAnyValueOrder = orderSpecs.some((s) => s.includes('='))
+      if (hasAnyValueOrder && ctx.dryRun) {
+        throw new CliError('Value reordering via --order is not supported in --dry-run mode. Use --options-json.', 2)
+      }
+
+      let optionsForValidation: any[] | undefined
+      if (hasAnyValueOrder) {
+        optionsForValidation = await fetchProductOptionsForResolution({ ctx, productId })
+      }
+
+      for (const spec of orderSpecs) {
+        const trimmed = spec.trim()
+        const eq = trimmed.indexOf('=')
+        const optionToken = (eq === -1 ? trimmed : trimmed.slice(0, eq)).trim()
+        if (!optionToken) throw new CliError('--order cannot be empty', 2)
+
+        const optionInput: any = looksLikeGidOrNumericId(optionToken)
+          ? { id: coerceGid(optionToken, 'ProductOption') }
+          : { name: optionToken }
+
+        if (eq !== -1) {
+          const valuesPart = trimmed.slice(eq + 1).trim()
+          if (!valuesPart) throw new CliError(`--order "${spec}" must include at least one value after '='`, 2)
+          const valueTokens = valuesPart
+            .split(',')
+            .map((v) => v.trim())
+            .filter(Boolean)
+          if (valueTokens.length === 0) throw new CliError(`--order "${spec}" must include at least one value after '='`, 2)
+
+          if (!optionsForValidation) throw new CliError('Internal error: missing options for validation', 2)
+
+          const resolvedOption =
+            'id' in optionInput
+              ? optionsForValidation.find((o) => typeof o?.id === 'string' && o.id === optionInput.id)
+              : resolveSingleOptionByName(optionsForValidation, optionInput.name)
+          if (!resolvedOption) {
+            const ref = 'id' in optionInput ? optionInput.id : `"${optionInput.name}"`
+            throw new CliError(`Option not found on product: ${ref}`, 2)
+          }
+
+          const optionValues = (resolvedOption.optionValues ?? []) as any[]
+          const byName = new Map<string, any[]>()
+          const existingIds: string[] = []
+          for (const ov of optionValues) {
+            const id = typeof ov?.id === 'string' ? ov.id : undefined
+            const name = typeof ov?.name === 'string' ? ov.name : undefined
+            if (id) existingIds.push(id)
+            if (name) {
+              const list = byName.get(name) ?? []
+              list.push(ov)
+              byName.set(name, list)
+            }
+          }
+
+          const providedIds: string[] = []
+          for (const vt of valueTokens) {
+            if (looksLikeGidOrNumericId(vt)) {
+              providedIds.push(coerceGid(vt, 'ProductOptionValue'))
+              continue
+            }
+            const matches = byName.get(vt) ?? []
+            if (matches.length === 0) throw new CliError(`Option value not found: "${vt}"`, 2)
+            if (matches.length > 1) throw new CliError(`Multiple option values named "${vt}" exist. Use IDs.`, 2)
+            const id = matches[0]?.id
+            if (typeof id !== 'string' || !id) throw new CliError(`Option value "${vt}" is missing an ID`, 2)
+            providedIds.push(id)
+          }
+
+          const existingSet = new Set(existingIds)
+          const providedSet = new Set(providedIds)
+          if (providedSet.size !== providedIds.length) {
+            throw new CliError('Duplicate option values provided in --order value list', 2)
+          }
+          const missing = existingIds.filter((id) => !providedSet.has(id))
+          const extra = providedIds.filter((id) => !existingSet.has(id))
+          if (missing.length || extra.length) {
+            throw new CliError(
+              `--order "${optionToken}=..." must include the full value order for that option.`,
+              2,
+            )
+          }
+
+          parsed.push({
+            id: resolvedOption.id,
+            values: providedIds.map((id) => ({ id })),
+          })
+        } else {
+          parsed.push(optionInput)
+        }
+      }
+
+      options = parsed
+    }
 
     const result = await runMutation(ctx, {
       productOptionsReorder: {
