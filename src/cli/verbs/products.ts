@@ -51,7 +51,7 @@ const requireProductIdForRootVerb = (args: any) => {
   const hasProductId = typeof rawProductId === 'string' && rawProductId.length > 0
 
   if (!hasId && !hasProductId) {
-    throw new CliError('Missing --id (or --product-id)', 2)
+    throw new CliError('Missing --id', 2)
   }
 
   if (hasId && hasProductId) {
