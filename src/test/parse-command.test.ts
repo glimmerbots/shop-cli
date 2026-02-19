@@ -43,7 +43,7 @@ describe('parse-command', () => {
       rest: ['7815068024874'],
     })
     expect(msg).toBe(
-      'Missing `--id <ID>`.\nDid you mean `shop products get --id 7815068024874`?',
+      'Missing --id <ID>\nDid you mean:\n  shop products get --id 7815068024874',
     )
   })
 
