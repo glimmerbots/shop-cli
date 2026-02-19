@@ -14,17 +14,17 @@ describe('parse-command', () => {
   it('parses a known multi-word verb', () => {
     const parsed = parseVerbAndRest({
       resource: 'products',
-      afterResource: ['media', 'add', '--id', '123'],
+      afterResource: ['media', 'add', '--product-id', '123'],
     })
-    expect(parsed).toEqual({ verb: 'media add', rest: ['--id', '123'] })
+    expect(parsed).toEqual({ verb: 'media add', rest: ['--product-id', '123'] })
   })
 
   it('parses a known multi-word verb (options list)', () => {
     const parsed = parseVerbAndRest({
       resource: 'products',
-      afterResource: ['options', 'list', '--id', '123'],
+      afterResource: ['options', 'list', '--product-id', '123'],
     })
-    expect(parsed).toEqual({ verb: 'options list', rest: ['--id', '123'] })
+    expect(parsed).toEqual({ verb: 'options list', rest: ['--product-id', '123'] })
   })
 
   it('keeps legacy behavior when verb is unknown', () => {
@@ -74,6 +74,15 @@ describe('parse-command', () => {
     const rewritten = rewritePositionalIdAsFlag({
       resource: 'products',
       verb: 'list',
+      rest: ['7815068024874'],
+    })
+    expect(rewritten).toEqual(['7815068024874'])
+  })
+
+  it('does not rewrite positional IDs for product-scoped subverbs using --product-id', () => {
+    const rewritten = rewritePositionalIdAsFlag({
+      resource: 'products',
+      verb: 'variants list',
       rest: ['7815068024874'],
     })
     expect(rewritten).toEqual(['7815068024874'])

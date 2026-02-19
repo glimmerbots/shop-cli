@@ -78,7 +78,7 @@ describe('help command rendering', () => {
     expect(help).toContain('  media list')
     expect(help).toContain('  media upload')
     expect(help).toContain('shopcli products media list --help')
-    expect(help).toContain('--id <gid>')
+    expect(help).toContain('--product-id <gid>')
     // Should not include unrelated verbs
     expect(help).not.toContain('options list')
     expect(help).not.toContain('Create a new product.')

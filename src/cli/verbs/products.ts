@@ -29,10 +29,43 @@ import {
   parseIntFlag,
   parseJsonArg,
   parseStringList,
+  requireGidFlag,
   requireId,
 } from './_shared'
 
 type MediaContentType = 'IMAGE' | 'VIDEO' | 'MODEL_3D' | 'EXTERNAL_VIDEO'
+
+const requireProductIdForSubverb = (args: any) => {
+  if (args.id !== undefined) {
+    throw new CliError('Unknown flag --id, did you mean --product-id?', 2)
+  }
+  return requireGidFlag((args as any)['product-id'], '--product-id', 'Product')
+}
+
+const requireProductIdForRootVerb = (args: any) => {
+  const rawId = args.id as unknown
+  const rawProductId = (args as any)['product-id'] as unknown
+
+  const hasId = typeof rawId === 'string' && rawId.length > 0
+  const hasProductId = typeof rawProductId === 'string' && rawProductId.length > 0
+
+  if (!hasId && !hasProductId) {
+    throw new CliError('Missing --id (or --product-id)', 2)
+  }
+
+  if (hasId && hasProductId) {
+    const a = coerceGid(rawId, 'Product')
+    const b = coerceGid(rawProductId, 'Product')
+    if (a !== b) throw new CliError('Conflicting --id and --product-id', 2)
+    return a
+  }
+
+  if (hasProductId) {
+    return requireGidFlag(rawProductId, '--product-id', 'Product')
+  }
+
+  return requireId(rawId, 'Product')
+}
 
 const productMediaSummarySelection = {
   id: true,
@@ -454,7 +487,7 @@ export const runProducts = async ({
   if (verb === 'variants list') {
     const args = parseStandardArgs({
       argv,
-      extraOptions: {},
+      extraOptions: { 'product-id': { type: 'string' } },
     })
 
     if (args.query) {
@@ -464,7 +497,7 @@ export const runProducts = async ({
       )
     }
 
-    const productId = requireId(args.id, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const first = parseFirst(args.first)
     const after = args.after as any
     const reverse = args.reverse as any
@@ -504,7 +537,7 @@ export const runProducts = async ({
         first,
         sort: typeof sortKey === 'string' ? sortKey : undefined,
         reverse: reverse === true,
-        extraFlags: [{ flag: '--id', value: productId }],
+        extraFlags: [{ flag: '--product-id', value: productId }],
       },
     })
     return
@@ -514,6 +547,7 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'variant-option': { type: 'string', multiple: true },
         sku: { type: 'string' },
         barcode: { type: 'string' },
@@ -524,7 +558,7 @@ export const runProducts = async ({
       },
     })
 
-    const productId = requireId(args.id, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const optionValues = parseVariantOptionValues((args as any)['variant-option'])
     if (optionValues.length === 0) {
       throw new CliError('Missing --variant-option OptionName=Value (repeatable)', 2)
@@ -595,6 +629,7 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'variant-id': { type: 'string' },
         'variant-option': { type: 'string', multiple: true },
         sku: { type: 'string' },
@@ -606,7 +641,7 @@ export const runProducts = async ({
       },
     })
 
-    const productId = requireId(args.id, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const variantId = requireId((args as any)['variant-id'], 'ProductVariant', '--variant-id')
     const optionValues = parseVariantOptionValues((args as any)['variant-option'])
     const sku = (args as any).sku as string | undefined
@@ -663,11 +698,12 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'variant-id': { type: 'string' },
       },
     })
 
-    const productId = requireId(args.id, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const variantId = requireId((args as any)['variant-id'], 'ProductVariant', '--variant-id')
 
     const result = await runMutation(ctx, {
@@ -702,12 +738,13 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'variant-id': { type: 'string' },
         position: { type: 'string' },
       },
     })
 
-    const productId = requireId(args.id, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const variantId = requireId((args as any)['variant-id'], 'ProductVariant', '--variant-id')
     const position = parseIntFlag('--position', (args as any).position)
     if (position <= 0) throw new CliError('--position must be a positive integer (1-based)', 2)
@@ -957,8 +994,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'change-status') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const productId = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const productId = requireProductIdForRootVerb(args)
     const status = args.status as string | undefined
     if (!status) throw new CliError('Missing --status (ACTIVE|DRAFT|ARCHIVED)', 2)
 
@@ -1039,8 +1076,11 @@ export const runProducts = async ({
   }
 
   if (verb === 'join-selling-plan-groups' || verb === 'leave-selling-plan-groups') {
-    const args = parseStandardArgs({ argv, extraOptions: { 'group-ids': { type: 'string', multiple: true } } })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({
+      argv,
+      extraOptions: { 'product-id': { type: 'string' }, 'group-ids': { type: 'string', multiple: true } },
+    })
+    const id = requireProductIdForRootVerb(args)
     const sellingPlanGroupIds = parseIds((args as any)['group-ids'], 'SellingPlanGroup')
 
     const selection = resolveSelection({
@@ -1072,8 +1112,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'options list') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const productId = requireProductIdForSubverb(args)
 
     const selection = resolveSelection({
       typeName: 'ProductOption',
@@ -1087,7 +1127,7 @@ export const runProducts = async ({
 
     const result = await runQuery(ctx, {
       product: {
-        __args: { id },
+        __args: { id: productId },
         options: selection,
       },
     })
@@ -1105,12 +1145,13 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         option: { type: 'string', multiple: true },
         'options-json': { type: 'string' },
         'variant-strategy': { type: 'string' },
       },
     })
-    const productId = requireId(args.id as any, 'Product')
+    const productId = requireProductIdForSubverb(args)
 
     const optionSpecs = parseRepeatableStrings((args as any).option, '--option', { allowEmpty: true })
     const optionsJsonRaw = (args as any)['options-json'] as string | undefined
@@ -1156,6 +1197,7 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'option-id': { type: 'string' },
         name: { type: 'string' },
         position: { type: 'string' },
@@ -1171,7 +1213,7 @@ export const runProducts = async ({
         'variant-strategy': { type: 'string' },
       },
     })
-    const productId = requireId(args.id as any, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const optionIdRaw = (args as any)['option-id'] as string | undefined
     if (!optionIdRaw) throw new CliError('Missing --option-id', 2)
     const optionId = coerceGid(optionIdRaw, 'ProductOption')
@@ -1370,12 +1412,13 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'option-id': { type: 'string', multiple: true },
         'option-name': { type: 'string', multiple: true },
         strategy: { type: 'string' },
       },
     })
-    const productId = requireId(args.id as any, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const optionIdsRaw = parseStringList((args as any)['option-id'], '--option-id', { allowEmpty: true })
     const optionNames = parseStringList((args as any)['option-name'], '--option-name', { allowEmpty: true })
     const strategy = normalizeProductOptionDeleteStrategy(args.strategy)
@@ -1431,11 +1474,12 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         order: { type: 'string', multiple: true },
         'options-json': { type: 'string' },
       },
     })
-    const productId = requireId(args.id as any, 'Product')
+    const productId = requireProductIdForSubverb(args)
 
     const orderSpecs = parseRepeatableStrings((args as any).order, '--order', { allowEmpty: true })
     const optionsJsonRaw = (args as any)['options-json'] as string | undefined
@@ -1738,12 +1782,14 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'publication-id': { type: 'string', multiple: true },
         publication: { type: 'string', multiple: true },
         at: { type: 'string' },
         now: { type: 'boolean' },
       },
     })
+    const id = requireProductIdForRootVerb(args)
 
     const publicationIds = ((args['publication-id'] as any) ?? []) as string[]
     const publicationNames = ((args.publication as any) ?? []) as string[]
@@ -1758,7 +1804,7 @@ export const runProducts = async ({
       const publishDate = parsePublishDate({ at: args.at as any, now: args.now as any })
       const payload = await publishProduct({
         ctx,
-        id: args.id,
+        id,
         publicationIds: resolvedPublicationIds,
         publishDate,
       })
@@ -1770,7 +1816,7 @@ export const runProducts = async ({
 
     const payload = await unpublishProduct({
       ctx,
-      id: args.id,
+      id,
       publicationIds: resolvedPublicationIds,
     })
     if (payload === undefined) return
@@ -1783,6 +1829,7 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         at: { type: 'string' },
         now: { type: 'boolean' },
       },
@@ -1793,6 +1840,7 @@ export const runProducts = async ({
       return
     }
 
+    const id = requireProductIdForRootVerb(args)
     const publishDate = parsePublishDate({ at: args.at as any, now: args.now as any })
     const publications = await listPublications(ctx)
     const publicationIds = publications.map((p) => p.id).filter(Boolean)
@@ -1800,7 +1848,7 @@ export const runProducts = async ({
 
     const payload = await publishProduct({
       ctx,
-      id: args.id,
+      id,
       publicationIds,
       publishDate,
     })
@@ -1811,7 +1859,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'metafields upsert') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const productId = requireProductIdForSubverb(args)
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -1819,7 +1868,7 @@ export const runProducts = async ({
     })
     if (!built.used) throw new CliError('Missing --input or --set/--set-json', 2)
 
-    const result = await metafieldsUpsert({ ctx, id: args.id, input: built.input })
+    const result = await metafieldsUpsert({ ctx, id: productId, input: built.input })
     if (result === undefined) return
 
     printJson(result)
@@ -1827,8 +1876,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'get') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
 
     const selectValues = Array.isArray(args.select)
       ? args.select
@@ -1966,8 +2015,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'archive' || verb === 'unarchive') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
     const status =
       verb === 'archive' ? 'ARCHIVED' : ((args.status as string | undefined) ?? 'DRAFT')
 
@@ -1996,8 +2045,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'update') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
     const built = buildInput({
       inputArg: args.input as any,
       setArgs: args.set as any,
@@ -2032,8 +2081,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'delete') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
     if (!args.yes) throw new CliError('Refusing to delete without --yes', 2)
 
     const result = await runMutation(ctx, {
@@ -2051,8 +2100,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'duplicate') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
 
     const built = buildInput({
       inputArg: undefined,
@@ -2103,8 +2152,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'set-status') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
     const status = args.status as string | undefined
     if (!status) throw new CliError('Missing --status (ACTIVE|DRAFT|ARCHIVED)', 2)
 
@@ -2207,8 +2256,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'add-tags' || verb === 'remove-tags') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForRootVerb(args)
     const tags = parseTags(args.tags as any)
 
     const mutationField = verb === 'add-tags' ? 'tagsAdd' : 'tagsRemove'
@@ -2242,6 +2291,7 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         url: { type: 'string', multiple: true },
         alt: { type: 'string' },
         'media-type': { type: 'string' },
@@ -2251,7 +2301,7 @@ export const runProducts = async ({
         'timeout-ms': { type: 'string' },
       },
     })
-    const id = requireId(args.id, 'Product')
+    const productId = requireProductIdForSubverb(args)
 
     const urls = (args.url as string[] | undefined) ?? []
     if (urls.length === 0) throw new CliError('Missing --url (repeatable)', 2)
@@ -2274,7 +2324,7 @@ export const runProducts = async ({
     const timeoutMs =
       parsePositiveIntFlag({ value: (args as any)['timeout-ms'], flag: '--timeout-ms' }) ?? 10 * 60 * 1000
     const shouldWait = wait && !ctx.dryRun
-    const beforeIds = shouldWait ? await getTopProductMediaIds({ ctx, productId: id }) : []
+    const beforeIds = shouldWait ? await getTopProductMediaIds({ ctx, productId }) : []
 
     const media = urls.map((url) => ({
       originalSource: url,
@@ -2296,7 +2346,7 @@ export const runProducts = async ({
 
     const result = await runMutation(ctx, {
       productUpdate: {
-        __args: { product: { id }, media },
+        __args: { product: { id: productId }, media },
         product: {
           id: true,
           media: {
@@ -2315,7 +2365,7 @@ export const runProducts = async ({
       return
     }
 
-    const afterIds = await getTopProductMediaIds({ ctx, productId: id })
+    const afterIds = await getTopProductMediaIds({ ctx, productId })
     const before = new Set(beforeIds)
     const createdIds = afterIds.filter((mid) => !before.has(mid)).slice(0, urls.length)
     if (createdIds.length !== urls.length) {
@@ -2345,6 +2395,7 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         file: { type: 'string', multiple: true },
         filename: { type: 'string' },
         alt: { type: 'string' },
@@ -2357,7 +2408,7 @@ export const runProducts = async ({
         'timeout-ms': { type: 'string' },
       },
     })
-    const id = requireId(args.id, 'Product')
+    const id = requireProductIdForSubverb(args)
 
     const filePaths = (args.file as string[] | undefined) ?? []
     if (filePaths.length === 0) throw new CliError('Missing --file (repeatable)', 2)
@@ -2493,8 +2544,8 @@ export const runProducts = async ({
   }
 
   if (verb === 'media list') {
-    const args = parseStandardArgs({ argv, extraOptions: {} })
-    const id = requireId(args.id as any, 'Product')
+    const args = parseStandardArgs({ argv, extraOptions: { 'product-id': { type: 'string' } } })
+    const id = requireProductIdForSubverb(args)
     const first = parseFirst(args.first)
     const after = args.after as any
 
@@ -2517,7 +2568,7 @@ export const runProducts = async ({
       nextPageArgs: {
         base: 'shop products media list',
         first,
-        extraFlags: [{ flag: '--id', value: id }],
+        extraFlags: [{ flag: '--product-id', value: id }],
       },
     })
     return
@@ -2527,10 +2578,11 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         'media-id': { type: 'string', multiple: true },
       },
     })
-    const productId = requireId(args.id as any, 'Product')
+    const productId = requireProductIdForSubverb(args)
     const mediaIds = ((args as any)['media-id'] as string[] | undefined) ?? []
     if (mediaIds.length === 0) throw new CliError('Missing --media-id (repeatable)', 2)
 
@@ -2598,11 +2650,12 @@ export const runProducts = async ({
     const args = parseStandardArgs({
       argv,
       extraOptions: {
+        'product-id': { type: 'string' },
         moves: { type: 'string' },
         move: { type: 'string', multiple: true },
       },
     })
-    const id = requireId(args.id as any, 'Product')
+    const id = requireProductIdForSubverb(args)
 
     let moves: Array<{ id: string; newPosition: number }> = []
     if ((args as any).moves) {

@@ -72,7 +72,7 @@ describe('products media add|upload output', () => {
       ctx,
       verb: 'media add',
       argv: [
-        '--id',
+        '--product-id',
         'gid://shopify/Product/1',
         '--url',
         'https://example.com/orchids.jpg',
@@ -123,7 +123,7 @@ describe('products media add|upload output', () => {
     await runProducts({
       ctx,
       verb: 'media add',
-      argv: ['--id', 'gid://shopify/Product/1', '--url', 'https://example.com/orchids.jpg'],
+      argv: ['--product-id', 'gid://shopify/Product/1', '--url', 'https://example.com/orchids.jpg'],
     })
 
     expect(captured).toBe('gid://shopify/MediaImage/10\n')
@@ -163,7 +163,7 @@ describe('products media add|upload output', () => {
       ctx,
       verb: 'media upload',
       argv: [
-        '--id',
+        '--product-id',
         'gid://shopify/Product/1',
         '--file',
         'src/test/fixtures/sample.txt',

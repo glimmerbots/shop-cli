@@ -44,7 +44,7 @@ describe('products media remove output', () => {
       ctx,
       verb: 'media remove',
       argv: [
-        '--id',
+        '--product-id',
         'gid://shopify/Product/1',
         '--media-id',
         'gid://shopify/MediaImage/10',
@@ -66,7 +66,7 @@ describe('products media remove output', () => {
       ctx,
       verb: 'media remove',
       argv: [
-        '--id',
+        '--product-id',
         'gid://shopify/Product/1',
         '--media-id',
         'gid://shopify/MediaImage/10',
@@ -78,4 +78,3 @@ describe('products media remove output', () => {
     expect(captured).toBe('gid://shopify/MediaImage/10\ngid://shopify/Video/11\n')
   })
 })
-
