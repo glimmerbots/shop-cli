@@ -239,7 +239,7 @@ const flagExpiresAt = flag('--expires-at <iso>', 'Expiration timestamp')
 const flagNotify = flag('--notify', 'Notify')
 const flagToken = flag('--token <string>', 'Access token')
 const flagItems = flag('--items <json>', 'Items JSON')
-const flagPositions = flag('--positions <json>', 'Positions JSON')
+const flagPositions = flag('--positions <json|@file>', 'Positions JSON array (inline or @file.json)')
 const flagMoves = flag('--moves <json>', 'Moves JSON array (or @file.json)')
 const flagMove = flag('--move <id>:<newPosition>', 'Move entry (repeatable)')
 const flagMediaIds = flag('--media-ids <gid>', 'Media IDs (repeatable)')
@@ -853,6 +853,11 @@ const baseCommandRegistry: ResourceSpec[] = [
         description: 'Reorder variants for a product.',
         operation: { type: 'mutation', name: 'productVariantsBulkReorder' },
         requiredFlags: [flagProductId, flagPositions],
+        notes: ['Positions format: [{ id: <variant gid>, position: <int> }, ...]. Position is 1-based (first is 1).'],
+        examples: [
+          `shop product-variants bulk-reorder --product-id 123 --positions '[{"id":"gid://shopify/ProductVariant/1","position":1}]'`,
+          'shop product-variants bulk-reorder --product-id 123 --positions @positions.json',
+        ],
       },
       {
         verb: 'append-media',

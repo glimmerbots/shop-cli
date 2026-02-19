@@ -4999,7 +4999,7 @@
         "--product-id",
         "1",
         "--positions",
-        "[{\"id\":\"gid://shopify/ProductVariant/1\",\"newPosition\":0}]"
+        "[{\"id\":\"gid://shopify/ProductVariant/1\",\"position\":1}]"
       ]
     },
     {
