@@ -41,7 +41,7 @@ describe('products options', () => {
       ctx,
       verb: 'options create',
       argv: [
-        '--id',
+        '--product-id',
         'gid://shopify/Product/1',
         '--option',
         'Size=Small,Medium',
@@ -97,7 +97,7 @@ describe('products options', () => {
       ctx,
       verb: 'options update',
       argv: [
-        '--id',
+        '--product-id',
         'gid://shopify/Product/1',
         '--option-id',
         'gid://shopify/ProductOption/10',
@@ -147,7 +147,7 @@ describe('products options', () => {
     await runProducts({
       ctx,
       verb: 'options delete',
-      argv: ['--id', 'gid://shopify/Product/1', '--option-name', 'Color'],
+      argv: ['--product-id', 'gid://shopify/Product/1', '--option-name', 'Color'],
     })
 
     expect(capture.mutation?.productOptionsDelete?.__args?.options).toEqual(['gid://shopify/ProductOption/20'])
@@ -192,7 +192,7 @@ describe('products options', () => {
     await runProducts({
       ctx,
       verb: 'options reorder',
-      argv: ['--id', 'gid://shopify/Product/1', '--order', 'Color=Green,Red,Blue'],
+      argv: ['--product-id', 'gid://shopify/Product/1', '--order', 'Color=Green,Red,Blue'],
     })
 
     const args = capture.mutation?.productOptionsReorder?.__args
@@ -209,5 +209,29 @@ describe('products options', () => {
     ])
     expect(captured).toBe('gid://shopify/Product/1\n')
   })
-})
 
+  it('rejects --id for product-scoped subverbs (use --product-id)', async () => {
+    const { runProducts } = await import('../cli/verbs/products')
+
+    const ctx: any = {
+      client: {
+        query: async () => ({}),
+        mutation: async () => ({}),
+      },
+      format: 'json',
+      quiet: false,
+      view: 'summary',
+      dryRun: false,
+      failOnUserErrors: true,
+      warnMissingAccessToken: false,
+    }
+
+    await expect(
+      runProducts({
+        ctx,
+        verb: 'options list',
+        argv: ['--id', 'gid://shopify/Product/1'],
+      }),
+    ).rejects.toThrow('Unknown flag --id, did you mean --product-id?')
+  })
+})

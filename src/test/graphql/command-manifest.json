@@ -5258,7 +5258,7 @@
       "resource": "products",
       "verb": "media add",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--url",
         "https://example.com"
@@ -5268,7 +5268,7 @@
       "resource": "products",
       "verb": "media list",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ]
     },
@@ -5276,7 +5276,7 @@
       "resource": "products",
       "verb": "media remove",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--media-id",
         "1"
@@ -5287,7 +5287,7 @@
       "resource": "products",
       "verb": "media reorder",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ],
       "skipReason": "Missing moves: pass either --moves <json> or --move <mediaId>:<newPosition> (repeatable)"
@@ -5309,7 +5309,7 @@
       "resource": "products",
       "verb": "media upload",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--file",
         "src/test/fixtures/sample.txt"
@@ -5320,7 +5320,7 @@
       "resource": "products",
       "verb": "metafields upsert",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--input",
         "{}"
@@ -5339,7 +5339,7 @@
       "resource": "products",
       "verb": "options list",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ]
     },
@@ -5347,7 +5347,7 @@
       "resource": "products",
       "verb": "options update",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--option-id",
         "1",
@@ -5359,7 +5359,7 @@
       "resource": "products",
       "verb": "options create",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--option",
         "Size=Small,Medium"
@@ -5369,7 +5369,7 @@
       "resource": "products",
       "verb": "options delete",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--option-id",
         "1"
@@ -5379,7 +5379,7 @@
       "resource": "products",
       "verb": "options reorder",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--order",
         "Size"
@@ -5490,7 +5490,7 @@
       "resource": "products",
       "verb": "variants create",
       "argv": [
-        "--id",
+        "--product-id",
         "1",
         "--variant-option",
         "test"
@@ -5501,7 +5501,7 @@
       "resource": "products",
       "verb": "variants delete",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ],
       "skipReason": "exceeded retry budget while auto-generating args"
@@ -5510,7 +5510,7 @@
       "resource": "products",
       "verb": "variants list",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ]
     },
@@ -5518,7 +5518,7 @@
       "resource": "products",
       "verb": "variants reorder",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ],
       "skipReason": "exceeded retry budget while auto-generating args"
@@ -5527,7 +5527,7 @@
       "resource": "products",
       "verb": "variants update",
       "argv": [
-        "--id",
+        "--product-id",
         "1"
       ],
       "skipReason": "exceeded retry budget while auto-generating args"
