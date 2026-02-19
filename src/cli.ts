@@ -7,120 +7,12 @@ dotenv.config({ path: resolve(process.cwd(), '.env'), quiet: true })
 
 import { createCliClientFromEnv } from './cli/client'
 import { CliError } from './cli/errors'
+import { parseGlobalFlags } from './cli/globalFlags'
+import { parseHeadersFromEnv, parseHeaderValues } from './cli/headers'
 import { renderResourceHelp, renderTopLevelHelp, renderVerbHelp } from './cli/help/render'
 import { runCommand } from './cli/router'
 import { createShopifyAdminClient } from './adminClient'
 import { resolveAdminApiVersion } from './defaults'
-
-type GlobalParsed = {
-  passthrough: string[]
-  shopDomain?: string
-  graphqlEndpoint?: string
-  accessToken?: string
-  apiVersion?: string
-  format?: string
-  quiet?: boolean
-  dryRun?: boolean
-  noFailOnUserErrors?: boolean
-  view?: string
-  headers: string[]
-  verbose?: boolean
-}
-
-const parseGlobalFlags = (args: string[]): GlobalParsed => {
-  const parsed: GlobalParsed = { passthrough: [], headers: [] }
-
-  const takeValue = (i: number, flag: string) => {
-    const next = args[i + 1]
-    if (!next) throw new CliError(`Missing value for ${flag}`, 2)
-    return next
-  }
-
-  for (let i = 0; i < args.length; i++) {
-    const token = args[i]!
-
-    if (!token.startsWith('-')) {
-      parsed.passthrough.push(token)
-      continue
-    }
-
-    const [flag, inlineValue] = token.split('=', 2)
-
-    if (flag === '--shop') {
-      parsed.shopDomain = inlineValue ?? takeValue(i, flag)
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--graphql-endpoint') {
-      parsed.graphqlEndpoint = inlineValue ?? takeValue(i, flag)
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--access-token') {
-      parsed.accessToken = inlineValue ?? takeValue(i, flag)
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--api-version') {
-      parsed.apiVersion = inlineValue ?? takeValue(i, flag)
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--format') {
-      parsed.format = inlineValue ?? takeValue(i, flag)
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--view') {
-      parsed.view = inlineValue ?? takeValue(i, flag)
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--quiet') {
-      parsed.quiet = true
-      continue
-    }
-    if (flag === '--dry-run') {
-      parsed.dryRun = true
-      continue
-    }
-    if (flag === '--no-fail-on-user-errors') {
-      parsed.noFailOnUserErrors = true
-      continue
-    }
-    if (flag === '--header') {
-      parsed.headers.push(inlineValue ?? takeValue(i, flag))
-      if (!inlineValue) i++
-      continue
-    }
-    if (flag === '--verbose') {
-      parsed.verbose = true
-      continue
-    }
-
-    // Unknown option: leave it for the verb parser (and don't consume a value).
-    parsed.passthrough.push(token)
-  }
-
-  return parsed
-}
-
-const parseHeaderValues = (values: string[]) => {
-  const headers: Record<string, string> = {}
-  for (const value of values) {
-    const separatorIndex = value.indexOf(':')
-    if (separatorIndex === -1) {
-      throw new CliError('Invalid --header value: expected "Name: value"', 2)
-    }
-    const name = value.slice(0, separatorIndex).trim()
-    if (!name) {
-      throw new CliError('Invalid --header value: header name is required', 2)
-    }
-    const headerValue = value.slice(separatorIndex + 1).trim()
-    headers[name] = headerValue
-  }
-  return headers
-}
 
 const helpFlags = new Set(['--help', '-h', '--help-full', '--help-all'])
 
@@ -200,7 +92,9 @@ const main = async () => {
   const shopDomain = parsed.shopDomain
   const graphqlEndpoint = parsed.graphqlEndpoint
   const accessToken = parsed.accessToken
-  const headers = parseHeaderValues(parsed.headers)
+  const envHeaders = parseHeadersFromEnv(process.env.SHOPIFY_HEADERS)
+  const cliHeaders = parseHeaderValues(parsed.headers, '--header')
+  const headers = { ...envHeaders, ...cliHeaders }
   const resolvedAccessToken = accessToken ?? process.env.SHOPIFY_ACCESS_TOKEN
   const hasAuthHeader = Object.keys(headers).some((name) => {
     const normalized = name.toLowerCase()

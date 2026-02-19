@@ -185,7 +185,7 @@ shop products list \
 
 # Multiple --header flags
 shop products list \
-  --header "X-Custom: value1" \
+  --header X-Custom=value1 \
   --header "X-Another: value2"
 
 # Multiple --include flags (with --view all)

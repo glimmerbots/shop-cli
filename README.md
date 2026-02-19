@@ -73,6 +73,20 @@ Or via environment variable:
 export GRAPHQL_ENDPOINT="https://your-proxy.example.com/graphql"
 ```
 
+### Custom Headers
+
+Add request headers via repeatable `--header` flags:
+
+```bash
+shop products list --header X-Foo=bar --header "X-Bar: baz"
+```
+
+Or via environment variable (JSON object):
+
+```bash
+export SHOPIFY_HEADERS='{"X-Foo":"bar","X-Bar":"baz"}'
+```
+
 ## Output Formats
 
 Control output format with `--format`:
