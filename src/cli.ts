@@ -10,12 +10,14 @@ import { CliError } from './cli/errors'
 import { parseGlobalFlags } from './cli/globalFlags'
 import { parseHeadersFromEnv, parseHeaderValues } from './cli/headers'
 import { renderResourceHelp, renderTopLevelHelp, renderVerbGroupHelp, renderVerbHelp } from './cli/help/render'
+import { commandRegistry } from './cli/help/registry'
 import { runCommand } from './cli/router'
 import { createShopifyAdminClient } from './adminClient'
 import { resolveAdminApiVersion } from './defaults'
 import { resolveCliCommand } from './cli/command'
 import { buildUnexpectedPositionalHint, parseVerbAndRest, rewritePositionalIdAsFlag } from './cli/parse-command'
 import { setGlobalCommand } from './cli/output'
+import { findSuggestions } from './cli/suggest'
 
 const helpFlags = new Set(['--help', '-h', '--help-full', '--help-all'])
 const versionFlags = new Set(['--version', '-v'])
@@ -24,6 +26,11 @@ const hasHelpFlag = (args: string[]) => args.some((arg) => helpFlags.has(arg))
 const hasVersionFlag = (args: string[]) => args.some((arg) => versionFlags.has(arg))
 
 const wantsFullHelp = (args: string[]) => args.some((arg) => arg === '--help-full' || arg === '--help-all')
+
+const formatDidYouMean = (suggestions: string[]) => {
+  if (suggestions.length === 0) return ''
+  return ['Did you mean:', ...suggestions.map((s) => `  ${s}`)].join('\n')
+}
 
 const printVersion = async () => {
   const fs = await import('fs')
@@ -82,8 +89,17 @@ const main = async () => {
         if (hasHelpFlag(afterResource)) return
         throw new CliError(`\nMissing <verb> for "${resource}"`, 2)
       } else if (!isTypesCommand) {
-        console.log(renderTopLevelHelp(command))
-        throw new CliError(`\nUnknown resource: ${resource}`, 2)
+        const resources = commandRegistry.map((r) => r.resource)
+        const matches = findSuggestions({ query: resource, candidates: resources, limit: 3 })
+        const suggestions = matches.map((r) =>
+          [command, r, ...afterResource].filter(Boolean).join(' ').trim(),
+        )
+
+        const didYouMean = formatDidYouMean(suggestions)
+        throw new CliError(
+          [`Unknown resource: ${resource}`, didYouMean].filter(Boolean).join('\n'),
+          2,
+        )
       }
       // For `types` with no verb and no --help, fall through and let runTypes show help
     }
@@ -161,24 +177,83 @@ const main = async () => {
         verbose,
       })
 
-  await runCommand({
-    client,
-    resource,
-    verb,
-    argv: parsed.passthrough,
-    format: (parsed.format as any) ?? (isOfflineCommand ? 'table' : 'json'),
-    quiet: parsed.quiet ?? false,
-    view: (parsed.view as any) ?? 'summary',
-    dryRun,
-    failOnUserErrors: !(parsed.noFailOnUserErrors ?? false),
-    warnMissingAccessToken,
-    // Raw GraphQL client options (for graphql command)
-    shopDomain: shopDomain ?? process.env.SHOPIFY_SHOP,
-    graphqlEndpoint: graphqlEndpoint ?? process.env.GRAPHQL_ENDPOINT,
-    accessToken: resolvedAccessToken,
-    apiVersion: resolvedApiVersion,
-    headers,
-  })
+  try {
+    await runCommand({
+      client,
+      resource,
+      verb,
+      argv: parsed.passthrough,
+      format: (parsed.format as any) ?? (isOfflineCommand ? 'table' : 'json'),
+      quiet: parsed.quiet ?? false,
+      view: (parsed.view as any) ?? 'summary',
+      dryRun,
+      failOnUserErrors: !(parsed.noFailOnUserErrors ?? false),
+      warnMissingAccessToken,
+      // Raw GraphQL client options (for graphql command)
+      shopDomain: shopDomain ?? process.env.SHOPIFY_SHOP,
+      graphqlEndpoint: graphqlEndpoint ?? process.env.GRAPHQL_ENDPOINT,
+      accessToken: resolvedAccessToken,
+      apiVersion: resolvedApiVersion,
+      headers,
+    })
+  } catch (err) {
+    if (!(err instanceof CliError)) throw err
+
+    let message = err.message
+
+    const unknownResourceMatch = message.match(/^Unknown resource: (.+)$/)
+    if (unknownResourceMatch) {
+      const unknown = unknownResourceMatch[1] ?? resource
+      const resources = commandRegistry.map((r) => r.resource)
+      const matches = findSuggestions({ query: unknown, candidates: resources, limit: 3 })
+      const suggestions = matches.map((r) =>
+        [command, r, ...afterResource].filter(Boolean).join(' ').trim(),
+      )
+      const didYouMean = formatDidYouMean(suggestions)
+      message = [`Unknown resource: ${unknown}`, didYouMean].filter(Boolean).join('\n')
+      throw new CliError(message, err.exitCode)
+    }
+
+    const unknownVerbMatch = message.match(/^Unknown verb for ([^:]+): (.+)$/)
+    if (unknownVerbMatch) {
+      const resourceName = unknownVerbMatch[1]!
+      const unknownVerb = unknownVerbMatch[2]!
+      const spec = commandRegistry.find((r) => r.resource === resourceName)
+      if (spec) {
+        const groups = new Set(
+          spec.verbs
+            .map((v) => v.verb)
+            .filter((v) => v.includes(' '))
+            .map((v) => v.split(' ')[0]!)
+            .filter(Boolean),
+        )
+        const candidates = Array.from(
+          new Set<string>([...spec.verbs.map((v) => v.verb), ...Array.from(groups)]),
+        )
+        const matches = findSuggestions({ query: unknownVerb, candidates, limit: 3 })
+        const suggestions = matches.map((v) => `${command} ${resourceName} ${v}`.trim())
+        const didYouMean = formatDidYouMean(suggestions)
+        if (didYouMean) {
+          message = [`Unknown verb for ${resourceName}: ${unknownVerb}`, didYouMean].join('\n')
+        }
+      }
+      throw new CliError(message, err.exitCode)
+    }
+
+    // Flag/arg validation errors: point users at the closest help.
+    if (
+      err.exitCode === 2 &&
+      verb &&
+      !message.includes('See help:') &&
+      message.includes('--') &&
+      !message.startsWith('Unknown resource:') &&
+      !message.startsWith('Unknown verb for ')
+    ) {
+      message = `${message}\nSee help:\n  ${command} ${resource} ${verb} --help`
+    }
+
+    throw new CliError(message, err.exitCode)
+  }
 }
 
 main().catch((err) => {
