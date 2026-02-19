@@ -85,8 +85,9 @@ export const buildMissingIdHint = ({
   const tail = rest.slice(1)
   const tailText = tail.length > 0 ? ` ${tail.join(' ')}` : ''
   return [
-    'Missing `--id <ID>`.',
-    `Did you mean \`${command} ${resource} ${verb} --id ${first}${tailText}\`?`,
+    'Missing --id <ID>',
+    'Did you mean:',
+    `  ${command} ${resource} ${verb} --id ${first}${tailText}`,
   ].join('\n')
 }
 
