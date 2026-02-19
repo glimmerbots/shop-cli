@@ -484,6 +484,15 @@ export const runProducts = async ({
     return
   }
 
+  verb =
+    (
+      {
+        variants: 'variants list',
+        options: 'options list',
+        media: 'media list',
+      } as Record<string, string>
+    )[verb] ?? verb
+
   if (verb === 'variants list') {
     const args = parseStandardArgs({
       argv,
@@ -640,6 +649,16 @@ export const runProducts = async ({
         'allow-partial-updates': { type: 'boolean' },
       },
     })
+
+    // For this subverb, treat `--id` as a legacy alias for `--product-id`
+    // so users get the more relevant "Missing --variant-id" error.
+    if ((args as any).id !== undefined) {
+      if ((args as any)['product-id'] !== undefined) {
+        throw new CliError('Unknown flag --id, did you mean --variant-id?', 2)
+      }
+      ;(args as any)['product-id'] = (args as any).id
+      delete (args as any).id
+    }
 
     const productId = requireProductIdForSubverb(args)
     const variantId = requireId((args as any)['variant-id'], 'ProductVariant', '--variant-id')
