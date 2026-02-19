@@ -359,10 +359,12 @@ const getVerb = ({
   operation,
   description,
   notes,
+  examples,
 }: {
   operation: string
   description?: string
   notes?: string[]
+  examples?: string[]
 }): VerbSpec => ({
   verb: 'get',
   description,
@@ -370,6 +372,7 @@ const getVerb = ({
   requiredFlags: [flagId],
   output: { view: true, selection: true },
   notes,
+  examples,
 })
 
 const listVerb = ({
@@ -377,11 +380,13 @@ const listVerb = ({
   description,
   notes,
   flags,
+  examples,
 }: {
   operation: string
   description?: string
   notes?: string[]
   flags?: FlagSpec[]
+  examples?: string[]
 }): VerbSpec => ({
   verb: 'list',
   description,
@@ -389,6 +394,7 @@ const listVerb = ({
   output: { view: true, selection: true, pagination: true },
   notes,
   flags,
+  examples,
 })
 
 const deleteVerb = ({
@@ -396,17 +402,20 @@ const deleteVerb = ({
   description,
   requiredFlags = [],
   notes,
+  examples,
 }: {
   operation: string
   description?: string
   requiredFlags?: FlagSpec[]
   notes?: string[]
+  examples?: string[]
 }): VerbSpec => ({
   verb: 'delete',
   description,
   operation: { type: 'mutation', name: operation },
   requiredFlags: [flagId, flagYes, ...requiredFlags],
   notes,
+  examples,
 })
 
 const duplicateVerb = ({
@@ -415,12 +424,14 @@ const duplicateVerb = ({
   requiredFlags = [],
   flags,
   notes,
+  examples,
 }: {
   operation: string
   description?: string
   requiredFlags?: FlagSpec[]
   flags?: FlagSpec[]
   notes?: string[]
+  examples?: string[]
 }): VerbSpec => ({
   verb: 'duplicate',
   description,
@@ -428,21 +439,25 @@ const duplicateVerb = ({
   requiredFlags: [flagId, ...requiredFlags],
   flags,
   notes,
+  examples,
 })
 
 const countVerb = ({
   operation,
   description,
   flags,
+  examples,
 }: {
   operation: string
   description?: string
   flags?: FlagSpec[]
+  examples?: string[]
 }): VerbSpec => ({
   verb: 'count',
   description,
   operation: { type: 'query', name: operation },
   flags,
+  examples,
 })
 
 const inputVerb = ({
@@ -453,6 +468,7 @@ const inputVerb = ({
   requiredFlags = [],
   flags,
   notes,
+  examples,
   inputRequired = true,
   output,
 }: {
@@ -463,6 +479,7 @@ const inputVerb = ({
   requiredFlags?: FlagSpec[]
   flags?: FlagSpec[]
   notes?: string[]
+  examples?: string[]
   inputRequired?: boolean
   output?: VerbSpec['output']
 }): VerbSpec => ({
@@ -473,6 +490,7 @@ const inputVerb = ({
   requiredFlags,
   flags,
   notes,
+  examples,
   output,
 })
 
@@ -944,7 +962,7 @@ const baseCommandRegistry: ResourceSpec[] = [
       },
       {
         verb: 'media reorder',
-        description: 'Reorder a product's media.',
+        description: "Reorder a product's media.",
         operation: { type: 'mutation', name: 'productReorderMedia' },
         requiredFlags: [flagId],
         flags: [flagMoves, flagMove],
