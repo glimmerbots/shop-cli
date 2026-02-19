@@ -1,5 +1,6 @@
 import { CliError } from '../errors'
 import { coerceGid } from '../gid'
+import { renderVerbGroupHelp } from '../help/render'
 import { buildInput } from '../input'
 import { printConnection, printIds, printJson, printNode } from '../output'
 import { applyComputedFieldsToNode, computedPublicationsSelection } from '../output/computedFields'
@@ -454,6 +455,15 @@ export const runProducts = async ({
   verb: string
   argv: string[]
 }) => {
+  const groupHelpVerbs = new Set(['variants', 'options', 'media'])
+  if (groupHelpVerbs.has(verb)) {
+    const groupHelp = renderVerbGroupHelp('products', verb)
+    if (groupHelp) console.log(groupHelp)
+
+    if (argv.length === 0 || argv.includes('--help') || argv.includes('-h')) return
+    throw new CliError(`\nMissing <verb> for "products ${verb}"`, 2)
+  }
+
   if (argv.includes('--help') || argv.includes('-h')) {
     console.log(
       [
@@ -483,15 +493,6 @@ export const runProducts = async ({
     )
     return
   }
-
-  verb =
-    (
-      {
-        variants: 'variants list',
-        options: 'options list',
-        media: 'media list',
-      } as Record<string, string>
-    )[verb] ?? verb
 
   if (verb === 'variants list') {
     const args = parseStandardArgs({
