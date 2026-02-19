@@ -70,4 +70,13 @@ describe('validation errors include a help pointer', () => {
     expect(result.stderr).toContain('See help:')
     expect(result.stderr).toContain('  shop products media upload --help')
   })
+
+  it('products get missing id does not mention --product-id', () => {
+    const result = runCli(['products', 'get', '--dry-run'])
+    expect(result.status).toBe(2)
+    expect(result.stderr).toContain('Missing --id')
+    expect(result.stderr).not.toContain('or --product-id')
+    expect(result.stderr).toContain('See help:')
+    expect(result.stderr).toContain('  shop products get --help')
+  })
 })
