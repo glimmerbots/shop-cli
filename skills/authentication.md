@@ -77,10 +77,10 @@ shop products list --api-version 2025-10
 Add custom HTTP headers to requests:
 
 ```bash
-shop products list --header "X-Custom-Header: value" --header "X-Another: value2"
+shop products list --header X-Custom-Header=value --header "X-Another: value2"
 ```
 
-The `--header` flag can be repeated for multiple headers.
+The `--header` flag can be repeated for multiple headers. You can also set headers via `SHOPIFY_HEADERS` (JSON object).
 
 ## Authentication Errors
 
