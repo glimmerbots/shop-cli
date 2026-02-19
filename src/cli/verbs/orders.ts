@@ -340,8 +340,28 @@ export const runOrders = async ({
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.orderCapture, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.orderCapture?.transaction?.id ?? '')
-    printJson(result.orderCapture, ctx.format !== 'raw')
+    if (ctx.quiet) {
+      process.stdout.write(`${result.orderCapture?.transaction?.id ?? ''}\n`)
+      return
+    }
+
+    const orderAfter = await runQuery(ctx, {
+      order: { __args: { id }, id: true, displayFinancialStatus: true },
+    })
+    if (orderAfter === undefined) return
+
+    printNode({
+      node: {
+        orderId: id,
+        transaction: result.orderCapture?.transaction,
+        ...(orderAfter?.order
+          ? { order: { id: orderAfter.order.id, displayFinancialStatus: orderAfter.order.displayFinancialStatus } }
+          : {}),
+        userErrors: result.orderCapture?.userErrors,
+      },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
@@ -505,7 +525,19 @@ export const runOrders = async ({
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.orderRiskAssessmentCreate, failOnUserErrors: ctx.failOnUserErrors })
-    printJson(result.orderRiskAssessmentCreate, ctx.format !== 'raw')
+    if (ctx.quiet) {
+      process.stdout.write(`${orderId}\n`)
+      return
+    }
+    printNode({
+      node: {
+        orderId,
+        orderRiskAssessment: result.orderRiskAssessmentCreate?.orderRiskAssessment,
+        userErrors: result.orderRiskAssessmentCreate?.userErrors,
+      },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
@@ -567,10 +599,39 @@ export const runOrders = async ({
       payload: result.orderCreateMandatePayment,
       failOnUserErrors: ctx.failOnUserErrors,
     })
+
+    const paymentReferenceId = result.orderCreateMandatePayment?.paymentReferenceId
+    const paymentStatus =
+      paymentReferenceId
+        ? await runQuery(ctx, {
+            orderPaymentStatus: {
+              __args: { orderId: id, paymentReferenceId },
+              paymentReferenceId: true,
+              status: true,
+              errorMessage: true,
+              translatedErrorMessage: true,
+              transactions: { id: true, kind: true, status: true, amount: true, createdAt: true },
+            },
+          })
+        : undefined
+    if (paymentReferenceId && paymentStatus === undefined) return
+
     if (ctx.quiet) {
-      return console.log(result.orderCreateMandatePayment?.paymentReferenceId ?? result.orderCreateMandatePayment?.job?.id ?? '')
+      process.stdout.write(`${result.orderCreateMandatePayment?.job?.id ?? paymentReferenceId ?? ''}\n`)
+      return
     }
-    printJson(result.orderCreateMandatePayment, ctx.format !== 'raw')
+
+    printNode({
+      node: {
+        job: result.orderCreateMandatePayment?.job,
+        orderId: id,
+        paymentReferenceId,
+        ...(paymentStatus?.orderPaymentStatus ? { paymentStatus: paymentStatus.orderPaymentStatus } : {}),
+        userErrors: result.orderCreateMandatePayment?.userErrors,
+      },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
@@ -652,8 +713,25 @@ export const runOrders = async ({
       failOnUserErrors: ctx.failOnUserErrors,
     })
 
-    if (ctx.quiet) return console.log(result.orderCancel?.job?.id ?? '')
-    printJson(result.orderCancel, ctx.format !== 'raw')
+    if (ctx.quiet) {
+      process.stdout.write(`${result.orderCancel?.job?.id ?? ''}\n`)
+      return
+    }
+    printNode({
+      node: {
+        job: result.orderCancel?.job,
+        orderId,
+        refund,
+        restock,
+        reason,
+        notifyCustomer,
+        ...(staffNote ? { staffNote } : {}),
+        ...(refundMethod ? { refundMethod } : {}),
+        userErrors: result.orderCancel?.orderCancelUserErrors,
+      },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
@@ -802,7 +880,7 @@ export const runOrders = async ({
       })
       if (created === undefined) return
       maybeFailOnUserErrors({ payload: created.fulfillmentCreateV2, failOnUserErrors: ctx.failOnUserErrors })
-      payloads.push({ locationId, ...created.fulfillmentCreateV2 })
+      payloads.push({ locationId, assignedLocationId: locationId, ...created.fulfillmentCreateV2 })
     }
 
     if (ctx.quiet) {

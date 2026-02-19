@@ -513,8 +513,15 @@ export const runCollections = async ({
 
     const payload = (result as any)[mutation]
     maybeFailOnUserErrors({ payload, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(payload?.job?.id ?? '')
-    printJson(payload, ctx.format !== 'raw')
+    if (ctx.quiet) {
+      process.stdout.write(`${payload?.job?.id ?? ''}\n`)
+      return
+    }
+    printNode({
+      node: { job: payload?.job, collectionId: id, productIds, userErrors: payload?.userErrors },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
@@ -536,10 +543,10 @@ export const runCollections = async ({
       const raw = (args as any).move as string[]
       const parsedMoves: Array<{ id: string; newPosition: number }> = []
       for (const item of raw) {
-        const parts = item.split(':')
-        if (parts.length !== 2) throw new CliError('--move must be <productId>:<newPosition>', 2)
-        const productId = parts[0]!.trim()
-        const pos = Number(parts[1]!.trim())
+        const idx = item.lastIndexOf(':')
+        if (idx <= 0 || idx === item.length - 1) throw new CliError('--move must be <productId>:<newPosition>', 2)
+        const productId = item.slice(0, idx).trim()
+        const pos = Number(item.slice(idx + 1).trim())
         if (!productId) throw new CliError('--move productId cannot be empty', 2)
         if (!Number.isFinite(pos) || pos < 0) throw new CliError('--move newPosition must be a non-negative number', 2)
         parsedMoves.push({ id: coerceGid(productId, 'Product'), newPosition: Math.floor(pos) })
@@ -569,8 +576,20 @@ export const runCollections = async ({
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.collectionReorderProducts, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.collectionReorderProducts?.job?.id ?? '')
-    printJson(result.collectionReorderProducts, ctx.format !== 'raw')
+    if (ctx.quiet) {
+      process.stdout.write(`${result.collectionReorderProducts?.job?.id ?? ''}\n`)
+      return
+    }
+    printNode({
+      node: {
+        job: result.collectionReorderProducts?.job,
+        collectionId: id,
+        moves: normalizedMoves,
+        userErrors: result.collectionReorderProducts?.userErrors,
+      },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
@@ -691,15 +710,26 @@ export const runCollections = async ({
     const result = await runMutation(ctx, {
       collectionDuplicate: {
         __args: { input },
-        collection: collectionSummarySelection,
+        collection: { id: true },
         job: { id: true, done: true },
         userErrors: { field: true, message: true, code: true },
       },
     })
     if (result === undefined) return
     maybeFailOnUserErrors({ payload: result.collectionDuplicate, failOnUserErrors: ctx.failOnUserErrors })
-    if (ctx.quiet) return console.log(result.collectionDuplicate?.collection?.id ?? '')
-    printJson(result.collectionDuplicate, ctx.format !== 'raw')
+    if (ctx.quiet) {
+      process.stdout.write(`${result.collectionDuplicate?.job?.id ?? result.collectionDuplicate?.collection?.id ?? ''}\n`)
+      return
+    }
+    printNode({
+      node: {
+        job: result.collectionDuplicate?.job,
+        collectionId: result.collectionDuplicate?.collection?.id,
+        userErrors: result.collectionDuplicate?.userErrors,
+      },
+      format: ctx.format,
+      quiet: false,
+    })
     return
   }
 
