@@ -283,13 +283,28 @@ const flagContextsToRemove = flag('--contexts-to-remove <json|@file>', 'Catalog 
 const flagUpdatedAtSince = flag('--updated-at-since <iso>', 'Only updated since timestamp')
 const flagBeforeUpdatedAt = flag('--before-updated-at <iso>', 'Only updated before timestamp')
 
-const flagOptions = flag('--options <json|@file>', 'Options JSON array (inline or @file.json)')
-const flagOption = flag('--option <json|@file>', 'Option JSON object (inline or @file.json)')
-const flagOptionIds = flag('--option-ids <id,id,...>', 'Option IDs (comma-separated or repeatable)')
+const flagOption = flag(
+  '--option <name=value1,value2,...>',
+  'Option spec (repeatable). Example: "Size=Small,Medium,Large".',
+)
+const flagOptionsJson = flag('--options-json <json|@file>', 'Options JSON array (inline or @file.json)')
+const flagOptionJson = flag('--option-json <json|@file>', 'Option JSON object (inline or @file.json)')
+const flagOptionId = flag('--option-id <gid>', 'Option ID (repeatable or comma-separated)')
+const flagOptionName = flag('--option-name <string>', 'Option name (repeatable or comma-separated)')
 const flagVariantStrategy = flag('--variant-strategy <value>', 'Variant strategy')
-const flagOptionValuesToAdd = flag('--option-values-to-add <json|@file>', 'Option values to add (JSON)')
-const flagOptionValuesToDelete = flag('--option-values-to-delete <json|@file>', 'Option value IDs to delete (JSON)')
-const flagOptionValuesToUpdate = flag('--option-values-to-update <json|@file>', 'Option values to update (JSON)')
+const flagAddValue = flag('--add-value <string>', 'Add an option value (repeatable)')
+const flagDeleteValue = flag('--delete-value <string>', 'Delete an option value by name (repeatable)')
+const flagRenameValue = flag('--rename-value <from=to>', 'Rename an option value by name (repeatable)')
+const flagDeleteValueId = flag('--delete-value-id <gid>', 'Delete an option value by ID (repeatable)')
+const flagRenameValueId = flag('--rename-value-id <gid=newName>', 'Rename an option value by ID (repeatable)')
+const flagAddValuesJson = flag('--add-values-json <json|@file>', 'Option values to add (JSON array)')
+const flagDeleteValueIdsJson = flag('--delete-value-ids-json <json|@file>', 'Option value IDs to delete (JSON array)')
+const flagUpdateValuesJson = flag('--update-values-json <json|@file>', 'Option values to update (JSON array)')
+const flagOrder = flag(
+  '--order <option[=value1,value2,...]>',
+  'Option order spec (repeatable). Example: "Size" or "Color=Green,Red,Blue".',
+)
+const flagPosition = flag('--position <n>', '1-based position')
 
 const flagParentProductId = flag('--parent-product-id <gid>', 'Parent product ID')
 const flagProductsAdded = flag('--products-added <json|@file>', 'Child products to add (JSON)')
@@ -696,45 +711,90 @@ const baseCommandRegistry: ResourceSpec[] = [
         examples: ['shop products leave-selling-plan-groups --id 123 --group-ids 456'],
       },
       {
-        verb: 'option-update',
-        description: 'Update a product option.',
-        operation: { type: 'mutation', name: 'productOptionUpdate' },
-        requiredFlags: [flagProductId, flagOption],
-        flags: [
-          flagOptionValuesToAdd,
-          flagOptionValuesToDelete,
-          flagOptionValuesToUpdate,
-          flagVariantStrategy,
-        ],
+        verb: 'options list',
+        description: 'List options for a product.',
+        operation: { type: 'query', name: 'product' },
+        requiredFlags: [flagId],
+        output: { view: true, selection: true },
+        notes: ['Product options are not paginated (no --after / Next page).'],
         examples: [
-          `shop products option-update --product-id 123 --option '{"id":"gid://shopify/ProductOption/1","name":"Color"}'`,
+          'shop products options list --id 123',
+          'shop products options list --id 123 --view full',
         ],
       },
       {
-        verb: 'options-create',
+        verb: 'options create',
         description: 'Create product options.',
         operation: { type: 'mutation', name: 'productOptionsCreate' },
-        requiredFlags: [flagProductId, flagOptions],
-        flags: [flagVariantStrategy],
+        requiredFlags: [flagId],
+        flags: [
+          flagVariantStrategy,
+          flagOption,
+          flagOptionsJson,
+        ],
+        notes: ['Pass one or more --option entries, or use --options-json for advanced inputs.'],
+        output: { view: true, selection: true },
         examples: [
-          `shop products options-create --product-id 123 --options '[{"name":"Size","values":[{"name":"S"},{"name":"M"},{"name":"L"}]}]'`,
+          'shop products options create --id 123 --option "Size=Small,Medium,Large"',
+          'shop products options create --id 123 --option "Size=S,M,L" --option "Color=Red,Blue" --variant-strategy CREATE',
         ],
       },
       {
-        verb: 'options-delete',
-        description: 'Delete product options.',
-        operation: { type: 'mutation', name: 'productOptionsDelete' },
-        requiredFlags: [flagProductId, flagOptionIds],
-        flags: [flagStrategy],
-        examples: ['shop products options-delete --product-id 123 --option-ids gid://shopify/ProductOption/1'],
+        verb: 'options update',
+        description: 'Update a product option.',
+        operation: { type: 'mutation', name: 'productOptionUpdate' },
+        requiredFlags: [flagId, flagOptionId],
+        flags: [
+          flagName,
+          flagPosition,
+          flagVariantStrategy,
+          flagAddValue,
+          flagDeleteValue,
+          flagRenameValue,
+          flagDeleteValueId,
+          flagRenameValueId,
+          flagOptionJson,
+          flagAddValuesJson,
+          flagDeleteValueIdsJson,
+          flagUpdateValuesJson,
+        ],
+        notes: [
+          'Name-based value changes require fetching current option value IDs.',
+          'In --dry-run mode, prefer ID-based flags (e.g. --delete-value-id) or JSON flags.',
+        ],
+        output: { view: true, selection: true },
+        examples: [
+          'shop products options update --id 123 --option-id 456 --name "Size"',
+          'shop products options update --id 123 --option-id 456 --add-value XL',
+          'shop products options update --id 123 --option-id 456 --rename-value "Medium=Med"',
+        ],
       },
       {
-        verb: 'options-reorder',
+        verb: 'options delete',
+        description: 'Delete product options.',
+        operation: { type: 'mutation', name: 'productOptionsDelete' },
+        requiredFlags: [flagId],
+        flags: [flagOptionId, flagOptionName, flagStrategy],
+        notes: ['Pass one or more --option-id and/or --option-name entries.'],
+        examples: [
+          'shop products options delete --id 123 --option-name "Color"',
+          'shop products options delete --id 123 --option-id gid://shopify/ProductOption/456',
+        ],
+      },
+      {
+        verb: 'options reorder',
         description: 'Reorder product options and values.',
         operation: { type: 'mutation', name: 'productOptionsReorder' },
-        requiredFlags: [flagProductId, flagOptions],
+        requiredFlags: [flagId],
+        flags: [flagOrder, flagOptionsJson],
+        notes: [
+          'If you specify values (e.g. --order "Color=Green,Red,Blue"), you must include the full value order for that option.',
+          'In --dry-run mode, value reordering via --order is not supported (use --options-json).',
+        ],
+        output: { view: true, selection: true },
         examples: [
-          `shop products options-reorder --product-id 123 --options '[{"id":"gid://shopify/ProductOption/1","position":2}]'`,
+          'shop products options reorder --id 123 --order "Size" --order "Color"',
+          'shop products options reorder --id 123 --order "Color=Green,Red,Blue"',
         ],
       },
       {

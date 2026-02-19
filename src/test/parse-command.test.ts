@@ -19,6 +19,14 @@ describe('parse-command', () => {
     expect(parsed).toEqual({ verb: 'media add', rest: ['--id', '123'] })
   })
 
+  it('parses a known multi-word verb (options list)', () => {
+    const parsed = parseVerbAndRest({
+      resource: 'products',
+      afterResource: ['options', 'list', '--id', '123'],
+    })
+    expect(parsed).toEqual({ verb: 'options list', rest: ['--id', '123'] })
+  })
+
   it('keeps legacy behavior when verb is unknown', () => {
     const parsed = parseVerbAndRest({
       resource: 'products',
