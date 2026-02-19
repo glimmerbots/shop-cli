@@ -710,13 +710,13 @@ const baseCommandRegistry: ResourceSpec[] = [
         requiredFlags: [flagId, flagUrl],
         flags: [
           flagAlt,
-          flagMediaContentType,
+          flagMediaType,
           flagFilesUploadWait,
           flagPollIntervalMs,
           flagTimeoutMs,
         ],
         notes: [
-          'Alias: --media-type is accepted as --media-content-type.',
+          'Alias: --media-content-type is accepted as --media-type.',
         ],
       },
       {
@@ -727,14 +727,14 @@ const baseCommandRegistry: ResourceSpec[] = [
         flags: [
           flagAlt,
           flagFilesUploadMimeType,
-          flagMediaContentType,
+          flagMediaType,
           flagFilesUploadWait,
           flagPollIntervalMs,
           flagTimeoutMs,
         ],
         notes: [
           'To attach by URL, use `shop products media add --url ...`.',
-          'Aliases: --content-type is accepted as --mime-type; --media-type is accepted as --media-content-type.',
+          'Aliases: --content-type is accepted as --mime-type; --media-content-type is accepted as --media-type.',
         ],
       },
       {
