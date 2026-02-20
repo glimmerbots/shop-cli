@@ -255,6 +255,9 @@ export const renderTopLevelHelp = (command = resolveCliCommand()) => {
     '  --selection <graphql>     (selection override; can be @file.gql)',
     '  --quiet                  (IDs only when possible)',
     '',
+    'IDs:',
+    '  --strict-ids             (or env SHOP_CLI_STRICT_IDS=1; require full gid://shopify/... IDs)',
+    '',
     'Debug:',
     '  --dry-run                (print GraphQL op + variables, do not execute)',
     '  --no-fail-on-user-errors (do not exit non-zero on userErrors)',
@@ -273,10 +276,10 @@ export const renderTopLevelHelp = (command = resolveCliCommand()) => {
     `  ${command} products list --first 5 --format table`,
     `  ${command} products get --id gid://shopify/Product/123 --format markdown`,
     `  ${command} products create --set title="Hat" --set status="ACTIVE"`,
-    `  ${command} products add-tags --id 123 --tags "summer,featured"`,
+    `  ${command} products add-tags --id gid://shopify/Product/123 --tags "summer,featured"`,
     `  ${command} publications resolve --publication "Online Store"`,
-    `  ${command} products publish --id 123 --publication "Online Store" --now`,
-    `  ${command} products metafields upsert --id 123 --set namespace=custom --set key=foo --set type=single_line_text_field --set value=bar`,
+    `  ${command} products publish --id gid://shopify/Product/123 --publication "Online Store" --now`,
+    `  ${command} products metafields upsert --id gid://shopify/Product/123 --set namespace=custom --set key=foo --set type=single_line_text_field --set value=bar`,
   ].join('\n')
 }
 

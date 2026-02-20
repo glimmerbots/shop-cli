@@ -124,6 +124,23 @@ export type ShopifyGidType =
 
 export const isGid = (value: string) => value.trim().startsWith('gid://')
 
+export const parseEnvBoolean = (value: string | undefined): boolean => {
+  if (value === undefined) return false
+  const v = value.trim().toLowerCase()
+  if (v === '') return true
+  if (v === '1' || v === 'true' || v === 'yes' || v === 'y' || v === 'on') return true
+  if (v === '0' || v === 'false' || v === 'no' || v === 'n' || v === 'off') return false
+  return true
+}
+
+let strictIdsMode = parseEnvBoolean(process.env.SHOP_CLI_STRICT_IDS)
+
+export const setStrictIdsMode = (enabled: boolean) => {
+  strictIdsMode = enabled
+}
+
+export const isStrictIdsMode = () => strictIdsMode
+
 export const parseShopifyGid = (value: string) => {
   const raw = value.trim()
   if (!raw.startsWith('gid://')) throw new CliError(`Invalid Shopify GID: ${value}`, 2)
@@ -178,6 +195,12 @@ export const assertShopifyGidTypeIn = (
 export const coerceGid = (value: string, type: ShopifyGidType, label = `ID for ${type}`) => {
   const raw = value.trim()
   if (isGid(raw)) return assertShopifyGidType(raw, type, label)
+  if (isStrictIdsMode()) {
+    throw new CliError(
+      `${label} must be a full Shopify GID of type ${type} (gid://shopify/${type}/...). Strict IDs mode is enabled (SHOP_CLI_STRICT_IDS or --strict-ids). Got: ${value}`,
+      2,
+    )
+  }
   if (!/^\d+$/.test(raw)) {
     throw new CliError(
       `Expected a numeric ID or full GID for ${type}. Got: ${value}`,

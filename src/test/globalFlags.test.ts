@@ -7,5 +7,10 @@ describe('parseGlobalFlags', () => {
     expect(parsed.headers).toEqual(['X-Foo=bar'])
     expect(parsed.passthrough).toEqual(['products', 'list'])
   })
-})
 
+  it('parses --strict-ids', () => {
+    const parsed = parseGlobalFlags(['--strict-ids', 'products', 'get', '--id', 'gid://shopify/Product/1'])
+    expect(parsed.strictIds).toBe(true)
+    expect(parsed.passthrough).toEqual(['products', 'get', '--id', 'gid://shopify/Product/1'])
+  })
+})
