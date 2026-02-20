@@ -67,7 +67,7 @@ describe('validation errors include a help pointer', () => {
     const result = runCli(['products', 'media', 'upload', '--dry-run'])
     expect(result.status).toBe(2)
     expect(result.stderr).toContain('Missing --product-id')
-    expect(result.stderr).toContain('See help:')
+    expect(result.stderr).toContain('See help for available options:')
     expect(result.stderr).toContain('  shop products media upload --help')
   })
 
@@ -76,7 +76,17 @@ describe('validation errors include a help pointer', () => {
     expect(result.status).toBe(2)
     expect(result.stderr).toContain('Missing --id')
     expect(result.stderr).not.toContain('or --product-id')
-    expect(result.stderr).toContain('See help:')
+    expect(result.stderr).toContain('See help for available options:')
     expect(result.stderr).toContain('  shop products get --help')
+  })
+
+  it('formats unknown options concisely', () => {
+    const result = runCli(['products', 'list', '--dry-run', '--max', '5'])
+    expect(result.status).toBe(2)
+    expect(result.stderr).toContain("Unknown option '--max'")
+    expect(result.stderr).toContain('See help for available options:')
+    expect(result.stderr).toContain('  shop products list --help')
+    expect(result.stderr).not.toContain('ERR_PARSE_ARGS_UNKNOWN_OPTION')
+    expect(result.stderr).not.toContain('TypeError')
   })
 })
