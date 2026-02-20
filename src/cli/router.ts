@@ -461,40 +461,50 @@ export const parseStandardArgs = ({
   argv: string[]
   extraOptions: Record<string, any>
 }): any => {
-  const parsed = parseArgs({
-    args: argv,
-    allowPositionals: false,
-    options: {
-      ...extraOptions,
-      input: { type: 'string' },
-      set: { type: 'string', multiple: true },
-      'set-json': { type: 'string', multiple: true },
-      select: { type: 'string', multiple: true },
-      selection: { type: 'string' },
-      include: { type: 'string', multiple: true },
-      id: { type: 'string' },
-      ids: { type: 'string', multiple: true },
-      yes: { type: 'boolean' },
-      help: { type: 'boolean' },
-      h: { type: 'boolean' },
-      query: { type: 'string' },
-      first: { type: 'string' },
-      after: { type: 'string' },
-      sort: { type: 'string' },
-      reverse: { type: 'boolean' },
-      type: { type: 'string' },
-      key: { type: 'string' },
-      namespace: { type: 'string' },
-      topic: { type: 'string' },
-      'owner-type': { type: 'string' },
-      'order-id': { type: 'string' },
-      'variant-ids': { type: 'string', multiple: true },
-      tags: { type: 'string' },
-      status: { type: 'string' },
-      'new-title': { type: 'string' },
-    },
-  })
-  return parsed.values
+  try {
+    const parsed = parseArgs({
+      args: argv,
+      allowPositionals: false,
+      options: {
+        ...extraOptions,
+        input: { type: 'string' },
+        set: { type: 'string', multiple: true },
+        'set-json': { type: 'string', multiple: true },
+        select: { type: 'string', multiple: true },
+        selection: { type: 'string' },
+        include: { type: 'string', multiple: true },
+        id: { type: 'string' },
+        ids: { type: 'string', multiple: true },
+        yes: { type: 'boolean' },
+        help: { type: 'boolean' },
+        h: { type: 'boolean' },
+        query: { type: 'string' },
+        first: { type: 'string' },
+        after: { type: 'string' },
+        sort: { type: 'string' },
+        reverse: { type: 'boolean' },
+        type: { type: 'string' },
+        key: { type: 'string' },
+        namespace: { type: 'string' },
+        topic: { type: 'string' },
+        'owner-type': { type: 'string' },
+        'order-id': { type: 'string' },
+        'variant-ids': { type: 'string', multiple: true },
+        tags: { type: 'string' },
+        status: { type: 'string' },
+        'new-title': { type: 'string' },
+      },
+    })
+    return parsed.values
+  } catch (err) {
+    // node:util/parseArgs throws TypeError objects with codes like ERR_PARSE_ARGS_UNKNOWN_OPTION.
+    // Wrap these as CliError so the CLI prints a concise message without a stack trace.
+    const code = (err as any)?.code
+    if (err instanceof TypeError && typeof code === 'string' && code.startsWith('ERR_PARSE_ARGS_')) {
+      throw new CliError(err.message, 2)
+    }
+    throw err
+  }
 }
 
 export const runQuery = async (ctx: CommandContext, request: any): Promise<any> => {
