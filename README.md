@@ -137,7 +137,7 @@ shop products list --select seo.title --select seo.description
 Include connections when using `--view all`:
 
 ```bash
-shop products get --id 123 --view all --include variants --include images
+shop products get --id gid://shopify/Product/123 --view all --include variants --include images
 ```
 
 Override selection entirely with raw GraphQL:
@@ -155,7 +155,7 @@ With `--select`, use the `on_TypeName` prefix:
 
 ```bash
 # Select apps from an AppCatalog via publications
-shop products get --id 123 --include resourcePublicationsV2 \
+shop products get --id gid://shopify/Product/123 --include resourcePublicationsV2 \
   --select resourcePublicationsV2.nodes.publication.catalog.on_AppCatalog.apps.nodes.title
 ```
 
@@ -204,6 +204,7 @@ shop products list --quiet
 | `--set-json`  | Set a field value as JSON (repeatable)   |
 | `--tags`      | Comma-separated tags                     |
 | `--dry-run`   | Print GraphQL operation without executing |
+| `--strict-ids` | Require full `gid://shopify/...` IDs (or env `SHOP_CLI_STRICT_IDS=1`) |
 
 ## Raw GraphQL
 
@@ -229,23 +230,23 @@ shop products list --first 5
 shop products list --published
 
 # Get a specific product
-shop products get --id 123
+shop products get --id gid://shopify/Product/123
 
 # Create a product
 shop products create --set title="My Product" --set status="ACTIVE"
 
 # Update a product
-shop products update --id 123 --set title="Updated Title"
+shop products update --id gid://shopify/Product/123 --set title="Updated Title"
 
 # Add tags to a product
-shop products add-tags --id 123 --tags "summer,featured"
+shop products add-tags --id gid://shopify/Product/123 --tags "summer,featured"
 
 # Publish to a sales channel
 shop publications resolve --publication "Online Store"
-shop products publish --id 123 --publication "Online Store" --now
+shop products publish --id gid://shopify/Product/123 --publication "Online Store" --now
 
 # Work with metafields
-shop products metafields upsert --id 123 \
+shop products metafields upsert --id gid://shopify/Product/123 \
   --set namespace=custom \
   --set key=foo \
   --set type=single_line_text_field \

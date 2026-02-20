@@ -22,7 +22,7 @@ export const runPublishables = async ({
         '  publish-to-current-channel|unpublish-to-current-channel',
         '',
         'Notes:',
-        '  --id must be a full gid://shopify/... ID (numeric IDs cannot be coerced for Publishable).',
+        '  --id must be a full Shopify GID (gid://shopify/...).',
       ].join('\n'),
     )
     return

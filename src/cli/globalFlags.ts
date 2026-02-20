@@ -9,6 +9,7 @@ export type GlobalParsed = {
   format?: string
   quiet?: boolean
   dryRun?: boolean
+  strictIds?: boolean
   noFailOnUserErrors?: boolean
   view?: string
   headers: string[]
@@ -74,6 +75,10 @@ export const parseGlobalFlags = (args: string[]): GlobalParsed => {
       parsed.dryRun = true
       continue
     }
+    if (flag === '--strict-ids') {
+      parsed.strictIds = true
+      continue
+    }
     if (flag === '--no-fail-on-user-errors') {
       parsed.noFailOnUserErrors = true
       continue
@@ -94,4 +99,3 @@ export const parseGlobalFlags = (args: string[]): GlobalParsed => {
 
   return parsed
 }
-

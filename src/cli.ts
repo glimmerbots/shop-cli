@@ -18,6 +18,7 @@ import { resolveCliCommand } from './cli/command'
 import { buildUnexpectedPositionalHint, parseVerbAndRest, rewritePositionalIdAsFlag } from './cli/parse-command'
 import { setGlobalCommand } from './cli/output'
 import { findSuggestions } from './cli/suggest'
+import { parseEnvBoolean, setStrictIdsMode } from './cli/gid'
 
 const helpFlags = new Set(['--help', '-h', '--help-full', '--help-all'])
 const versionFlags = new Set(['--version', '-v'])
@@ -138,6 +139,8 @@ const main = async () => {
   const parsed = parseGlobalFlags(rewrittenRest)
 
   const dryRun = parsed.dryRun ?? false
+  const strictIds = parsed.strictIds ?? parseEnvBoolean(process.env.SHOP_CLI_STRICT_IDS)
+  setStrictIdsMode(strictIds)
   const isOfflineCommand = verb === 'fields' || isTypesCommand
   const shopDomain = parsed.shopDomain
   const graphqlEndpoint = parsed.graphqlEndpoint

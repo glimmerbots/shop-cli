@@ -1,4 +1,5 @@
 import { CliError } from '../errors'
+import { isStrictIdsMode } from '../gid'
 import { parseStandardArgs, runMutation, runQuery, type CommandContext } from '../router'
 import { maybeFailOnUserErrors } from '../userErrors'
 import { buildLocalFilesForStagedUpload, stagedUploadLocalFiles } from '../workflows/files/stagedUploads'
@@ -128,9 +129,17 @@ export const runFiles = async ({
       trimmed.startsWith('gid://')
         ? `ids:${trimmed}`
         : /^\d+$/.test(trimmed)
-          ? `id:${trimmed}`
+          ? (() => {
+              if (isStrictIdsMode()) {
+                throw new CliError(
+                  '--id must be a full Shopify GID (gid://shopify/...). Strict IDs mode is enabled (SHOP_CLI_STRICT_IDS or --strict-ids).',
+                  2,
+                )
+              }
+              return `id:${trimmed}`
+            })()
           : (() => {
-              throw new CliError('--id must be a numeric ID or full gid://shopify/... GID', 2)
+              throw new CliError('--id must be a full Shopify GID (gid://shopify/...)', 2)
             })()
 
     const result = await runQuery(ctx, {

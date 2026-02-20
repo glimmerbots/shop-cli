@@ -104,7 +104,7 @@ export const runLocations = async ({
         '  --selection <graphql>  (selection override; can be @file.gql)',
         '',
         'Special flags:',
-        '  --destination-location-id <gid|num>  (deactivate)',
+        '  --destination-location-id <gid>  (deactivate)',
         '  --include-inactive                     (list)',
         '  --include-legacy                       (list)',
       ].join('\n'),
