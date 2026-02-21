@@ -67,7 +67,7 @@ describe('validation errors include a help pointer', () => {
     const result = runCli(['products', 'media', 'upload', '--dry-run'])
     expect(result.status).toBe(2)
     expect(result.stderr).toContain('Missing --product-id')
-    expect(result.stderr).toContain('See help for available options:')
+    expect(result.stderr).toContain('\n\nSee help for available options:')
     expect(result.stderr).toContain('  shop products media upload --help')
   })
 

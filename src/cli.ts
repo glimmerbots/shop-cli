@@ -252,7 +252,8 @@ const main = async () => {
       !message.startsWith('Unknown resource:') &&
       !message.startsWith('Unknown verb for ')
     ) {
-      message = `${message}\nSee help for available options:\n  ${command} ${resource} ${verb} --help`
+      const sep = message.endsWith('\n') ? '\n' : '\n\n'
+      message = `${message}${sep}See help for available options:\n  ${command} ${resource} ${verb} --help`
     }
 
     throw new CliError(message, err.exitCode, { silent: err.silent })
