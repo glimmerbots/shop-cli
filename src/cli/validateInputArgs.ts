@@ -1,0 +1,139 @@
+import { CliError } from './errors'
+import { resolveCliCommand } from './command'
+import { inputTypeHelp } from '../generated/help/schema-help'
+import { getType } from './introspection'
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const splitTokens = (value: string): string[] =>
+  value
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .split(/[^A-Za-z0-9]+/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+
+/** Simple fuzzy matching: check if all chars of needle appear in haystack in order */
+const fuzzyMatch = (needle: string, haystack: string): boolean => {
+  const lowerNeedle = needle.toLowerCase()
+  const lowerHaystack = haystack.toLowerCase()
+  let ni = 0
+  for (let hi = 0; hi < lowerHaystack.length && ni < lowerNeedle.length; hi++) {
+    if (lowerHaystack[hi] === lowerNeedle[ni]) ni++
+  }
+  return ni === lowerNeedle.length
+}
+
+/** Score a match - lower is better. Prefers exact prefix matches, then substring, then fuzzy */
+const scoreMatch = (query: string, fieldName: string): number => {
+  const lowerQuery = query.toLowerCase()
+  const lowerField = fieldName.toLowerCase()
+
+  if (lowerField === lowerQuery) return 0
+  if (lowerField.startsWith(lowerQuery)) return 1
+  if (lowerField.includes(lowerQuery)) return 2
+  const qTokens = splitTokens(query).map((t) => t.toLowerCase())
+  const fTokens = splitTokens(fieldName).map((t) => t.toLowerCase())
+  const qLast = qTokens[qTokens.length - 1]
+  const fLast = fTokens[fTokens.length - 1]
+  if (qLast && fLast && qLast === fLast) return 3
+  if (fuzzyMatch(query, fieldName)) return 4
+  return Infinity
+}
+
+const suggestFieldNames = (query: string, candidates: string[], limit = 5): string[] => {
+  const scored = candidates
+    .map((name) => ({ name, score: scoreMatch(query, name) }))
+    .filter(({ score }) => score < Infinity)
+    .sort((a, b) => a.score - b.score || a.name.localeCompare(b.name))
+    .slice(0, limit)
+
+  return scored.map(({ name }) => name)
+}
+
+const validateInputObject = ({
+  inputTypeName,
+  value,
+  at,
+}: {
+  inputTypeName: string
+  value: unknown
+  at: string
+}) => {
+  if (value === null || value === undefined) return
+
+  if (Array.isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      validateInputObject({ inputTypeName, value: value[i], at: `${at}[${i}]` })
+    }
+    return
+  }
+
+  if (!isPlainObject(value)) return
+
+  const fields = inputTypeHelp[inputTypeName]
+  if (!fields) return
+
+  const allowed = new Map(fields.map((f) => [f.name, f]))
+
+  for (const [key, child] of Object.entries(value)) {
+    const field = allowed.get(key)
+    if (!field) {
+      const suggestions = suggestFieldNames(key, Array.from(allowed.keys()))
+      const lines = [`Unknown input field "${key}" on ${inputTypeName} (at ${at}.${key}).`]
+      if (suggestions.length > 0) {
+        lines.push('')
+        lines.push('Did you mean?')
+        for (const s of suggestions) lines.push(`  ${s}`)
+      }
+      lines.push('')
+      lines.push(`See \`${resolveCliCommand()} types ${inputTypeName}\` for valid fields.`)
+      throw new CliError(lines.join('\n'), 2)
+    }
+
+    const nestedTypeName = field.typeName
+    if (nestedTypeName && inputTypeHelp[nestedTypeName]) {
+      validateInputObject({ inputTypeName: nestedTypeName, value: child, at: `${at}.${key}` })
+    }
+  }
+}
+
+export const validateRequestInputArgs = (rootTypeName: 'Query' | 'Mutation', request: any) => {
+  if (!isPlainObject(request)) return
+
+  const root = getType(rootTypeName)
+  if (!root?.fields) return
+
+  for (const [opName, selection] of Object.entries(request)) {
+    if (!isPlainObject(selection)) continue
+    const field: any = root.fields[opName]
+    if (!field) continue
+
+    const args = (selection as any).__args
+    if (!isPlainObject(args)) continue
+
+    const argDefs: any = field.args ?? {}
+    for (const [argName, argValue] of Object.entries(args)) {
+      if (argValue === undefined) continue
+
+      const argDef: any = argDefs[argName]
+      if (!argDef) {
+        const candidates = Object.keys(argDefs)
+        const suggestions = suggestFieldNames(argName, candidates)
+        const lines = [`Unknown argument "${argName}" for ${rootTypeName}.${opName}.`]
+        if (suggestions.length > 0) {
+          lines.push('')
+          lines.push('Did you mean?')
+          for (const s of suggestions) lines.push(`  ${s}`)
+        }
+        throw new CliError(lines.join('\n'), 2)
+      }
+
+      const typeName = argDef[0]?.name
+      if (!typeName) continue
+      if (!inputTypeHelp[typeName]) continue
+
+      validateInputObject({ inputTypeName: typeName, value: argValue, at: `${opName}.__args.${argName}` })
+    }
+  }
+}

@@ -1107,7 +1107,7 @@ const baseCommandRegistry: ResourceSpec[] = [
       {
         verb: 'get-by-identifier',
         description: 'Fetch a variant by identifier (product + sku/barcode).',
-        operation: { type: 'query', name: 'productVariantByIdentifier' },
+        operation: { type: 'query', name: 'product' },
         flags: [flagProductId, flag('--sku <string>', 'SKU'), flag('--barcode <string>', 'Barcode')],
         output: { view: true, selection: true },
         notes: ['Provide --product-id plus --sku or --barcode, or pass --input.'],
@@ -1119,7 +1119,7 @@ const baseCommandRegistry: ResourceSpec[] = [
       {
         verb: 'by-identifier',
         description: 'Alias for get-by-identifier.',
-        operation: { type: 'query', name: 'productVariantByIdentifier' },
+        operation: { type: 'query', name: 'product' },
         flags: [flagProductId, flag('--sku <string>', 'SKU'), flag('--barcode <string>', 'Barcode')],
         output: { view: true, selection: true },
         notes: ['Alias for `shop product-variants get-by-identifier`.'],

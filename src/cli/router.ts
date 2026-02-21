@@ -10,6 +10,7 @@ import { maybeThrowApprovalRequired } from './approvalRequired'
 import { getFields, getType } from './introspection'
 import { printFieldsTable } from './introspection/format'
 import { resourceToType } from './introspection/resources'
+import { validateRequestInputArgs } from './validateInputArgs'
 import { runArticles } from './verbs/articles'
 import { runBlogs } from './verbs/blogs'
 import { runBulkOperations } from './verbs/bulk-operations'
@@ -508,6 +509,7 @@ export const parseStandardArgs = ({
 }
 
 export const runQuery = async (ctx: CommandContext, request: any): Promise<any> => {
+  validateRequestInputArgs('Query', request)
   if (ctx.dryRun) {
     // dry-run output is always a stable JSON payload
     // (format/quiet are handled by the command wrapper, not by the request generator)
@@ -532,6 +534,7 @@ export const runQuery = async (ctx: CommandContext, request: any): Promise<any> 
 }
 
 export const runMutation = async (ctx: CommandContext, request: any): Promise<any> => {
+  validateRequestInputArgs('Mutation', request)
   if (ctx.dryRun) {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(generateMutationOp(request), null, 2))

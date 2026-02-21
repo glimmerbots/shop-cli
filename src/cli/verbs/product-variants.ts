@@ -175,14 +175,11 @@ export const runProductVariants = async ({
       setJsonArgs: args['set-json'] as any,
     })
 
-    let identifier = built.used ? (built.input as any) : undefined
-    if (!identifier) {
-      const productId = requireId(args['product-id'], 'Product', '--product-id')
-      const sku = args.sku as string | undefined
-      const barcode = args.barcode as string | undefined
-      if (!sku && !barcode) throw new CliError('Missing --sku or --barcode', 2)
-      identifier = { productId, ...(sku ? { sku } : {}), ...(barcode ? { barcode } : {}) }
-    }
+    const fromInput = built.used ? (built.input as any) : undefined
+    const productId = requireId(fromInput?.productId ?? (args as any)['product-id'], 'Product', '--product-id')
+    const sku = (fromInput?.sku ?? args.sku) as string | undefined
+    const barcode = (fromInput?.barcode ?? args.barcode) as string | undefined
+    if (!sku && !barcode) throw new CliError('Missing --sku or --barcode', 2)
 
     const selection = resolveSelection({
       resource: 'product-variants',
@@ -194,10 +191,40 @@ export const runProductVariants = async ({
       ensureId: ctx.quiet,
     })
 
-    const result = await runQuery(ctx, { productVariantByIdentifier: { __args: { identifier }, ...selection } })
-    if (result === undefined) return
-    printNode({ node: result.productVariantByIdentifier, format: ctx.format, quiet: ctx.quiet })
-    return
+    const first = parseFirst(args.first)
+    let after = args.after as any
+
+    const nodeSelection: any = { ...selection }
+    if (!('id' in nodeSelection)) nodeSelection.id = true
+    if (sku && !('sku' in nodeSelection)) nodeSelection.sku = true
+    if (barcode && !('barcode' in nodeSelection)) nodeSelection.barcode = true
+
+    while (true) {
+      const result = await runQuery(ctx, {
+        product: {
+          __args: { id: productId },
+          variants: {
+            __args: { first, after },
+            pageInfo: { hasNextPage: true, endCursor: true },
+            nodes: nodeSelection,
+          },
+        },
+      })
+      if (result === undefined) return
+
+      const nodes = result.product?.variants?.nodes ?? []
+      const match = nodes.find((v: any) => (sku && v?.sku === sku) || (barcode && v?.barcode === barcode))
+      if (match) {
+        printNode({ node: match, format: ctx.format, quiet: ctx.quiet })
+        return
+      }
+
+      const pageInfo = result.product?.variants?.pageInfo
+      if (!pageInfo?.hasNextPage) break
+      after = pageInfo.endCursor
+    }
+
+    throw new CliError('Product variant not found', 2)
   }
 
   if (verb === 'list') {
