@@ -6,6 +6,11 @@ import { getType } from './introspection'
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
+const formatCliPlaceholder = (field: { typeName: string; isList: boolean }) => {
+  const base = `${field.typeName}${field.isList ? '[]' : ''}`
+  return `<${base}>`
+}
+
 const splitTokens = (value: string): string[] =>
   value
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
@@ -26,19 +31,29 @@ const fuzzyMatch = (needle: string, haystack: string): boolean => {
 
 /** Score a match - lower is better. Prefers exact prefix matches, then substring, then fuzzy */
 const scoreMatch = (query: string, fieldName: string): number => {
-  const lowerQuery = query.toLowerCase()
   const lowerField = fieldName.toLowerCase()
 
-  if (lowerField === lowerQuery) return 0
-  if (lowerField.startsWith(lowerQuery)) return 1
-  if (lowerField.includes(lowerQuery)) return 2
-  const qTokens = splitTokens(query).map((t) => t.toLowerCase())
-  const fTokens = splitTokens(fieldName).map((t) => t.toLowerCase())
-  const qLast = qTokens[qTokens.length - 1]
-  const fLast = fTokens[fTokens.length - 1]
-  if (qLast && fLast && qLast === fLast) return 3
-  if (fuzzyMatch(query, fieldName)) return 4
-  return Infinity
+  const lowerQuery = query.toLowerCase()
+  const queryVariants = [query]
+  if (lowerQuery.endsWith('html') && query.length > 4) queryVariants.push(query.slice(0, -4))
+
+  let best = Infinity
+  for (const qRaw of queryVariants) {
+    const q = qRaw.toLowerCase()
+    if (lowerField === q) best = Math.min(best, 0)
+    else if (lowerField.startsWith(q)) best = Math.min(best, 1)
+    else if (lowerField.includes(q)) best = Math.min(best, 2)
+    else {
+      const qTokens = splitTokens(qRaw).map((t) => t.toLowerCase())
+      const fTokens = splitTokens(fieldName).map((t) => t.toLowerCase())
+      const qLast = qTokens[qTokens.length - 1]
+      const fLast = fTokens[fTokens.length - 1]
+      if (qLast && fLast && qLast === fLast) best = Math.min(best, 3)
+      else if (fuzzyMatch(qRaw, fieldName)) best = Math.min(best, 4)
+    }
+  }
+
+  return best
 }
 
 const suggestFieldNames = (query: string, candidates: string[], limit = 5): string[] => {
@@ -55,16 +70,19 @@ const validateInputObject = ({
   inputTypeName,
   value,
   at,
+  setPath,
 }: {
   inputTypeName: string
   value: unknown
   at: string
+  setPath: string
 }) => {
   if (value === null || value === undefined) return
 
   if (Array.isArray(value)) {
     for (let i = 0; i < value.length; i++) {
-      validateInputObject({ inputTypeName, value: value[i], at: `${at}[${i}]` })
+      const nextSetPath = setPath ? `${setPath}.${i}` : String(i)
+      validateInputObject({ inputTypeName, value: value[i], at: `${at}[${i}]`, setPath: nextSetPath })
     }
     return
   }
@@ -79,21 +97,34 @@ const validateInputObject = ({
   for (const [key, child] of Object.entries(value)) {
     const field = allowed.get(key)
     if (!field) {
+      const fullSetPath = setPath ? `${setPath}.${key}` : key
       const suggestions = suggestFieldNames(key, Array.from(allowed.keys()))
-      const lines = [`Unknown input field "${key}" on ${inputTypeName} (at ${at}.${key}).`]
+
+      const lines = [
+        `Unknown input field "${key}" on ${inputTypeName}${setPath ? ` (in --set ${fullSetPath})` : ''}`,
+      ]
+
       if (suggestions.length > 0) {
         lines.push('')
-        lines.push('Did you mean?')
-        for (const s of suggestions) lines.push(`  ${s}`)
+        lines.push('Did you mean:')
+        for (const s of suggestions) {
+          const suggestionField = allowed.get(s)
+          if (!suggestionField) continue
+          const suggestionPath = setPath ? `${setPath}.${s}` : s
+          lines.push(`  --set ${suggestionPath}=${formatCliPlaceholder(suggestionField)}`)
+        }
       }
+
       lines.push('')
-      lines.push(`See \`${resolveCliCommand()} types ${inputTypeName}\` for valid fields.`)
+      lines.push('For valid fields see:')
+      lines.push(`  ${resolveCliCommand()} types ${inputTypeName}`)
       throw new CliError(lines.join('\n'), 2)
     }
 
     const nestedTypeName = field.typeName
     if (nestedTypeName && inputTypeHelp[nestedTypeName]) {
-      validateInputObject({ inputTypeName: nestedTypeName, value: child, at: `${at}.${key}` })
+      const nextSetPath = setPath ? `${setPath}.${key}` : key
+      validateInputObject({ inputTypeName: nestedTypeName, value: child, at: `${at}.${key}`, setPath: nextSetPath })
     }
   }
 }
@@ -133,7 +164,7 @@ export const validateRequestInputArgs = (rootTypeName: 'Query' | 'Mutation', req
       if (!typeName) continue
       if (!inputTypeHelp[typeName]) continue
 
-      validateInputObject({ inputTypeName: typeName, value: argValue, at: `${opName}.__args.${argName}` })
+      validateInputObject({ inputTypeName: typeName, value: argValue, at: `${opName}.__args.${argName}`, setPath: '' })
     }
   }
 }

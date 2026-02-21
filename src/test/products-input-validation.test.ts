@@ -40,7 +40,7 @@ describe('products input field validation', () => {
       throw new Error('expected rejection')
     } catch (err: any) {
       expect(String(err?.message ?? err)).toContain('Unknown input field "bodyHtml" on ProductInput')
-      expect(String(err?.message ?? err)).toContain('descriptionHtml')
+      expect(String(err?.message ?? err)).toContain('--set descriptionHtml=<String>')
     }
     expect(called).toBe(false)
   })
